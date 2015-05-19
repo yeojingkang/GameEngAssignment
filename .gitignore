@@ -30,6 +30,7 @@ obj/
 assets/
 gen/
 out/
+Debug.win32/
 .classpath
 .project
 .cproject
@@ -43,3 +44,6 @@ out/
 .tar .tgz
 *.gtgz
 GameEngAssignment/cocos2d/plugin/plugins/facebook/proj.ios/
+
+*.sdf
+*.opensdf

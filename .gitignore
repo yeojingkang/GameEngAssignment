@@ -47,3 +47,4 @@ GameEngAssignment/cocos2d/plugin/plugins/facebook/proj.ios/
 
 *.sdf
 *.opensdf
+*.suo

@@ -25,15 +25,32 @@ bool GameWorld::init()
     if ( !Layer::init() )
     {
         return false;
-    }
+	}
+
+	srand(time(NULL));
     
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	
-   
-    
+	CEnemy* newEnemy;
+	for (int i = 0; i < 5; ++i){
+		newEnemy = new CEnemy();
+		newEnemy->Init(cocos2d::Vec2(500.f, 500.f));
+		this->addChild(newEnemy->getSprite(), 0);
+
+		theEnemies.push_back(newEnemy);
+	}
+
+	this->scheduleUpdate();
+
     return true;
+}
+
+void GameWorld::update(float dt){
+	//update the enemies
+	for (vector<CEnemy*>::iterator itr = theEnemies.begin(); itr != theEnemies.end(); ++itr){
+		(*itr)->Update(dt);
+	}
 }
 
 

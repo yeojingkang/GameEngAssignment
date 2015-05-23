@@ -28,10 +28,11 @@ bool GameWorld::init()
 	}
 
 	srand(time(NULL));
-    
+
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
+	//Create enemies
 	CEnemy* newEnemy;
 	for (int i = 0; i < 5; ++i){
 		newEnemy = new CEnemy();

@@ -24,7 +24,11 @@
     <ClCompile Include="..\Classes\gameScene.cpp">
       <Filter>src</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="..\Classes\Player.cpp">
+=======
+    <ClCompile Include="..\Classes\Enemy.cpp">
+>>>>>>> origin/master
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,7 +45,11 @@
     <ClInclude Include="..\Classes\gameScene.h">
       <Filter>src</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="..\Classes\Player.h">
+=======
+    <ClInclude Include="..\Classes\Enemy.h">
+>>>>>>> origin/master
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

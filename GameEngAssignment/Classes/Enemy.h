@@ -10,7 +10,7 @@ public:
 	~CEnemy();
 
 	void Init(cocos2d::Vec2);
-	void Update(float);
+	void Update(float, cocos2d::Vec2);
 
 	cocos2d::Sprite* getSprite(void){ return theSprite; };
 

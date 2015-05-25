@@ -53,7 +53,7 @@ bool GameWorld::init()
 	CEnemy* newEnemy;
 	for (int i = 0; i < 5; ++i){
 		newEnemy = new CEnemy();
-		newEnemy->Init(cocos2d::Vec2(500.f, 500.f));
+		newEnemy->Init(player->getPlayerSprite()->getPosition());
 		this->addChild(newEnemy->getSprite(), 0);
 
 		theEnemies.push_back(newEnemy);
@@ -150,7 +150,7 @@ void GameWorld::update(float dt)
 
 	//update the enemies
 	for (vector<CEnemy*>::iterator itr = theEnemies.begin(); itr != theEnemies.end(); ++itr){
-		(*itr)->Update(dt);
+		(*itr)->Update(dt, player->getPlayerSprite()->getPosition());
 	}
 }
 

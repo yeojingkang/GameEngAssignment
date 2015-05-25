@@ -18,7 +18,8 @@ void CEnemy::Init(cocos2d::Vec2 playerPos){
 
 	updateSpritePosition();
 }
-void CEnemy::Update(float dt){
+void CEnemy::Update(float dt, cocos2d::Vec2 playerPos){
+	direction = (playerPos - position).getNormalized();
 	position += speed * direction * dt;
 	updateSpritePosition();
 }

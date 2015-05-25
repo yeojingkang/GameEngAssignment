@@ -2,13 +2,10 @@
 #define __GAME_SCENE_H__
 
 #include "cocos2d.h"
-<<<<<<< HEAD
 #include "Player.h"
-=======
 #include "Enemy.h"
 
 using namespace std;
->>>>>>> origin/master
 
 class GameWorld : public cocos2d::Layer
 {
@@ -21,9 +18,6 @@ public:
 
     // Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
     virtual bool init();
-<<<<<<< HEAD
-	
-	virtual void update(float dt);
 
 	//handler for keyboard events
 	void keyPressed(EventKeyboard::KeyCode keyCode, cocos2d::Event *event);
@@ -35,10 +29,8 @@ public:
 	void mouseMove(cocos2d::Event *event);
 	void mouseScroll(cocos2d::Event *event);
 
-=======
 	virtual void update(float);
     
->>>>>>> origin/master
     // a selector callback
     void menuCloseCallback(cocos2d::Ref* pSender);
 

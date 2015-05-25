@@ -32,7 +32,6 @@ bool GameWorld::init()
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-<<<<<<< HEAD
 	auto keyBoardListener = EventListenerKeyboard::create();
 	keyBoardListener->onKeyPressed = CC_CALLBACK_2(GameWorld::keyPressed, this);
 	keyBoardListener->onKeyReleased = CC_CALLBACK_2(GameWorld::keyReleased, this);
@@ -50,7 +49,6 @@ bool GameWorld::init()
 	player->Init();
 
 	this->addChild(player->getPlayerSprite());
-=======
 	//Create enemies
 	CEnemy* newEnemy;
 	for (int i = 0; i < 5; ++i){
@@ -60,14 +58,12 @@ bool GameWorld::init()
 
 		theEnemies.push_back(newEnemy);
 	}
->>>>>>> origin/master
 
 	this->scheduleUpdate();
 
     return true;
 }
 
-<<<<<<< HEAD
 void GameWorld::keyPressed(EventKeyboard::KeyCode keyCode, cocos2d::Event *event)
 {
 	if (keyCode == EventKeyboard::KeyCode::KEY_W)
@@ -151,16 +147,12 @@ void GameWorld::mouseScroll(Event *event)
 void GameWorld::update(float dt)
 {
 	player->update(dt);
-}
-=======
-void GameWorld::update(float dt){
+
 	//update the enemies
 	for (vector<CEnemy*>::iterator itr = theEnemies.begin(); itr != theEnemies.end(); ++itr){
 		(*itr)->Update(dt);
 	}
 }
-
->>>>>>> origin/master
 
 void GameWorld::menuCloseCallback(Ref* pSender)
 {

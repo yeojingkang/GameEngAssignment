@@ -11,6 +11,8 @@ class GameWorld : public cocos2d::Layer
 {
 private:
 	CPlayer *player;
+	vector<CEnemy*> theEnemies;
+	CCLabelTTF* waveNum;
 
 public:
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
@@ -36,9 +38,6 @@ public:
 
     // implement the "static create()" method manually
 	CREATE_FUNC(GameWorld);
-
-private:
-	vector<CEnemy*> theEnemies;
 };
 
 #endif // __GAME_SCENE_H__

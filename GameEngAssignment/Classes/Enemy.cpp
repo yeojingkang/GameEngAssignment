@@ -11,7 +11,12 @@ CEnemy::~CEnemy()
 
 void CEnemy::Init(cocos2d::Vec2 playerPos){
 	speed = 25.0f;
-	position = Vec2(CCRANDOM_0_1() * 300, CCRANDOM_0_1() * 300);
+	
+	if (CCRANDOM_0_1() > 0.5f)
+		position = Vec2(round(CCRANDOM_0_1()) * 1280, CCRANDOM_0_1() * 720);
+	else
+		position = Vec2(CCRANDOM_0_1() * 1280, round(CCRANDOM_0_1()) * 720);
+	
 	direction = (playerPos - position).getNormalized();
 
 	theSprite = cocos2d::Sprite::create("CloseNormal.png");

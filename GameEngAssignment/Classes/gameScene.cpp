@@ -65,6 +65,9 @@ bool GameWorld::init()
 		theEnemies.push_back(newEnemy);
 	}
 
+	//Create text
+	waveNum = CCLabelTTF::create("Hello World", "Helvetica", 12, CCSizeMake(245, 32), kCCTextAlignmentCenter);
+
 	this->scheduleUpdate();
 
     return true;

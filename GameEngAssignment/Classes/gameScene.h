@@ -13,6 +13,8 @@ class GameWorld : public cocos2d::Layer
 {
 private:
 	CPlayer *player;
+	vector<CEnemy*> theEnemies;
+	CCLabelTTF* waveNum;
 
 public:
 
@@ -41,9 +43,6 @@ public:
 
     // implement the "static create()" method manually
 	CREATE_FUNC(GameWorld);
-
-private:
-	vector<CEnemy*> theEnemies;
 };
 
 #endif // __GAME_SCENE_H__

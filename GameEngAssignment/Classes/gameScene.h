@@ -2,10 +2,14 @@
 #define __GAME_SCENE_H__
 
 #include "cocos2d.h"
+#include "Rendering.h"
 
 class GameWorld : public cocos2d::Layer
 {
 public:
+
+	Rendering *r;
+
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
     static cocos2d::Scene* createScene();
 

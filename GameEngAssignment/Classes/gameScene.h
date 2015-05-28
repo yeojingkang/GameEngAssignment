@@ -4,6 +4,7 @@
 #include "cocos2d.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Bullet.h"
 
 using namespace std;
 
@@ -12,6 +13,7 @@ class GameWorld : public cocos2d::Layer
 private:
 	CPlayer *player;
 	vector<CEnemy*> theEnemies;
+	vector<CBullet*> theBullets;
 	CCLabelTTF* waveNum;
 
 public:

@@ -116,10 +116,21 @@ void GameWorld::mouseDown(Event *event)
 	auto mousePosX = e->getLocationInView().x;
 	auto mousePosY = Director::getInstance()->getWinSize().height + e->getLocationInView().y;
 
-	auto test = new CPlayer();
-	test->Init();
-	test->getPlayerSprite()->setPosition(mousePosX, mousePosY);
-	this->addChild(test->getPlayerSprite());
+	CBullet* b = new CBullet();
+	b->Init();
+	b->SetPlayerPos(player->getPlayerSprite()->getPosition());
+	theBullets.push_back(b);
+	this->addChild(b->GetSprite(), 0);
+
+	for (vector<CBullet*>::iterator itr = theBullets.begin(); itr != theBullets.end(); ++itr){
+		if ((*itr)->GetActive() == false)
+		{
+			(*itr)->SetActive(true);
+			(*itr)->GetSprite()->setRotation(player->getPlayerSprite()->getRotation());
+			(*itr)->GetSprite()->setPosition(player->getPlayerSprite()->getPositionX() + 10, player->getPlayerSprite()->getPositionY());
+			
+		}
+	}
 }
 
 void GameWorld::mouseUp(Event *event)
@@ -154,6 +165,13 @@ void GameWorld::update(float dt)
 	//update the enemies
 	for (vector<CEnemy*>::iterator itr = theEnemies.begin(); itr != theEnemies.end(); ++itr){
 		(*itr)->Update(dt, player->getPlayerSprite()->getPosition());
+	}
+
+	for (vector<CBullet*>::iterator itr = theBullets.begin(); itr != theBullets.end(); ++itr){
+		if ((*itr)->GetActive() == true)
+		{
+			(*itr)->Update(dt);
+		}
 	}
 }
 

@@ -22,6 +22,9 @@ public:
 	void SetVelocity(float, float);
 	Vec2* GetVelocity();
 
+	void SetGunPoint(Vec2*);
+	Vec2* GetGunPoint();
+
 	bool CheckCollision(Rect r);
 
 	void MoveUpDown(bool up, float speed);
@@ -36,6 +39,8 @@ private:
 	float yPos;
 
 	Vec2* velocity;
+
+	Vec2* gunPoint;
 
 	Rect bounds;
 };

@@ -50,17 +50,23 @@ bool GameWorld::init()
 
 	this->addChild(player->getPlayerSprite());
 	//Create enemies
-	CEnemy* newEnemy;
-	for (int i = 0; i < 5; ++i){
-		newEnemy = new CEnemy();
-		newEnemy->Init(player->getPlayerSprite()->getPosition());
-		this->addChild(newEnemy->getSprite(), 0);
+	//CEnemy* newEnemy;
+	//for (int i = 0; i < 5; ++i){
+	//	newEnemy = new CEnemy();
+	//	newEnemy->Init(player->getPlayerSprite()->getPosition());
+	//	this->addChild(newEnemy->getSprite(), 0);
 
-		theEnemies.push_back(newEnemy);
-	}
+	//	theEnemies.push_back(newEnemy);
+	//}
 
 	//Create text
-	waveNum = CCLabelTTF::create("Hello World", "Helvetica", 12, CCSizeMake(245, 32), kCCTextAlignmentCenter);
+	waveNumLabel = CCLabelTTF::create("Wave 1", "fonts/Marker Felt.ttf", 24);
+	waveNumLabel->setPosition(Vec2(origin.x + visibleSize.width / 2,
+		origin.y + visibleSize.height - waveNumLabel->getContentSize().height));
+	this->addChild(waveNumLabel, 1);
+	
+	//Create the waves
+	createWaves();
 
 	this->scheduleUpdate();
 
@@ -155,6 +161,36 @@ void GameWorld::update(float dt)
 	for (vector<CEnemy*>::iterator itr = theEnemies.begin(); itr != theEnemies.end(); ++itr){
 		(*itr)->Update(dt, player->getPlayerSprite()->getPosition());
 	}
+
+	//Update the wave
+	if (currWaveNum < theWaves.size()){
+		if (theWaves[currWaveNum]->getTotalMonsters() <= 0){
+			//When wave has finished spawning all enemies
+			//Wait for timer before going to next wave
+			static float waveChangeTimer = 0.0f;
+			waveChangeTimer += dt;
+
+			if (waveChangeTimer > 10.0f && currWaveNum + 1 < theWaves.size()){
+				++currWaveNum;
+				waveChangeTimer = 0.0f;
+				waveNumLabel->setString("Wave " + to_string(currWaveNum + 1));
+			}
+		}
+		else{
+			static float enemySpawnTimer = 0.0f;
+			enemySpawnTimer += dt;
+
+			if (enemySpawnTimer > 1.0f){
+				enemySpawnTimer = 0.0f;
+				//Spawn new enemy
+				CEnemy *newEnemy = new CEnemy();
+				newEnemy->Init(player->getPlayerSprite()->getPosition());
+				this->addChild(newEnemy->getSprite(), 0);
+				theEnemies.push_back(newEnemy);
+				theWaves[currWaveNum]->spawnedNormalMonster();
+			}
+		}
+	}
 }
 
 void GameWorld::menuCloseCallback(Ref* pSender)
@@ -169,4 +205,34 @@ void GameWorld::menuCloseCallback(Ref* pSender)
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     exit(0);
 #endif
+}
+
+
+void GameWorld::createWaves(){
+	//Design waves here
+
+	for (int i = 0; i < 3; ++i){
+		CWave* newWave = new CWave();
+
+		switch (i){
+		case 0:
+			newWave->setWave(5);
+			break;
+
+		case 1:
+			newWave->setWave(10);
+			break;
+
+		case 2:
+			newWave->setWave(18);
+			break;
+
+		default:
+			break;
+		}
+
+		theWaves.push_back(newWave);
+	}
+
+	currWaveNum = 0;
 }

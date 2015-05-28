@@ -4,6 +4,7 @@
 #include "cocos2d.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Wave.h"
 
 using namespace std;
 
@@ -12,7 +13,12 @@ class GameWorld : public cocos2d::Layer
 private:
 	CPlayer *player;
 	vector<CEnemy*> theEnemies;
-	CCLabelTTF* waveNum;
+	vector<CWave*> theWaves;
+	int currWaveNum;
+
+	CCLabelTTF* waveNumLabel;
+
+	void createWaves();
 
 public:
     // there's no 'id' in cpp, so we recommend returning the class instance pointer

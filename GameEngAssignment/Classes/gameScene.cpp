@@ -127,7 +127,13 @@ void GameWorld::mouseDown(Event *event)
 
 	CBullet* b = new CBullet();
 	b->Init();
-	b->SetPlayerPos(player->getPlayerSprite()->getPosition());
+	float dirX = mousePosX - player->getPlayerSprite()->getPositionX();
+	float dirY = mousePosY - player->getPlayerSprite()->getPositionY();
+
+	Vec2* direction = new Vec2(dirX, dirY);
+	direction->normalize();
+	b->SetMoveVec(direction);
+
 	theBullets.push_back(b);
 	this->addChild(b->GetSprite(), 0);
 
@@ -136,7 +142,7 @@ void GameWorld::mouseDown(Event *event)
 		{
 			(*itr)->SetActive(true);
 			(*itr)->GetSprite()->setRotation(player->getPlayerSprite()->getRotation());
-			(*itr)->GetSprite()->setPosition(player->getPlayerSprite()->getPositionX() + 10, player->getPlayerSprite()->getPositionY());
+			(*itr)->GetSprite()->setPosition(player->getPlayerSprite()->getPosition());
 			
 		}
 	}
@@ -180,9 +186,9 @@ void GameWorld::update(float dt)
 		if ((*itr)->GetActive() == true)
 		{
 			(*itr)->Update(dt);
-		}
-		
+		}	
 	}
+
 	//Update the wave
 	if (currWaveNum < theWaves.size()){
 		if (theWaves[currWaveNum]->getTotalMonsters() <= 0){

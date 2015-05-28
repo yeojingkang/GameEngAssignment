@@ -7,7 +7,6 @@
 #include "Enemy.h"
 #include "Bullet.h"
 #include "Wave.h"
->>>>>>> origin/master
 
 using namespace std;
 

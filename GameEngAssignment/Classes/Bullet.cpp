@@ -6,8 +6,10 @@ CBullet::CBullet()
 {
 	xPos = 0;
 	yPos = 0;
+	bulletSpeed = 0;
 	active = false;
 	bulletSprite = NULL;
+	movementVec = NULL;
 }
 
 void CBullet::Init()
@@ -16,10 +18,10 @@ void CBullet::Init()
 	active = false;
 	xPos = 0;
 	yPos = 0;
+	bulletSpeed = 1000;
 	bulletSprite->setPosition(xPos, yPos);
+	movementVec = new Vec2(0, 0);
 	bounds = bulletSprite->getBoundingBox();
-
-	
 }
 
 void CBullet::SetSprite(string filename)
@@ -42,14 +44,24 @@ bool CBullet::GetActive()
 	return this->active;
 }
 
-void CBullet::SetPlayerPos(Vec2 pos)
+void CBullet::SetMoveVec(Vec2* v)
 {
-	this->playerPos = pos;
+	this->movementVec = v;
 }
 
-Vec2 CBullet::GetPlayerPos()
+Vec2* CBullet::GetMoveVec()
 {
-	return this->playerPos;
+	return this->movementVec;
+}
+
+void CBullet::SetBulletSpeed(float s)
+{
+	this->bulletSpeed = s;
+}
+
+float CBullet::GetBulletSpeed()
+{
+	return this->bulletSpeed;
 }
 
 bool CBullet::CheckCollision(Rect r)
@@ -66,8 +78,5 @@ bool CBullet::CheckCollision(Rect r)
 
 void CBullet::Update(float dt)
 {
-	Vec2 dirVector = bulletSprite->getPosition() - playerPos;
-	dirVector.normalize();
-
-	bulletSprite->setPosition(bulletSprite->getPosition() + dirVector * dt * 100);
+	bulletSprite->setPosition(bulletSprite->getPositionX() + movementVec->x * dt * this->bulletSpeed, bulletSprite->getPositionY() + movementVec->y * dt * this->bulletSpeed);
 }

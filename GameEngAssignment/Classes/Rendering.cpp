@@ -19,7 +19,7 @@ void Rendering::Init(USHORT x, USHORT y)
 	m_Sprite = Sprite::create("HelloWorld.png");
 	//Render(x, y);
 	m_Sprite->setScale(0.5f);
-	m_Sprite->setPosition();
+	m_Sprite->setPosition(0.0f, 0.0f);
 }
 
 void Rendering::Render(USHORT x, USHORT y)

@@ -35,9 +35,6 @@ bool GameWorld::init()
 
 	srand(time(NULL));
 
-    Size visibleSize = Director::getInstance()->getVisibleSize();
-    Vec2 origin = Director::getInstance()->getVisibleOrigin();
-
 	auto keyBoardListener = EventListenerKeyboard::create();
 	keyBoardListener->onKeyPressed = CC_CALLBACK_2(GameWorld::keyPressed, this);
 	keyBoardListener->onKeyReleased = CC_CALLBACK_2(GameWorld::keyReleased, this);

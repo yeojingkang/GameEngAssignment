@@ -8,7 +8,6 @@
 #include "Wave.h"
 
 using namespace std;
->>>>>>> origin/master
 
 class GameWorld : public cocos2d::Layer
 {

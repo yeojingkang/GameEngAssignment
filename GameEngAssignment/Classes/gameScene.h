@@ -2,9 +2,12 @@
 #define __GAME_SCENE_H__
 
 #include "cocos2d.h"
+#include "Rendering.h"
 #include "Player.h"
 #include "Enemy.h"
 #include "Bullet.h"
+#include "Wave.h"
+>>>>>>> origin/master
 
 using namespace std;
 
@@ -13,10 +16,21 @@ class GameWorld : public cocos2d::Layer
 private:
 	CPlayer *player;
 	vector<CEnemy*> theEnemies;
+
 	vector<CBullet*> theBullets;
 	CCLabelTTF* waveNum;
 
+	vector<CWave*> theWaves;
+	int currWaveNum;
+
+	CCLabelTTF* waveNumLabel;
+
+	void createWaves();
+
 public:
+
+	Rendering *r;
+
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
     static cocos2d::Scene* createScene();
 

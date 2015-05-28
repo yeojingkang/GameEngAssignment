@@ -25,7 +25,13 @@ bool GameWorld::init()
     if ( !Layer::init() )
     {
         return false;
-	}
+    }
+    
+	r = new Rendering();
+	r->Init(1, 1);
+    Size visibleSize = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+	this->addChild(r->getSprite(), 1);
 
 	srand(time(NULL));
 

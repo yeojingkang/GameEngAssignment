@@ -2,11 +2,13 @@
 #define __GAME_SCENE_H__
 
 #include "cocos2d.h"
+#include "Rendering.h"
 #include "Player.h"
 #include "Enemy.h"
 #include "Wave.h"
 
 using namespace std;
+>>>>>>> origin/master
 
 class GameWorld : public cocos2d::Layer
 {
@@ -21,6 +23,9 @@ private:
 	void createWaves();
 
 public:
+
+	Rendering *r;
+
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
     static cocos2d::Scene* createScene();
 

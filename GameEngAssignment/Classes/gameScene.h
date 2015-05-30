@@ -7,7 +7,7 @@
 #include "Enemy.h"
 #include "Bullet.h"
 #include "Wave.h"
-
+#include "touchPad.h"
 using namespace std;
 
 class GameWorld : public cocos2d::Layer
@@ -25,6 +25,8 @@ private:
 	CCLabelTTF* waveNumLabel;
 
 	void createWaves();
+	
+	CTouchPad* movePad = new CTouchPad();
 
 public:
 
@@ -45,6 +47,12 @@ public:
 	void mouseUp(cocos2d::Event *event);
 	void mouseMove(cocos2d::Event *event);
 	void mouseScroll(cocos2d::Event *event);
+
+	//handler for touch events
+	bool touchBegan(cocos2d::Touch*, cocos2d::Event*);
+	void touchEnded(cocos2d::Touch*, cocos2d::Event*);
+	void touchMoved(cocos2d::Touch*, cocos2d::Event*);
+	void touchCancelled(cocos2d::Touch*, cocos2d::Event*);
 
 	virtual void update(float);
     

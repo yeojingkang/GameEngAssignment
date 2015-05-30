@@ -6,6 +6,7 @@ CPlayer::CPlayer()
 {
 	xPos = 0;
 	yPos = 0;
+	moveSpeed = 0;
 	velocity = new Point(0, 0);
 	playerSprite = NULL;
 	gunPoint = new Vec2(0, 0);
@@ -18,6 +19,7 @@ void CPlayer::Init()
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 	xPos = origin.x + visibleSize.width / 2;
 	yPos = origin.y + visibleSize.height / 2;
+	moveSpeed = 200;
 	playerSprite->setPosition(xPos, yPos);
 	gunPoint->set(playerSprite->getPositionX() + 10, playerSprite->getPositionY());
 	bounds = playerSprite->getBoundingBox();
@@ -87,6 +89,16 @@ void CPlayer::SetGunPoint(Vec2* pt)
 Vec2* CPlayer::GetGunPoint()
 {
 	return this->gunPoint;
+}
+
+void CPlayer::SetMoveSpeed(float speed)
+{
+	this->moveSpeed = speed;
+}
+
+float CPlayer::GetMoveSpeed(void)
+{
+	return this->moveSpeed;
 }
 
 void CPlayer::update(float dt)

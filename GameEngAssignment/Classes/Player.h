@@ -30,6 +30,9 @@ public:
 	void MoveUpDown(bool up, float speed);
 	void MoveLeftRight(bool left, float speed);
 
+	void SetMoveSpeed(float);
+	float GetMoveSpeed();
+
 	void update(float dt);
 
 private:
@@ -37,6 +40,8 @@ private:
 
 	float xPos;
 	float yPos;
+
+	float moveSpeed;
 
 	Vec2* velocity;
 

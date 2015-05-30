@@ -45,13 +45,20 @@ bool GameWorld::init()
 	mouseListener->onMouseMove = CC_CALLBACK_1(GameWorld::mouseMove, this);
 	mouseListener->onMouseScroll = CC_CALLBACK_1(GameWorld::mouseScroll, this);
 	
+	auto touchListener = EventListenerTouchOneByOne::create();
+	touchListener->onTouchBegan = CC_CALLBACK_2(GameWorld::touchBegan, this);
+	touchListener->onTouchEnded = CC_CALLBACK_2(GameWorld::touchEnded, this);
+	touchListener->onTouchMoved = CC_CALLBACK_2(GameWorld::touchMoved, this);
+	touchListener->onTouchCancelled = CC_CALLBACK_2(GameWorld::touchCancelled, this);
+
 	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyBoardListener, this);
 	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(mouseListener, this);
+	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(touchListener, this);
 
 	player = new CPlayer();
 	player->Init();
-
 	this->addChild(player->getPlayerSprite());
+
 	//Create enemies
 	//CEnemy* newEnemy;
 	//for (int i = 0; i < 5; ++i){
@@ -71,6 +78,14 @@ bool GameWorld::init()
 	//Create the waves
 	createWaves();
 
+	//Create movement touchPad
+	movePad = new CTouchPad();
+	movePad->Init();
+	movePad->GetSprite()->setPosition(Vec2(origin.x + visibleSize.width / 5, origin.y + visibleSize.height / 4));
+	movePad->GetBaseSprite()->setPosition(Vec2(origin.x + visibleSize.width / 5, origin.y + visibleSize.height / 4));
+	movePad->SetOriginalPos(movePad->GetBaseSprite()->getPosition());
+	this->addChild(movePad->GetBaseSprite(), 0);
+	this->addChild(movePad->GetSprite(), 0);
 	this->scheduleUpdate();
 
     return true;
@@ -80,20 +95,20 @@ void GameWorld::keyPressed(EventKeyboard::KeyCode keyCode, cocos2d::Event *event
 {
 	if (keyCode == EventKeyboard::KeyCode::KEY_W)
 	{
-		player->MoveUpDown(true, 200);
+		player->MoveUpDown(true, player->GetMoveSpeed());
 	}
 	else if (keyCode == EventKeyboard::KeyCode::KEY_S)
 	{
-		player->MoveUpDown(false, 200);
+		player->MoveUpDown(false, player->GetMoveSpeed());
 	}
 
 	if (keyCode == EventKeyboard::KeyCode::KEY_A)
 	{
-		player->MoveLeftRight(true, 200);
+		player->MoveLeftRight(true, player->GetMoveSpeed());
 	}
 	else if (keyCode == EventKeyboard::KeyCode::KEY_D)
 	{
-		player->MoveLeftRight(false, 200);
+		player->MoveLeftRight(false, player->GetMoveSpeed());
 	}
 }
 
@@ -133,7 +148,7 @@ void GameWorld::mouseDown(Event *event)
 	Vec2* direction = new Vec2(dirX, dirY);
 	direction->normalize();
 	b->SetMoveVec(direction);
-
+	
 	theBullets.push_back(b);
 	this->addChild(b->GetSprite(), 0);
 
@@ -173,9 +188,62 @@ void GameWorld::mouseScroll(Event *event)
 {
 }
 
+bool GameWorld::touchBegan(Touch* touch, Event* event)
+{
+	cocos2d::log("touch began");
+
+	auto touchPos = touch->getLocation();
+
+	if (movePad->GetSprite()->getBoundingBox().containsPoint(touchPos))
+	{
+		movePad->SetActive(true);
+	}
+
+	return true;
+}
+
+void GameWorld::touchEnded(Touch* touch, Event* event)
+{
+	cocos2d::log("touch ended");
+
+	auto touchPos = touch->getLocation();
+
+	if (movePad->GetSprite()->getBoundingBox().containsPoint(touchPos))
+	{
+		movePad->SetActive(false);
+		movePad->GetSprite()->setPosition(movePad->GetOriginalPos());
+		player->SetVelocity(0, 0);
+	}
+}
+
+void GameWorld::touchMoved(Touch* touch, Event* event)
+{
+	cocos2d::log("touch moved");
+
+	auto touchPos = touch->getLocation();
+
+	if (movePad->GetActive() == true)
+	{
+		movePad->GetSprite()->setPosition(touchPos);
+		float moveDirX = movePad->GetSprite()->getPositionX() - movePad->GetOriginalPos().x;
+		float moveDirY = movePad->GetSprite()->getPositionY() - movePad->GetOriginalPos().y;
+
+		Vec2* moveDir = new Vec2(moveDirX, moveDirY);
+		moveDir->normalize();
+		player->SetVelocity(moveDir->x * player->GetMoveSpeed(), moveDir->y * player->GetMoveSpeed());
+	}
+}
+
+void GameWorld::touchCancelled(Touch* touch, Event* event)
+{
+	cocos2d::log("touch cancelled");
+}
+
 void GameWorld::update(float dt)
 {
 	player->update(dt);
+
+	movePad->Update(dt);
 
 	//update the enemies
 	for (vector<CEnemy*>::iterator itr = theEnemies.begin(); itr != theEnemies.end(); ++itr){
@@ -233,7 +301,6 @@ void GameWorld::menuCloseCallback(Ref* pSender)
     exit(0);
 #endif
 }
-
 
 void GameWorld::createWaves(){
 	//Design waves here

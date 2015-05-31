@@ -27,6 +27,10 @@ private:
 	void createWaves();
 	
 	CTouchPad* movePad = new CTouchPad();
+	CTouchPad* shootPad = new CTouchPad();
+
+	const static int MAX_TOUCHES = 5;
+	Vec2 touchPos[MAX_TOUCHES];
 
 public:
 
@@ -53,6 +57,11 @@ public:
 	void touchEnded(cocos2d::Touch*, cocos2d::Event*);
 	void touchMoved(cocos2d::Touch*, cocos2d::Event*);
 	void touchCancelled(cocos2d::Touch*, cocos2d::Event*);
+
+	//handler for multi touch events
+	void touchesBegan(const vector<cocos2d::Touch*> &touches, cocos2d::Event *event);
+	void touchesMoved(const vector<cocos2d::Touch*> &touches, cocos2d::Event *event);
+	void touchesEnded(const vector<cocos2d::Touch*> &touches, cocos2d::Event *event);
 
 	virtual void update(float);
     

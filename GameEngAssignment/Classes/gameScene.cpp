@@ -35,23 +35,41 @@ bool GameWorld::init()
 
 	srand(time(NULL));
 
+	//keyboard listener
 	auto keyBoardListener = EventListenerKeyboard::create();
 	keyBoardListener->onKeyPressed = CC_CALLBACK_2(GameWorld::keyPressed, this);
 	keyBoardListener->onKeyReleased = CC_CALLBACK_2(GameWorld::keyReleased, this);
 
+	//mouse listener
 	auto mouseListener = EventListenerMouse::create();
 	mouseListener->onMouseDown = CC_CALLBACK_1(GameWorld::mouseDown, this);
 	mouseListener->onMouseUp = CC_CALLBACK_1(GameWorld::mouseUp, this);
 	mouseListener->onMouseMove = CC_CALLBACK_1(GameWorld::mouseMove, this);
 	mouseListener->onMouseScroll = CC_CALLBACK_1(GameWorld::mouseScroll, this);
 	
+	////touch listener
+	//auto touchListener = EventListenerTouchOneByOne::create();
+	//touchListener->onTouchBegan = CC_CALLBACK_2(GameWorld::touchBegan, this);
+	//touchListener->onTouchEnded = CC_CALLBACK_2(GameWorld::touchEnded, this);
+	//touchListener->onTouchMoved = CC_CALLBACK_2(GameWorld::touchMoved, this);
+	//touchListener->onTouchCancelled = CC_CALLBACK_2(GameWorld::touchCancelled, this);
+
+	//multitouch listener
+	auto multiTouchListener = EventListenerTouchAllAtOnce::create();
+	multiTouchListener->onTouchesBegan = CC_CALLBACK_2(GameWorld::touchesBegan, this);
+	multiTouchListener->onTouchesMoved = CC_CALLBACK_2(GameWorld::touchesMoved, this);
+	multiTouchListener->onTouchesEnded = CC_CALLBACK_2(GameWorld::touchesEnded, this);
+
+	//add event listeners with scene graph priority
 	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyBoardListener, this);
 	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(mouseListener, this);
+	//Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(touchListener, this);
+	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(multiTouchListener, this);
 
 	player = new CPlayer();
 	player->Init();
-
 	this->addChild(player->getPlayerSprite());
+
 	//Create enemies
 	//CEnemy* newEnemy;
 	//for (int i = 0; i < 5; ++i){
@@ -71,6 +89,25 @@ bool GameWorld::init()
 	//Create the waves
 	createWaves();
 
+	//Create movement touchPad
+	movePad = new CTouchPad();
+	movePad->Init();
+	movePad->GetSprite()->setPosition(Vec2(origin.x + visibleSize.width / 5, origin.y + visibleSize.height / 4));
+	movePad->GetBaseSprite()->setPosition(Vec2(origin.x + visibleSize.width / 5, origin.y + visibleSize.height / 4));
+	movePad->SetOriginalPos(movePad->GetBaseSprite()->getPosition());
+	this->addChild(movePad->GetBaseSprite(), 0);
+	this->addChild(movePad->GetSprite(), 0);
+
+	//Create shooting touchPad
+	shootPad = new CTouchPad();
+	shootPad->Init();
+	shootPad->GetSprite()->setPosition(Vec2(origin.x + 4 * (visibleSize.width / 5), origin.y + visibleSize.height / 4));
+	shootPad->GetBaseSprite()->setPosition(Vec2(origin.x + 4 * (visibleSize.width / 5), origin.y + visibleSize.height / 4));
+	shootPad->SetOriginalPos(shootPad->GetBaseSprite()->getPosition());
+	this->addChild(shootPad->GetBaseSprite(), 0);
+	this->addChild(shootPad->GetSprite(), 0);
+
+	//scheduling update
 	this->scheduleUpdate();
 
     return true;
@@ -80,20 +117,20 @@ void GameWorld::keyPressed(EventKeyboard::KeyCode keyCode, cocos2d::Event *event
 {
 	if (keyCode == EventKeyboard::KeyCode::KEY_W)
 	{
-		player->MoveUpDown(true, 200);
+		player->MoveUpDown(true, player->GetMoveSpeed());
 	}
 	else if (keyCode == EventKeyboard::KeyCode::KEY_S)
 	{
-		player->MoveUpDown(false, 200);
+		player->MoveUpDown(false, player->GetMoveSpeed());
 	}
 
 	if (keyCode == EventKeyboard::KeyCode::KEY_A)
 	{
-		player->MoveLeftRight(true, 200);
+		player->MoveLeftRight(true, player->GetMoveSpeed());
 	}
 	else if (keyCode == EventKeyboard::KeyCode::KEY_D)
 	{
-		player->MoveLeftRight(false, 200);
+		player->MoveLeftRight(false, player->GetMoveSpeed());
 	}
 }
 
@@ -125,10 +162,27 @@ void GameWorld::mouseDown(Event *event)
 	auto mousePosX = e->getLocationInView().x;
 	auto mousePosY = Director::getInstance()->getWinSize().height + e->getLocationInView().y;
 
-	auto test = new CPlayer();
-	test->Init();
-	test->getPlayerSprite()->setPosition(mousePosX, mousePosY);
-	this->addChild(test->getPlayerSprite());
+	CBullet* b = new CBullet();
+	b->Init();
+	float dirX = mousePosX - player->getPlayerSprite()->getPositionX();
+	float dirY = mousePosY - player->getPlayerSprite()->getPositionY();
+
+	Vec2* direction = new Vec2(dirX, dirY);
+	direction->normalize();
+	b->SetMoveVec(direction);
+	
+	theBullets.push_back(b);
+	this->addChild(b->GetSprite(), 0);
+
+	for (vector<CBullet*>::iterator itr = theBullets.begin(); itr != theBullets.end(); ++itr){
+		if ((*itr)->GetActive() == false)
+		{
+			(*itr)->SetActive(true);
+			(*itr)->GetSprite()->setRotation(player->getPlayerSprite()->getRotation());
+			(*itr)->GetSprite()->setPosition(player->getPlayerSprite()->getPosition());
+			
+		}
+	}
 }
 
 void GameWorld::mouseUp(Event *event)
@@ -156,13 +210,159 @@ void GameWorld::mouseScroll(Event *event)
 {
 }
 
+//bool GameWorld::touchBegan(Touch* touch, Event* event)
+//{
+//	cocos2d::log("touch began");
+//
+//	auto touchPos = touch->getLocation();
+//
+//	if (movePad->GetSprite()->getBoundingBox().containsPoint(touchPos))
+//	{
+//		movePad->SetActive(true);
+//	}
+//
+//	if (shootPad->GetSprite()->getBoundingBox().containsPoint(touchPos))
+//	{
+//		shootPad->SetActive(true);
+//	}
+//
+//	return true;
+//}
+//
+//void GameWorld::touchEnded(Touch* touch, Event* event)
+//{
+//	cocos2d::log("touch ended");
+//
+//	auto touchPos = touch->getLocation();
+//
+//	if (movePad->GetSprite()->getBoundingBox().containsPoint(touchPos))
+//	{
+//		movePad->SetActive(false);
+//		movePad->GetSprite()->setPosition(movePad->GetOriginalPos());
+//		player->SetVelocity(0, 0);
+//	}
+//
+//	if (shootPad->GetSprite()->getBoundingBox().containsPoint(touchPos))
+//	{
+//		shootPad->SetActive(false);
+//		shootPad->GetSprite()->setPosition(movePad->GetOriginalPos());
+//	}
+//}
+//
+//void GameWorld::touchMoved(Touch* touch, Event* event)
+//{
+//	cocos2d::log("touch moved");
+//
+//	auto touchPos = touch->getLocation();
+//
+//	//moving player based on direction of movement touch pad
+//	if (movePad->GetActive() == true)
+//	{
+//		movePad->GetSprite()->setPosition(touchPos);
+//		float moveDirX = movePad->GetSprite()->getPositionX() - movePad->GetOriginalPos().x;
+//		float moveDirY = movePad->GetSprite()->getPositionY() - movePad->GetOriginalPos().y;
+//
+//		Vec2* moveDir = new Vec2(moveDirX, moveDirY);
+//		moveDir->normalize();
+//		player->SetVelocity(moveDir->x * player->GetMoveSpeed(), moveDir->y * player->GetMoveSpeed());
+//	}
+//
+//	//rotating player based on shooting touch pad
+//	if (shootPad->GetActive() == true)
+//	{
+//		
+//	}
+//}
+//
+//void GameWorld::touchCancelled(Touch* touch, Event* event)
+//{
+//	cocos2d::log("touch cancelled");
+//}
+
+void GameWorld::touchesBegan(const vector<cocos2d::Touch*> &touches, cocos2d::Event *event)
+{
+	log("multitouch began");
+
+	for (int i = 0; i < touches.size(); ++i)
+	{
+		touchPos[i] = touches[i]->getLocation();
+
+		if (movePad->GetSprite()->getBoundingBox().containsPoint(touchPos[i]))
+		{
+			movePad->SetActive(true);
+		}
+		if (shootPad->GetSprite()->getBoundingBox().containsPoint(touchPos[i]))
+		{
+			shootPad->SetActive(true);
+		}
+	}
+}
+
+void GameWorld::touchesEnded(const vector<cocos2d::Touch*> &touches, cocos2d::Event *event)
+{
+	log("multitouch ended");
+
+	for (int i = 0; i < touches.size(); ++i)
+	{	
+		touchPos[i] = touches[i]->getLocation();
+
+		if (movePad->GetSprite()->getBoundingBox().containsPoint(touchPos[i]))
+		{
+			movePad->SetActive(false);
+			movePad->GetSprite()->setPosition(movePad->GetOriginalPos());
+			player->SetVelocity(0, 0);
+		}
+		if (shootPad->GetSprite()->getBoundingBox().containsPoint(touchPos[i]))
+		{
+			shootPad->SetActive(false);
+			shootPad->GetSprite()->setPosition(shootPad->GetOriginalPos());
+		}
+	}
+}
+
+void GameWorld::touchesMoved(const vector<cocos2d::Touch*> &touches, cocos2d::Event *event)
+{
+	log("multitouch moved");
+
+	for (int i = 0; i < touches.size(); ++i)
+	{
+		touchPos[i] = touches[i]->getLocation();
+
+		if (movePad->GetActive() == true)
+		{
+			movePad->GetSprite()->setPosition(touchPos[i]);
+			float moveDirX = movePad->GetSprite()->getPositionX() - movePad->GetOriginalPos().x;
+			float moveDirY = movePad->GetSprite()->getPositionY() - movePad->GetOriginalPos().y;
+
+			Vec2* moveDir = new Vec2(moveDirX, moveDirY);
+			moveDir->normalize();
+			player->SetVelocity(moveDir->x * player->GetMoveSpeed(), moveDir->y * player->GetMoveSpeed());
+		}
+
+		if (shootPad->GetActive() == true)
+		{
+			shootPad->GetSprite()->setPosition(touchPos[i]);
+		}
+	}
+
+}
+
 void GameWorld::update(float dt)
 {
 	player->update(dt);
 
+	movePad->Update(dt);
+
 	//update the enemies
 	for (vector<CEnemy*>::iterator itr = theEnemies.begin(); itr != theEnemies.end(); ++itr){
 		(*itr)->Update(dt, player->getPlayerSprite()->getPosition());
+	}
+
+	for (vector<CBullet*>::iterator itr = theBullets.begin(); itr != theBullets.end(); ++itr){
+		if ((*itr)->GetActive() == true)
+		{
+			(*itr)->Update(dt);
+		}	
 	}
 
 	//Update the wave
@@ -176,7 +376,7 @@ void GameWorld::update(float dt)
 			if (waveChangeTimer > 10.0f && currWaveNum + 1 < theWaves.size()){
 				++currWaveNum;
 				waveChangeTimer = 0.0f;
-				waveNumLabel->setString("Wave " + to_string(currWaveNum + 1));
+				waveNumLabel->setString("Wave " + (currWaveNum + 1));
 			}
 		}
 		else{
@@ -209,7 +409,6 @@ void GameWorld::menuCloseCallback(Ref* pSender)
     exit(0);
 #endif
 }
-
 
 void GameWorld::createWaves(){
 	//Design waves here

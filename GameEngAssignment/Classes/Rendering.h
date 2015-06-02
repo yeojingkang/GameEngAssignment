@@ -28,8 +28,8 @@ public:
 	Rendering();
 	~Rendering();
 
-	void Init(USHORT, USHORT);
-	void Render(USHORT, USHORT);
+	void Init(float x, float y);
+	void Render(float x, float y);
 	Sprite* getSprite(void)
 	{ 
 		return m_Sprite; 

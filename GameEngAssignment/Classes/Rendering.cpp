@@ -12,7 +12,7 @@ Rendering::~Rendering()
 
 }
 
-void Rendering::Init(USHORT x, USHORT y)
+void Rendering::Init(float x, float y)
 {
 	//initialise new gem type by giving it a sprite
 	//m_Sprite = Sprite::create(g_scTextureFileName[newType]);
@@ -22,7 +22,7 @@ void Rendering::Init(USHORT x, USHORT y)
 	m_Sprite->setPosition(0.0f, 0.0f);
 }
 
-void Rendering::Render(USHORT x, USHORT y)
+void Rendering::Render(float x, float y)
 {
 	//calculate and setting position of sprite based on screen's position
 	Size visibleSize = Director::getInstance()->getVisibleSize();

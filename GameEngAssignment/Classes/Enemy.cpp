@@ -19,13 +19,17 @@ void CEnemy::Init(cocos2d::Vec2 playerPos){
 	
 	direction = (playerPos - position).getNormalized();
 
-	theSprite = cocos2d::Sprite::create("CloseNormal.png");
+	theSprite = cocos2d::Sprite::create("enemy.png");
+
+	theSprite->setScale(1.0f);
 
 	updateSpritePosition();
 }
+
 void CEnemy::Update(float dt, cocos2d::Vec2 playerPos){
 	direction = (playerPos - position).getNormalized();
 	position += speed * direction * dt;
+	
 	updateSpritePosition();
 }
 

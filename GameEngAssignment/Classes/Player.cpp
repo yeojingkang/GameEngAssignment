@@ -18,9 +18,8 @@ void CPlayer::Init()
 	xPos = origin.x + visibleSize.width / 2;
 	yPos = origin.y + visibleSize.height / 2;
 	playerSprite->setPosition(xPos, yPos);
+	playerSprite->setScale(1.5f);
 	bounds = playerSprite->getBoundingBox();
-
-	
 }
 
 void CPlayer::SetPlayerSprite(string filename)

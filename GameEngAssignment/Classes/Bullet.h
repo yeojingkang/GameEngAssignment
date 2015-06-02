@@ -21,6 +21,12 @@ public:
 	
 	void SetActive(bool);
 	bool GetActive();
+	
+	void SetMoveVec(Vec2* v);
+	Vec2* GetMoveVec();
+
+	void SetBulletSpeed(float s);
+	float GetBulletSpeed();
 
 	bool CheckCollision(Rect r);
 
@@ -33,6 +39,9 @@ private:
 	float yPos;
 
 	bool active;
+
+	Vec2* movementVec;
+	float bulletSpeed;
 
 	Rect bounds;
 };

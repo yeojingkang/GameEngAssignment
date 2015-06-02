@@ -30,15 +30,21 @@ static int register_all_packages()
     return 0; //flag for packages manager
 }
 
+
+
 bool AppDelegate::applicationDidFinishLaunching() {
     // initialize director
     auto director = Director::getInstance();
-    auto glview = director->getOpenGLView();
+	auto glview = director->getOpenGLView();
+
     if(!glview) {
         glview = GLViewImpl::create("Game Engine Assignment");
+		
 		glview->setFrameSize(1280, 720);
         director->setOpenGLView(glview);
     }
+
+	glview->setDesignResolutionSize(1280, 720, kResolutionFixedHeight);
 
     // turn on display FPS
     director->setDisplayStats(true);

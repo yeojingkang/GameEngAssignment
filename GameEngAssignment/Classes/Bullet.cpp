@@ -8,6 +8,9 @@ CBullet::CBullet()
 	yPos = 0;
 	active = false;
 	bulletSprite = NULL;
+	bulletSpeed = 0;
+	active = false;
+	movementVec = NULL;
 }
 
 void CBullet::Init()
@@ -18,6 +21,8 @@ void CBullet::Init()
 	yPos = 0;
 	bulletSprite->setPosition(xPos, yPos);
 	bulletSprite->setScale(1.5f);
+	bulletSpeed = 1000;
+	movementVec = new Vec2(0, 0);
 	bounds = bulletSprite->getBoundingBox();
 }
 
@@ -41,6 +46,26 @@ bool CBullet::GetActive()
 	return this->active;
 }
 
+void CBullet::SetMoveVec(Vec2* v)
+{
+	this->movementVec = v;
+}
+
+Vec2* CBullet::GetMoveVec()
+{
+	return this->movementVec;
+}
+
+void CBullet::SetBulletSpeed(float s)
+{
+	this->bulletSpeed = s;
+}
+
+float CBullet::GetBulletSpeed()
+{
+	return this->bulletSpeed;
+}
+
 bool CBullet::CheckCollision(Rect r)
 {
 	if (this->bounds.intersectsRect(r))
@@ -55,5 +80,5 @@ bool CBullet::CheckCollision(Rect r)
 
 void CBullet::Update(float dt)
 {
-	
+	bulletSprite->setPosition(bulletSprite->getPositionX() + movementVec->x * dt * this->bulletSpeed, bulletSprite->getPositionY() + movementVec->y * dt * this->bulletSpeed);
 }

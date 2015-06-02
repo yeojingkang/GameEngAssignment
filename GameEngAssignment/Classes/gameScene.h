@@ -6,14 +6,18 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Bullet.h"
+#include "Rendering.h"
+
 #include "Wave.h"
 #include "touchPad.h"
+
 using namespace std;
 
 class GameWorld : public cocos2d::Layer
 {
 private:
 	CPlayer *player;
+	Rendering *background;
 	vector<CEnemy*> theEnemies;
 
 	vector<CBullet*> theBullets;
@@ -29,8 +33,6 @@ private:
 	CTouchPad* movePad = new CTouchPad();
 	CTouchPad* shootPad = new CTouchPad();
 
-	const static int MAX_TOUCHES = 5;
-	Vec2 touchPos[MAX_TOUCHES];
 
 public:
 

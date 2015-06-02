@@ -6,9 +6,10 @@ CBullet::CBullet()
 {
 	xPos = 0;
 	yPos = 0;
-	bulletSpeed = 0;
 	active = false;
 	bulletSprite = NULL;
+	bulletSpeed = 0;
+	active = false;
 	movementVec = NULL;
 }
 
@@ -18,8 +19,9 @@ void CBullet::Init()
 	active = false;
 	xPos = 0;
 	yPos = 0;
-	bulletSpeed = 1000;
 	bulletSprite->setPosition(xPos, yPos);
+	bulletSprite->setScale(1.5f);
+	bulletSpeed = 1000;
 	movementVec = new Vec2(0, 0);
 	bounds = bulletSprite->getBoundingBox();
 }

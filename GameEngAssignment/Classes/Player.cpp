@@ -21,6 +21,7 @@ void CPlayer::Init()
 	yPos = origin.y + visibleSize.height / 2;
 	moveSpeed = 200;
 	playerSprite->setPosition(xPos, yPos);
+	playerSprite->setScale(1.5f);
 	gunPoint->set(playerSprite->getPositionX() + 10, playerSprite->getPositionY());
 	bounds = playerSprite->getBoundingBox();
 }

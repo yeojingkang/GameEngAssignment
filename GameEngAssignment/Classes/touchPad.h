@@ -23,12 +23,12 @@ public:
 
 	void SetBaseSprite(string filename);
 	ImageView* GetBaseSprite();
-	
-	void SetActive(bool);
-	bool GetActive();
 
 	void SetOriginalPos(Vec2);
 	Vec2 GetOriginalPos();
+
+	void SetTouch(Touch*);
+	Touch* GetTouch();
 
 	void Update(float dt);
 
@@ -40,10 +40,11 @@ private:
 	float xPos;
 	float yPos;
 
-	bool active;
 	Vec2 originalPos;
 
 	float maxDist;
+
+	Touch* touch;
 };
 
 #endif // __TOUCHPAD_H__

@@ -27,13 +27,13 @@ bool GameWorld::init()
         return false;
     }
     
-	r = new Rendering();
-	r->Init(1, 1);
+	//r = new Rendering();
+	//r->Init(1, 1);
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
-	this->addChild(r->getSprite(), 1);
+	//this->addChild(r->getSprite(), 1);
 
-	srand(time(NULL));
+	//srand(time(NULL));
 
 	//keyboard listener
 	auto keyBoardListener = EventListenerKeyboard::create();
@@ -66,6 +66,13 @@ bool GameWorld::init()
 	//Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(touchListener, this);
 	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(multiTouchListener, this);
 
+	//Create Background
+	background = new Rendering();
+	background->Init();
+
+	this->addChild(background->getBackgroundSprite());
+
+	//Create Player
 	player = new CPlayer();
 	player->Init();
 	this->addChild(player->getPlayerSprite());
@@ -182,7 +189,6 @@ void GameWorld::mouseDown(Event *event)
 			(*itr)->SetActive(true);
 			(*itr)->GetSprite()->setRotation(player->getPlayerSprite()->getRotation());
 			(*itr)->GetSprite()->setPosition(player->getPlayerSprite()->getPosition());
-			
 		}
 	}
 }
@@ -193,7 +199,7 @@ void GameWorld::mouseUp(Event *event)
 
 void GameWorld::mouseMove(Event *event)
 {
-	EventMouse* e = (EventMouse*)event;
+	/*EventMouse* e = (EventMouse*)event;
 
 	Vec2 MousePos = Vec2(e->getLocationInView().x, Director::getInstance()->getWinSize().height + e->getLocationInView().y);
 
@@ -205,7 +211,7 @@ void GameWorld::mouseMove(Event *event)
 		angleToRot = 360 - (-angleToRot);
 	}
 
-	player->getPlayerSprite()->setRotation(angleToRot);
+	player->getPlayerSprite()->setRotation(angleToRot);*/
 }
 
 void GameWorld::mouseScroll(Event *event)
@@ -285,17 +291,19 @@ void GameWorld::touchesBegan(const vector<cocos2d::Touch*> &touches, cocos2d::Ev
 {
 	log("multitouch began");
 
-	for (int i = 0; i < touches.size(); ++i)
+	for (auto touch : touches)
 	{
-		touchPos[i] = touches[i]->getLocation();
-
-		if (movePad->GetSprite()->getBoundingBox().containsPoint(touchPos[i]))
+		if (touch != nullptr)
 		{
-			movePad->SetActive(true);
-		}
-		if (shootPad->GetSprite()->getBoundingBox().containsPoint(touchPos[i]))
-		{
-			shootPad->SetActive(true);
+			auto tap = touch->getLocation();
+			if (movePad->GetSprite()->getBoundingBox().containsPoint(tap))
+			{
+				movePad->SetTouch(touch);
+			}
+			if (shootPad->GetSprite()->getBoundingBox().containsPoint(tap))
+			{
+				shootPad->SetTouch(touch);
+			}
 		}
 	}
 }
@@ -303,20 +311,17 @@ void GameWorld::touchesBegan(const vector<cocos2d::Touch*> &touches, cocos2d::Ev
 void GameWorld::touchesEnded(const vector<cocos2d::Touch*> &touches, cocos2d::Event *event)
 {
 	log("multitouch ended");
-
-	for (int i = 0; i < touches.size(); ++i)
-	{	
-		touchPos[i] = touches[i]->getLocation();
-
-		if (movePad->GetSprite()->getBoundingBox().containsPoint(touchPos[i]))
+	for (auto touch : touches)
+	{
+		if (movePad->GetTouch() != nullptr && movePad->GetTouch() == touch)
 		{
-			movePad->SetActive(false);
+			movePad->SetTouch(nullptr);
 			movePad->GetSprite()->setPosition(movePad->GetOriginalPos());
 			player->SetVelocity(0, 0);
 		}
-		if (shootPad->GetSprite()->getBoundingBox().containsPoint(touchPos[i]))
+		if (shootPad->GetTouch() != nullptr && shootPad->GetTouch() == touch)
 		{
-			shootPad->SetActive(false);
+			shootPad->SetTouch(nullptr);
 			shootPad->GetSprite()->setPosition(shootPad->GetOriginalPos());
 		}
 	}
@@ -326,24 +331,45 @@ void GameWorld::touchesMoved(const vector<cocos2d::Touch*> &touches, cocos2d::Ev
 {
 	log("multitouch moved");
 
-	for (int i = 0; i < touches.size(); ++i)
+	for (auto touch : touches)
 	{
-		touchPos[i] = touches[i]->getLocation();
-
-		if (movePad->GetActive() == true)
+		if (touch != nullptr)
 		{
-			movePad->GetSprite()->setPosition(touchPos[i]);
-			float moveDirX = movePad->GetSprite()->getPositionX() - movePad->GetOriginalPos().x;
-			float moveDirY = movePad->GetSprite()->getPositionY() - movePad->GetOriginalPos().y;
+			auto tap = touch->getLocation();
 
-			Vec2* moveDir = new Vec2(moveDirX, moveDirY);
-			moveDir->normalize();
-			player->SetVelocity(moveDir->x * player->GetMoveSpeed(), moveDir->y * player->GetMoveSpeed());
-		}
+			if (movePad->GetTouch() != nullptr && movePad->GetTouch() == touch)
+			{
+				Point nextPos = tap;
+				movePad->GetSprite()->setPosition(tap);
 
-		if (shootPad->GetActive() == true)
-		{
-			shootPad->GetSprite()->setPosition(touchPos[i]);
+				float moveDirX = movePad->GetSprite()->getPositionX() - movePad->GetOriginalPos().x;
+				float moveDirY = movePad->GetSprite()->getPositionY() - movePad->GetOriginalPos().y;
+
+				Vec2* moveDir = new Vec2(moveDirX, moveDirY);
+				moveDir->normalize();
+				player->SetVelocity(moveDir->x * player->GetMoveSpeed(), moveDir->y * player->GetMoveSpeed());
+			}
+
+			if (shootPad->GetTouch() != nullptr && shootPad->GetTouch() == touch)
+			{
+				Point nextPos = tap;
+				shootPad->GetSprite()->setPosition(tap);
+
+				float shootDirX = shootPad->GetSprite()->getPositionX() - shootPad->GetOriginalPos().x;
+				float shootDirY = shootPad->GetSprite()->getPositionY() - shootPad->GetOriginalPos().y;
+
+				Vec2* shootPos = new Vec2(shootDirX, shootDirY);
+
+				float angleToRot = atan2(shootPos->y, shootPos->x);
+				angleToRot = -angleToRot * (180 / 3.14159);
+
+				if (angleToRot < 0)
+				{
+					angleToRot = 360 - (-angleToRot);
+				}
+
+				player->getPlayerSprite()->setRotation(angleToRot);
+			}
 		}
 	}
 

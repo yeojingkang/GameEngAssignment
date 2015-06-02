@@ -33,8 +33,6 @@ private:
 	CTouchPad* movePad = new CTouchPad();
 	CTouchPad* shootPad = new CTouchPad();
 
-	const static int MAX_TOUCHES = 5;
-	Vec2 touchPos[MAX_TOUCHES];
 
 public:
 

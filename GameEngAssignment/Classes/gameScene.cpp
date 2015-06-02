@@ -27,13 +27,13 @@ bool GameWorld::init()
         return false;
     }
     
-	r = new Rendering();
-	r->Init(1, 1);
+	//r = new Rendering();
+	//r->Init(1, 1);
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
-	this->addChild(r->getSprite(), 1);
+	//this->addChild(r->getSprite(), 1);
 
-	srand(time(NULL));
+	//srand(time(NULL));
 
 	//keyboard listener
 	auto keyBoardListener = EventListenerKeyboard::create();
@@ -97,22 +97,22 @@ bool GameWorld::init()
 	createWaves();
 
 	//Create movement touchPad
-	movePad = new CTouchPad();
+	/*movePad = new CTouchPad();
 	movePad->Init();
 	movePad->GetSprite()->setPosition(Vec2(origin.x + visibleSize.width / 5, origin.y + visibleSize.height / 4));
 	movePad->GetBaseSprite()->setPosition(Vec2(origin.x + visibleSize.width / 5, origin.y + visibleSize.height / 4));
 	movePad->SetOriginalPos(movePad->GetBaseSprite()->getPosition());
 	this->addChild(movePad->GetBaseSprite(), 0);
-	this->addChild(movePad->GetSprite(), 0);
+	this->addChild(movePad->GetSprite(), 0);*/
 
 	//Create shooting touchPad
-	shootPad = new CTouchPad();
+	/*shootPad = new CTouchPad();
 	shootPad->Init();
 	shootPad->GetSprite()->setPosition(Vec2(origin.x + 4 * (visibleSize.width / 5), origin.y + visibleSize.height / 4));
 	shootPad->GetBaseSprite()->setPosition(Vec2(origin.x + 4 * (visibleSize.width / 5), origin.y + visibleSize.height / 4));
 	shootPad->SetOriginalPos(shootPad->GetBaseSprite()->getPosition());
 	this->addChild(shootPad->GetBaseSprite(), 0);
-	this->addChild(shootPad->GetSprite(), 0);
+	this->addChild(shootPad->GetSprite(), 0);*/
 
 	//scheduling update
 	this->scheduleUpdate();
@@ -293,14 +293,14 @@ void GameWorld::touchesBegan(const vector<cocos2d::Touch*> &touches, cocos2d::Ev
 	{
 		touchPos[i] = touches[i]->getLocation();
 
-		if (movePad->GetSprite()->getBoundingBox().containsPoint(touchPos[i]))
+		/*if (movePad->GetSprite()->getBoundingBox().containsPoint(touchPos[i]))
 		{
 			movePad->SetActive(true);
 		}
 		if (shootPad->GetSprite()->getBoundingBox().containsPoint(touchPos[i]))
 		{
 			shootPad->SetActive(true);
-		}
+		}*/
 	}
 }
 
@@ -312,7 +312,7 @@ void GameWorld::touchesEnded(const vector<cocos2d::Touch*> &touches, cocos2d::Ev
 	{	
 		touchPos[i] = touches[i]->getLocation();
 
-		if (movePad->GetSprite()->getBoundingBox().containsPoint(touchPos[i]))
+		/*if (movePad->GetSprite()->getBoundingBox().containsPoint(touchPos[i]))
 		{
 			movePad->SetActive(false);
 			movePad->GetSprite()->setPosition(movePad->GetOriginalPos());
@@ -322,7 +322,7 @@ void GameWorld::touchesEnded(const vector<cocos2d::Touch*> &touches, cocos2d::Ev
 		{
 			shootPad->SetActive(false);
 			shootPad->GetSprite()->setPosition(shootPad->GetOriginalPos());
-		}
+		}*/
 	}
 }
 

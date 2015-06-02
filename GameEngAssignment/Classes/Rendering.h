@@ -17,22 +17,6 @@ private:
 	float xPos;
 	float yPos;
 
-//enum gem types
-enum E_TEXTURE_IMAGES
-{
-	E_BLUE,
-	E_TOTAL
-};
-
-//gem file names to access textures
-static const char* const g_scTextureFileName[E_TOTAL] =
-{ "Blue.png" };
-
-class Rendering
-{
-private:
-	Sprite* m_Sprite;
-
 public:
 	Rendering();
 	~Rendering();
@@ -40,16 +24,6 @@ public:
 	void Init(); 
 	void setBackgroundSprite(string filename);
 	Sprite* getBackgroundSprite();
-
-	void Init(float x, float y);
-	void Render(float x, float y);
-	Sprite* getSprite(void)
-	{ 
-		return m_Sprite; 
-	};
-
-	void Update(void);
-	void ChangeTexture(E_TEXTURE_IMAGES);
 
 };
 

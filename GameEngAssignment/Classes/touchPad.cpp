@@ -65,7 +65,7 @@ Vec2 CTouchPad::GetOriginalPos()
 
 void CTouchPad::Update(float dt)
 {
-	if ((this->touchPadSprite->getPosition() - this->baseSprite->getPosition()).length() > this->baseSprite->getBoundingBox().getMaxX())
+	/*if ((this->touchPadSprite->getPosition() - this->baseSprite->getPosition()).length() > this->baseSprite->getBoundingBox().getMaxX())
 	{
-	}
+	}*/
 }

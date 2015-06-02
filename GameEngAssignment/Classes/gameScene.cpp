@@ -376,7 +376,9 @@ void GameWorld::update(float dt)
 			if (waveChangeTimer > 10.0f && currWaveNum + 1 < theWaves.size()){
 				++currWaveNum;
 				waveChangeTimer = 0.0f;
-				waveNumLabel->setString("Wave " + (currWaveNum + 1));
+				char text[256];
+				sprintf(text, "Wave %d", currWaveNum+1);
+				waveNumLabel->setString(text);
 			}
 		}
 		else{

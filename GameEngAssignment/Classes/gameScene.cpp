@@ -70,6 +70,8 @@ bool GameWorld::init()
 	player->Init();
 	this->addChild(player->getPlayerSprite());
 
+	this->runAction(Follow::create(player->getPlayerSprite()));
+
 	//Create enemies
 	//CEnemy* newEnemy;
 	//for (int i = 0; i < 5; ++i){

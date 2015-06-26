@@ -11,6 +11,8 @@
 #include "Wave.h"
 #include "touchPad.h"
 
+#include <fstream>
+
 using namespace std;
 
 class GameWorld : public cocos2d::Layer

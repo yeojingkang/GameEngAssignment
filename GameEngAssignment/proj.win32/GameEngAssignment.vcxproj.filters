@@ -11,7 +11,7 @@
     <ClCompile Include="..\Classes\Rendering.cpp" />
     <ClCompile Include="..\Classes\touchPad.cpp" />
     <ClCompile Include="..\Classes\Wave.cpp" />
-    <ClCompile Include="..\Classes\Subwave.cpp" />
+    <ClCompile Include="..\Classes\HUD.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
@@ -24,7 +24,7 @@
     <ClInclude Include="..\Classes\Rendering.h" />
     <ClInclude Include="..\Classes\touchPad.h" />
     <ClInclude Include="..\Classes\Wave.h" />
-    <ClInclude Include="..\Classes\Subwave.h" />
+    <ClInclude Include="..\Classes\HUD.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc" />

@@ -30,7 +30,10 @@ public:
 	void SetTouch(Touch*);
 	Touch* GetTouch();
 
-	void Update(float dt);
+	void SetActive(bool);
+	bool GetActive();
+
+	void Update(Vec2 pos, float dt);
 
 private:
 	
@@ -45,6 +48,8 @@ private:
 	float maxDist;
 
 	Touch* touch;
+
+	bool active;
 };
 
 #endif // __TOUCHPAD_H__

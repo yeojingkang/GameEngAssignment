@@ -11,6 +11,7 @@
 #include "Wave.h"
 #include "touchPad.h"
 
+#include "HUD.h"
 #include <fstream>
 
 using namespace std;
@@ -34,7 +35,6 @@ private:
 	
 	CTouchPad* movePad = new CTouchPad();
 	CTouchPad* shootPad = new CTouchPad();
-
 
 public:
 

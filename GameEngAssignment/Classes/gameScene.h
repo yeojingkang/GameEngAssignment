@@ -12,6 +12,7 @@
 #include "touchPad.h"
 
 #include "HUD.h"
+#include <fstream>
 
 using namespace std;
 

@@ -77,6 +77,8 @@ bool GameWorld::init()
 	player->Init();
 	this->addChild(player->getPlayerSprite());
 
+	this->runAction(Follow::create(player->getPlayerSprite()));
+
 	//Create enemies
 	//CEnemy* newEnemy;
 	//for (int i = 0; i < 5; ++i){
@@ -431,17 +433,25 @@ void GameWorld::update(float dt)
 			}
 		}
 		else{
-			static float enemySpawnTimer = 0.0f;
-			enemySpawnTimer += dt;
+			//static float enemySpawnTimer = 0.0f;
+			//enemySpawnTimer += dt;
 
-			if (enemySpawnTimer > 1.0f){
-				enemySpawnTimer = 0.0f;
-				//Spawn new enemy
-				CEnemy *newEnemy = new CEnemy();
-				newEnemy->Init(player->getPlayerSprite()->getPosition());
-				this->addChild(newEnemy->getSprite(), 0);
-				theEnemies.push_back(newEnemy);
-				theWaves[currWaveNum]->spawnedNormalMonster();
+			//if (enemySpawnTimer > 1.0f){
+			//	enemySpawnTimer = 0.0f;
+			//	//Spawn new enemy
+			//	CEnemy *newEnemy = new CEnemy();
+			//	newEnemy->Init(player->getPlayerSprite()->getPosition());
+			//	this->addChild(newEnemy->getSprite(), 0);
+			//	theEnemies.push_back(newEnemy);
+			//	theWaves[currWaveNum]->spawnedNormalMonster();
+			//}
+			if (vector<CEnemy*>* newEnemies = theWaves[currWaveNum]->update(dt, player->getPlayerSprite()->getPosition())){
+				//Add enemies to the scene
+				for (vector<CEnemy*>::iterator itr = newEnemies->begin(); itr != newEnemies->end(); ++itr){
+					this->addChild((*itr)->getSprite(), 0);
+				}
+				//Add enemies to theEnemies to update them
+				theEnemies.insert(theEnemies.end(), newEnemies->begin(), newEnemies->end());
 			}
 		}
 	}
@@ -462,30 +472,74 @@ void GameWorld::menuCloseCallback(Ref* pSender)
 }
 
 void GameWorld::createWaves(){
+	ifstream file;
+	file.open("waves.txt");
+
+	if (file.is_open()){
+		int waveSetNum = 0;
+		while (!file.eof()){
+			string line;
+			getline(file, line);
+
+			if (line.empty()){
+				//Line is empty
+				waveSetNum = 0;
+			}
+			else{
+				istringstream tmp(line);
+				string inputCatcher;//To catch unnecessary inputs
+
+				if (waveSetNum > 0){
+					//Currently setting a subwave for any waves
+					float activateTime;
+					int normalMonsters;
+
+					tmp >> activateTime;
+					tmp >> normalMonsters;
+					//getline(tmp, inputCatcher, ',');
+
+					//Create subwave
+					theWaves[waveSetNum - 1]->setSubwave(activateTime, normalMonsters);
+				}
+				else{
+					//Currently not setting subwave for any waves
+					//Get number to set a new wave
+					tmp >> waveSetNum;
+
+					//If wave don't exist
+					if (waveSetNum > theWaves.size()){
+						CWave* newWave = new CWave();
+						theWaves.push_back(newWave);
+					}
+				}
+			}
+		}
+	}
+
 	//Design waves here
 
-	for (int i = 0; i < 3; ++i){
-		CWave* newWave = new CWave();
+	//for (int i = 0; i < 3; ++i){
+	//	CWave* newWave = new CWave();
 
-		switch (i){
-		case 0:
-			newWave->setWave(5);
-			break;
+	//	switch (i){
+	//	case 0:
+	//		newWave->setWave(5);
+	//		break;
 
-		case 1:
-			newWave->setWave(10);
-			break;
+	//	case 1:
+	//		newWave->setWave(10);
+	//		break;
 
-		case 2:
-			newWave->setWave(18);
-			break;
+	//	case 2:
+	//		newWave->setWave(18);
+	//		break;
 
-		default:
-			break;
-		}
+	//	default:
+	//		break;
+	//	}
 
-		theWaves.push_back(newWave);
-	}
+	//	theWaves.push_back(newWave);
+	//}
 
 	currWaveNum = 0;
 }

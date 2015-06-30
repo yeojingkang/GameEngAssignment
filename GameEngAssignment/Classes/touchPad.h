@@ -31,7 +31,7 @@ public:
 	Touch* GetTouch();
 
 	void SetActive(bool);
-	void GetActive();
+	bool GetActive();
 
 	void Update(Vec2 pos, float dt);
 

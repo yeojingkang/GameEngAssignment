@@ -70,7 +70,10 @@ void CTouchPad::SetActive(bool active)
 	this->active = active;
 }
 
-
+bool CTouchPad::GetActive()
+{
+	return this->active;
+}
 
 void CTouchPad::Update(Vec2 pos, float dt)
 {

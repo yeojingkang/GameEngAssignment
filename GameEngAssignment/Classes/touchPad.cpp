@@ -22,7 +22,7 @@ void CTouchPad::Init()
 	baseSprite->setPosition(Vec2(xPos, yPos));
 	originalPos = touchPadSprite->getPosition();
 	touch = NULL;
-	active = true;
+	active = false;
 }
 
 void CTouchPad::SetSprite(string filename)

@@ -11,6 +11,8 @@
 #include "Wave.h"
 #include "touchPad.h"
 
+#include "HUD.h"
+
 using namespace std;
 
 class GameWorld : public cocos2d::Layer
@@ -32,7 +34,6 @@ private:
 	
 	CTouchPad* movePad = new CTouchPad();
 	CTouchPad* shootPad = new CTouchPad();
-
 
 public:
 

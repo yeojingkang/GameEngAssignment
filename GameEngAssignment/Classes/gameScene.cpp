@@ -114,6 +114,13 @@ bool GameWorld::init()
 	this->addChild(shootPad->GetBaseSprite(), 0);
 	this->addChild(shootPad->GetSprite(), 0);
 
+	//following camera
+	this->runAction(Follow::create(player->getPlayerSprite()));
+
+	//create hud
+	CHUD* theHUD = CHUD::createLayer();
+	//this->addChild(theHUD);
+
 	//scheduling update
 	this->scheduleUpdate();
 
@@ -164,7 +171,7 @@ void GameWorld::keyReleased(EventKeyboard::KeyCode keyCode, cocos2d::Event *even
 
 void GameWorld::mouseDown(Event *event)
 {
-	EventMouse* e = (EventMouse*)event;
+	/*EventMouse* e = (EventMouse*)event;
 
 	auto mousePosX = e->getLocationInView().x;
 	auto mousePosY = Director::getInstance()->getWinSize().height + e->getLocationInView().y;
@@ -188,7 +195,7 @@ void GameWorld::mouseDown(Event *event)
 			(*itr)->GetSprite()->setRotation(player->getPlayerSprite()->getRotation());
 			(*itr)->GetSprite()->setPosition(player->getPlayerSprite()->getPosition());
 		}
-	}
+	}*/
 }
 
 void GameWorld::mouseUp(Event *event)
@@ -367,6 +374,24 @@ void GameWorld::touchesMoved(const vector<cocos2d::Touch*> &touches, cocos2d::Ev
 				}
 
 				player->getPlayerSprite()->setRotation(angleToRot);
+				CBullet* b = new CBullet();
+				b->Init();
+
+				Vec2* direction = new Vec2(shootDirX, shootDirY);
+				direction->normalize();
+				b->SetMoveVec(direction);
+
+				theBullets.push_back(b);
+				this->addChild(b->GetSprite(), 0);
+
+				for (vector<CBullet*>::iterator itr = theBullets.begin(); itr != theBullets.end(); ++itr){
+					if ((*itr)->GetActive() == false)
+					{
+						(*itr)->SetActive(true);
+						(*itr)->GetSprite()->setRotation(player->getPlayerSprite()->getRotation());
+						(*itr)->GetSprite()->setPosition(player->getPlayerSprite()->getPosition());
+					}
+				}
 			}
 		}
 	}
@@ -376,8 +401,6 @@ void GameWorld::touchesMoved(const vector<cocos2d::Touch*> &touches, cocos2d::Ev
 void GameWorld::update(float dt)
 {
 	player->update(dt);
-
-	movePad->Update(dt);
 
 	//update the enemies
 	for (vector<CEnemy*>::iterator itr = theEnemies.begin(); itr != theEnemies.end(); ++itr){

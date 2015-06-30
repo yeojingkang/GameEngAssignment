@@ -8,6 +8,7 @@ CTouchPad::CTouchPad()
 	yPos = 0;
 	maxDist = 0;
 	touch = NULL;
+	active = false;
 }
 
 void CTouchPad::Init()
@@ -21,6 +22,7 @@ void CTouchPad::Init()
 	baseSprite->setPosition(Vec2(xPos, yPos));
 	originalPos = touchPadSprite->getPosition();
 	touch = NULL;
+	active = true;
 }
 
 void CTouchPad::SetSprite(string filename)
@@ -63,9 +65,13 @@ Touch* CTouchPad::GetTouch()
 	return this->touch;
 }
 
-void CTouchPad::Update(float dt)
+void CTouchPad::SetActive(bool active)
 {
-	/*if ((this->touchPadSprite->getPosition() - this->baseSprite->getPosition()).length() > this->baseSprite->getBoundingBox().getMaxX())
-	{
-	}*/
+	this->active = active;
+}
+
+
+
+void CTouchPad::Update(Vec2 pos, float dt)
+{
 }

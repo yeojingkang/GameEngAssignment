@@ -2,6 +2,8 @@
 
 #include "Enemy.h"
 
+typedef map<string, unsigned int> monsterSpawnList;
+
 class CSubwave
 {
 public:
@@ -9,7 +11,7 @@ public:
 	~CSubwave();
 
 	void init(float activateTime, int normal);
-	CEnemy* update(float dt, cocos2d::Vec2 playerPosition);
+	monsterSpawnList update(float dt, cocos2d::Vec2 playerPosition);
 	void activate(){ active = true; }
 
 	int getTotalMonsters(){ return normal; }

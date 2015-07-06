@@ -33,6 +33,10 @@ public:
 	void SetMoveSpeed(float);
 	float GetMoveSpeed();
 
+	int GetGold(){ return gold; }
+	void AddGold(int amt){ gold += amt; }
+	void DecreaseGold(int amt){ gold -= amt; }
+
 	void update(float dt);
 
 private:
@@ -48,6 +52,8 @@ private:
 	Vec2* gunPoint;
 
 	Rect bounds;
+
+	unsigned int gold;
 };
 
 #endif // __PLAYER_H__

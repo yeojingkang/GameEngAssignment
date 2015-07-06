@@ -24,12 +24,12 @@ private:
 	vector<CEnemy*> theEnemies;
 
 	vector<CBullet*> theBullets;
-	CCLabelTTF* waveNum;
 
 	vector<CWave*> theWaves;
-	int currWaveNum;
+	unsigned int currWaveNum;
 
 	CCLabelTTF* waveNumLabel;
+	CCLabelTTF* goldNumLabel;
 
 	void createWaves();
 	

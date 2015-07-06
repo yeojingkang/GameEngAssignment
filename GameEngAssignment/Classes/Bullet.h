@@ -3,6 +3,7 @@
 
 #include "cocos2d.h"
 #include <string>
+#include "Enemy.h"
 
 using namespace cocos2d;
 using namespace std;
@@ -29,6 +30,7 @@ public:
 	float GetBulletSpeed();
 
 	bool CheckCollision(Rect r);
+	bool CheckCollision(CEnemy* enemy);
 
 	void Update(float dt);
 
@@ -42,6 +44,7 @@ private:
 
 	Vec2* movementVec;
 	float bulletSpeed;
+	unsigned int damage;
 
 	Rect bounds;
 };

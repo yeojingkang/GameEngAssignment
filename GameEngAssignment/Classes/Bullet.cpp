@@ -12,6 +12,7 @@ CBullet::CBullet()
 	active = false;
 	movementVec = NULL;
 }
+CBullet::~CBullet(){}
 
 void CBullet::Init()
 {
@@ -24,6 +25,7 @@ void CBullet::Init()
 	bulletSpeed = 1000;
 	movementVec = new Vec2(0, 0);
 	bounds = bulletSprite->getBoundingBox();
+	damage = 20;
 }
 
 void CBullet::SetSprite(string filename)
@@ -70,12 +72,23 @@ bool CBullet::CheckCollision(Rect r)
 {
 	if (this->bounds.intersectsRect(r))
 	{
+		active = false;
 		return true;
 	}
 	else
 	{
 		return false;
 	}
+}
+
+bool CBullet::CheckCollision(CEnemy* enemy){
+	if (this->bounds.intersectsRect(enemy->getSprite()->getBoundingBox())){
+		enemy->decreaseHP(damage);
+		active = false;
+		return true;
+	}
+	else
+		return false;
 }
 
 void CBullet::Update(float dt)

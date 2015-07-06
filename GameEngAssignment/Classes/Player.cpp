@@ -10,6 +10,7 @@ CPlayer::CPlayer()
 	velocity = new Point(0, 0);
 	playerSprite = NULL;
 	gunPoint = new Vec2(0, 0);
+	gold = 0;
 }
 
 void CPlayer::Init()

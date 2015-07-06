@@ -9,17 +9,15 @@ CWave::~CWave()
 {
 }
 
-vector<CEnemy*>* CWave::update(float dt, cocos2d::Vec2 playerPosition){
-	vector<CEnemy*>* spawnedEnemies = new vector<CEnemy*>();
+monsterSpawnList CWave::update(float dt, cocos2d::Vec2 playerPosition){
+	monsterSpawnList list;
 
 	elapsedTime += dt;
 
 	for (vector<CSubwave*>::iterator itr = theSubwaves.begin(); itr != theSubwaves.end(); ++itr){
 		if ((*itr)->getActive()){
-			//If subwave spawned an enemy, add it to the list to return to gameScene
-			if (CEnemy* newEnemy = (*itr)->update(dt, playerPosition)){
-				spawnedEnemies->push_back(newEnemy);
-			}
+			monsterSpawnList newList = (*itr)->update(dt, playerPosition);
+			list.insert(newList.begin(), newList.end());
 		}
 		else{
 			//Check if enough time has passed for subwave to activate
@@ -28,7 +26,7 @@ vector<CEnemy*>* CWave::update(float dt, cocos2d::Vec2 playerPosition){
 		}
 	}
 
-	return spawnedEnemies;
+	return list;
 }
 
 void CWave::setSubwave(float activateTime, int normal){

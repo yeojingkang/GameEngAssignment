@@ -79,21 +79,15 @@ bool GameWorld::init()
 
 	this->runAction(Follow::create(player->getPlayerSprite()));
 
-	//Create enemies
-	//CEnemy* newEnemy;
-	//for (int i = 0; i < 5; ++i){
-	//	newEnemy = new CEnemy();
-	//	newEnemy->Init(player->getPlayerSprite()->getPosition());
-	//	this->addChild(newEnemy->getSprite(), 0);
-
-	//	theEnemies.push_back(newEnemy);
-	//}
-
 	//Create text
 	waveNumLabel = CCLabelTTF::create("Wave 1", "fonts/Marker Felt.ttf", 24);
 	waveNumLabel->setPosition(Vec2(origin.x + visibleSize.width / 2,
 		origin.y + visibleSize.height - waveNumLabel->getContentSize().height));
 	this->addChild(waveNumLabel, 1);
+	goldNumLabel = CCLabelTTF::create("Gold: ", "fonts/Marker Felt.ttf", 24);
+	goldNumLabel->setPosition(Vec2(origin.x + visibleSize.width / 30,
+		origin.y + visibleSize.height*3/4 - goldNumLabel->getContentSize().height));
+	this->addChild(goldNumLabel, 1);
 	
 	//Create the waves
 	createWaves();
@@ -389,6 +383,11 @@ void GameWorld::update(float dt)
 {
 	player->update(dt);
 
+	//Update gold text
+	char text[256];
+	sprintf(text, "Gold: %d", player->GetGold());
+	goldNumLabel->setString(text);
+
 	if (shootPad->GetActive() == true)
 	{
 		CBullet* b = new CBullet();
@@ -420,11 +419,18 @@ void GameWorld::update(float dt)
 		(*itr)->Update(dt, player->getPlayerSprite()->getPosition());
 	}
 
+	//Update the bullets
 	for (vector<CBullet*>::iterator itr = theBullets.begin(); itr != theBullets.end(); ++itr){
 		if ((*itr)->GetActive() == true)
 		{
 			(*itr)->Update(dt);
-		}	
+			//Check collision with enemies
+			for (vector<CEnemy*>::iterator enemy = theEnemies.begin(); enemy != theEnemies.end(); ++enemy){
+				//if ((*itr)->GetSprite()->getPosition().distance((*enemy)->getSprite()->getPosition()) < 15.0f)
+				if ((*itr)->CheckCollision(*enemy))
+					break;
+			}
+		}
 	}
 
 	//Update the wave
@@ -444,25 +450,18 @@ void GameWorld::update(float dt)
 			}
 		}
 		else{
-			//static float enemySpawnTimer = 0.0f;
-			//enemySpawnTimer += dt;
+			//Get list of monsters to spawn and add them to theEnemies
+			monsterSpawnList spawnList = theWaves[currWaveNum]->update(dt, player->getPlayerSprite()->getPosition());
 
-			//if (enemySpawnTimer > 1.0f){
-			//	enemySpawnTimer = 0.0f;
-			//	//Spawn new enemy
-			//	CEnemy *newEnemy = new CEnemy();
-			//	newEnemy->Init(player->getPlayerSprite()->getPosition());
-			//	this->addChild(newEnemy->getSprite(), 0);
-			//	theEnemies.push_back(newEnemy);
-			//	theWaves[currWaveNum]->spawnedNormalMonster();
-			//}
-			if (vector<CEnemy*>* newEnemies = theWaves[currWaveNum]->update(dt, player->getPlayerSprite()->getPosition())){
-				//Add enemies to the scene
-				for (vector<CEnemy*>::iterator itr = newEnemies->begin(); itr != newEnemies->end(); ++itr){
-					this->addChild((*itr)->getSprite(), 0);
+			for (monsterSpawnList::iterator itr = spawnList.begin(); itr != spawnList.end(); ++itr){
+				CEnemy* newEnemy = new CEnemy();
+
+				if (itr->first == "Normal"){
+					newEnemy->Init(player->getPlayerSprite()->getPosition(), ENEMYTYPE_NORMAL, player);
 				}
-				//Add enemies to theEnemies to update them
-				theEnemies.insert(theEnemies.end(), newEnemies->begin(), newEnemies->end());
+
+				theEnemies.push_back(newEnemy);
+				this->addChild(newEnemy->getSprite(), 0);
 			}
 		}
 	}
@@ -526,31 +525,6 @@ void GameWorld::createWaves(){
 			}
 		}
 	}
-
-	//Design waves here
-
-	//for (int i = 0; i < 3; ++i){
-	//	CWave* newWave = new CWave();
-
-	//	switch (i){
-	//	case 0:
-	//		newWave->setWave(5);
-	//		break;
-
-	//	case 1:
-	//		newWave->setWave(10);
-	//		break;
-
-	//	case 2:
-	//		newWave->setWave(18);
-	//		break;
-
-	//	default:
-	//		break;
-	//	}
-
-	//	theWaves.push_back(newWave);
-	//}
 
 	currWaveNum = 0;
 }

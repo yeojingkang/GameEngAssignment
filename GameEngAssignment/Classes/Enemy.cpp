@@ -9,8 +9,7 @@ CEnemy::~CEnemy()
 {
 }
 
-void CEnemy::Init(cocos2d::Vec2 playerPos){
-	speed = 25.0f;
+void CEnemy::Init(cocos2d::Vec2 playerPos, enemyType type, CPlayer* player){
 	
 	if (CCRANDOM_0_1() > 0.5f)
 		position = Vec2(round(CCRANDOM_0_1()) * 1280, CCRANDOM_0_1() * 720);
@@ -24,15 +23,33 @@ void CEnemy::Init(cocos2d::Vec2 playerPos){
 	theSprite->setScale(1.0f);
 
 	updateSpritePosition();
+
+	this->type = type;
+	this->thePlayer = player;
+
+	if (this->type == ENEMYTYPE_NORMAL){
+		hp = 100;
+		bounty = 10;
+		speed = 25.0f;
+	}
 }
 
 void CEnemy::Update(float dt, cocos2d::Vec2 playerPos){
+	if (hp <= 0){
+		Die();
+	}
+
 	direction = (playerPos - position).getNormalized();
 	position += speed * direction * dt;
-	
+
 	updateSpritePosition();
 }
 
 void CEnemy::updateSpritePosition(){
 	theSprite->setPosition(position);
+}
+
+void CEnemy::Die(){
+	thePlayer->AddGold(bounty);
+	delete this;
 }

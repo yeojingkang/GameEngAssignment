@@ -120,8 +120,9 @@ bool GameWorld::init()
 	this->runAction(Follow::create(player->getPlayerSprite()));
 
 	//create hud
-	CHUD* theHUD = CHUD::createLayer();
-	//this->addChild(theHUD);
+	//hud = new CHUD();
+	//hud->createLayer("Test Message");
+	//this->addChild(hud);
 
 	//scheduling update
 	this->scheduleUpdate();

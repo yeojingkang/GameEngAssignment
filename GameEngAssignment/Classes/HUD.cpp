@@ -3,7 +3,7 @@
 CHUD::CHUD(){}
 CHUD::~CHUD(){}
 
-CHUD* CHUD::createLayer()
+CHUD* CHUD::createLayer(const string& message)
 {
 	CHUD* h = new CHUD();
 	h->create();
@@ -12,12 +12,20 @@ CHUD* CHUD::createLayer()
 	h->setContentSize(cocos2d::Size::Size(1, 1));
 	h->setAnchorPoint(cocos2d::Vec2(0, 0));
 
+	h->initOptions(message);
 
 	return h;
 }
 
-void CHUD::initOptions()
+void CHUD::initOptions(const string& message)
 {
+	messageLabel = LabelBMFont::create(message.c_str(), "gameFont.fnt");
+	messageLabel->setColor(Color3B(255, 215, 0));
+
+	addChild(messageLabel, 1);
+
+	messageLabel->setPosition(cocos2d::Vec2(Director::getInstance()->getVisibleSize().width,
+		Director::getInstance()->getVisibleSize().height));
 
 }
 

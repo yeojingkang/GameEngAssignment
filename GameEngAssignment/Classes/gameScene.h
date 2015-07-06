@@ -36,6 +36,8 @@ private:
 	CTouchPad* movePad = new CTouchPad();
 	CTouchPad* shootPad = new CTouchPad();
 
+	CHUD* hud;
+
 public:
 
 	Rendering *r;

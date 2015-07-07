@@ -25,6 +25,8 @@ public:
 	int getHP(){ return hp; }
 	void decreaseHP(int amt){ hp -= amt; }
 
+	bool getActive(){ return active; }
+
 	void Die();
 
 private:
@@ -34,6 +36,7 @@ private:
 	enemyType type;
 	unsigned int hp, bounty;
 	CPlayer* thePlayer;
+	bool active;
 
 	void updateSpritePosition();
 };

@@ -83,11 +83,19 @@ bool GameWorld::init()
 	waveNumLabel = CCLabelTTF::create("Wave 1", "fonts/Marker Felt.ttf", 24);
 	waveNumLabel->setPosition(Vec2(origin.x + visibleSize.width / 2,
 		origin.y + visibleSize.height - waveNumLabel->getContentSize().height));
-	this->addChild(waveNumLabel, 1);
 	goldNumLabel = CCLabelTTF::create("Gold: ", "fonts/Marker Felt.ttf", 24);
-	goldNumLabel->setPosition(Vec2(origin.x + visibleSize.width / 30,
-		origin.y + visibleSize.height*3/4 - goldNumLabel->getContentSize().height));
+	goldNumLabel->setPosition(Vec2(origin.x + goldNumLabel->getContentSize().width/2,
+		origin.y + visibleSize.height*3/4));
+	hpNumLabel = CCLabelTTF::create("HP: ", "fonts/Marker Felt.ttf", 24);
+	hpNumLabel->setPosition(Vec2(origin.x + hpNumLabel->getContentSize().width/2,
+		origin.y + visibleSize.height * 3 / 4 - hpNumLabel->getContentSize().height));
+	monsterNumLabel = CCLabelTTF::create("Monsters: ", "fonts/Marker Felt.ttf", 24);
+	monsterNumLabel->setPosition(Vec2(origin.x + monsterNumLabel->getContentSize().width/2,
+		origin.y + visibleSize.height * 3 / 4 - monsterNumLabel->getContentSize().height*2));
+	this->addChild(waveNumLabel, 1);
 	this->addChild(goldNumLabel, 1);
+	this->addChild(hpNumLabel, 1);
+	this->addChild(monsterNumLabel, 1);
 	
 	//Create the waves
 	createWaves();
@@ -384,10 +392,14 @@ void GameWorld::update(float dt)
 {
 	player->update(dt);
 
-	//Update gold text
+	//Update text
 	char text[256];
 	sprintf(text, "Gold: %d", player->GetGold());
 	goldNumLabel->setString(text);
+	sprintf(text, "HP: %d", player->GetHP());
+	hpNumLabel->setString(text);
+	sprintf(text, "Monsters: %d", getNumberOfActiveMonsters());
+	monsterNumLabel->setString(text);
 
 	if (shootPad->GetActive() == true)
 	{
@@ -417,7 +429,8 @@ void GameWorld::update(float dt)
 	}
 	//update the enemies
 	for (vector<CEnemy*>::iterator itr = theEnemies.begin(); itr != theEnemies.end(); ++itr){
-		(*itr)->Update(dt, player->getPlayerSprite()->getPosition());
+		if ((*itr)->getActive())
+			(*itr)->Update(dt, player->getPlayerSprite()->getPosition());
 	}
 
 	//Update the bullets
@@ -436,7 +449,8 @@ void GameWorld::update(float dt)
 
 	//Update the wave
 	if (currWaveNum < theWaves.size()){
-		if (theWaves[currWaveNum]->getTotalMonsters() <= 0){
+		//If there are no more monster to spawn or are alive
+		if (theWaves[currWaveNum]->getTotalMonsters() <= 0 && getNumberOfActiveMonsters() <= 0){
 			//When wave has finished spawning all enemies
 			//Wait for timer before going to next wave
 			static float waveChangeTimer = 0.0f;
@@ -528,4 +542,15 @@ void GameWorld::createWaves(){
 	}
 
 	currWaveNum = 0;
+}
+
+int GameWorld::getNumberOfActiveMonsters(){
+	int num = 0;
+
+	for (vector<CEnemy*>::iterator itr = theEnemies.begin(); itr != theEnemies.end(); ++itr){
+		if ((*itr)->getActive())
+			++num;
+	}
+
+	return num;
 }

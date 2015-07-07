@@ -2,7 +2,12 @@
 
 USING_NS_CC;
 
-CEnemy::CEnemy()
+CEnemy::CEnemy() :
+type(ENEMYTYPE_TOTAL),
+hp(0),
+bounty(0),
+thePlayer(NULL),
+active(false)
 {
 }
 CEnemy::~CEnemy()
@@ -32,6 +37,8 @@ void CEnemy::Init(cocos2d::Vec2 playerPos, enemyType type, CPlayer* player){
 		bounty = 10;
 		speed = 25.0f;
 	}
+
+	active = true;
 }
 
 void CEnemy::Update(float dt, cocos2d::Vec2 playerPos){
@@ -51,5 +58,5 @@ void CEnemy::updateSpritePosition(){
 
 void CEnemy::Die(){
 	thePlayer->AddGold(bounty);
-	delete this;
+	active = false;
 }

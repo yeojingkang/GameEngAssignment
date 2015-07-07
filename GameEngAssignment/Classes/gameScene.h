@@ -28,8 +28,10 @@ private:
 	vector<CWave*> theWaves;
 	unsigned int currWaveNum;
 
-	CCLabelTTF* waveNumLabel;
-	CCLabelTTF* goldNumLabel;
+	cocos2d::LabelTTF* waveNumLabel;
+	cocos2d::LabelTTF* goldNumLabel;
+	cocos2d::LabelTTF* hpNumLabel;
+	cocos2d::LabelTTF* monsterNumLabel;
 
 	void createWaves();
 	
@@ -70,6 +72,8 @@ public:
 	void touchesEnded(const vector<cocos2d::Touch*> &touches, cocos2d::Event *event);
 
 	virtual void update(float);
+
+	int getNumberOfActiveMonsters();
     
     // a selector callback
     void menuCloseCallback(cocos2d::Ref* pSender);

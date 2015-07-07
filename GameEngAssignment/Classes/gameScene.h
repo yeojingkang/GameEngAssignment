@@ -71,6 +71,9 @@ public:
 	void touchesMoved(const vector<cocos2d::Touch*> &touches, cocos2d::Event *event);
 	void touchesEnded(const vector<cocos2d::Touch*> &touches, cocos2d::Event *event);
 
+	//handler for detecting collision
+	bool onContactBegin(PhysicsContact &contact);
+
 	virtual void update(float);
 
 	int getNumberOfActiveMonsters();

@@ -29,6 +29,14 @@ void CEnemy::Init(cocos2d::Vec2 playerPos, enemyType type, CPlayer* player){
 
 	updateSpritePosition();
 
+	auto enemyBody = PhysicsBody::createBox(theSprite->getContentSize());
+
+	enemyBody->setDynamic(false);
+	enemyBody->setCollisionBitmask(ENEMY_COLLISION_BITMASK);
+	enemyBody->setContactTestBitmask(true);
+
+	theSprite->setPhysicsBody(enemyBody);
+
 	this->type = type;
 	this->thePlayer = player;
 

@@ -19,7 +19,7 @@ CHUD* CHUD::createLayer(const string& message)
 
 void CHUD::initOptions(const string& message)
 {
-	messageLabel = LabelBMFont::create(message.c_str(), "gameFont.fnt");
+	messageLabel = LabelBMFont::create(message.c_str(), "font/Arial.fnt");
 	messageLabel->setColor(Color3B(255, 215, 0));
 
 	addChild(messageLabel, 1);

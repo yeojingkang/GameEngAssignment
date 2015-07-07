@@ -5,13 +5,13 @@ USING_NS_CC;
 Scene* GameWorld::createScene()
 {
     // 'scene' is an autorelease object
-    auto scene = Scene::create();
+	auto scene = Scene::createWithPhysics();
     
     // 'layer' is an autorelease object
 	auto layer = GameWorld::create();
 
     // add layer as a child to scene
-    scene->addChild(layer);
+	scene->addChild(layer);
 
     // return the scene
     return scene;
@@ -66,6 +66,11 @@ bool GameWorld::init()
 	//Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(touchListener, this);
 	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(multiTouchListener, this);
 
+	//listener for onContactBegin
+	auto contactListener = EventListenerPhysicsContact::create();
+	contactListener->onContactBegin = CC_CALLBACK_1(GameWorld::onContactBegin, this);
+	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
+
 	//Create Background
 	background = new Rendering();
 	background->Init();
@@ -97,6 +102,8 @@ bool GameWorld::init()
 	this->addChild(hpNumLabel, 1);
 	this->addChild(monsterNumLabel, 1);
 	
+	//goldNumLabel->runAction(Follow::create(this));
+
 	//Create the waves
 	createWaves();
 
@@ -116,15 +123,17 @@ bool GameWorld::init()
 	shootPad->GetBaseSprite()->setPosition(Vec2(origin.x + 4 * (visibleSize.width / 5), origin.y + visibleSize.height / 4));
 	shootPad->SetOriginalPos(shootPad->GetBaseSprite()->getPosition());
 	this->addChild(shootPad->GetBaseSprite(), 0);
-	this->addChild(shootPad->GetSprite(), 0);
+	this->addChild(shootPad->GetSprite(), 0);	
 
 	//following camera
 	this->runAction(Follow::create(player->getPlayerSprite()));
 
+
+
 	//create hud
-	//hud = new CHUD();
-	//hud->createLayer("Test Message");
-	//this->addChild(hud);
+	/*hud = new CHUD();
+	hud->createLayer("Test Message");
+	this->addChild(hud);*/
 
 	//scheduling update
 	this->scheduleUpdate();
@@ -388,9 +397,28 @@ void GameWorld::touchesMoved(const vector<cocos2d::Touch*> &touches, cocos2d::Ev
 	}
 }
 
+bool GameWorld::onContactBegin(PhysicsContact &contact)
+{
+	PhysicsBody *a = contact.getShapeA()->getBody();
+	PhysicsBody *b = contact.getShapeB()->getBody();
+
+	if ((BULLET_COLLISION_BITMASK == a->getCollisionBitmask() && ENEMY_COLLISION_BITMASK == b->getCollisionBitmask()) ||
+		(BULLET_COLLISION_BITMASK == b->getCollisionBitmask() && ENEMY_COLLISION_BITMASK == a->getCollisionBitmask()))
+	{
+		auto scene = GameWorld::createScene();
+
+		Director::getInstance()->replaceScene(TransitionFade::create(1.0f, scene));
+	}
+
+	return true;
+}
+
 void GameWorld::update(float dt)
 {
 	player->update(dt);
+
+	Size visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
 	//Update text
 	char text[256];
@@ -400,6 +428,20 @@ void GameWorld::update(float dt)
 	hpNumLabel->setString(text);
 	sprintf(text, "Monsters: %d", getNumberOfActiveMonsters());
 	monsterNumLabel->setString(text);
+	
+	goldNumLabel->runAction(Follow::create(this));
+	goldNumLabel->setPosition(goldNumLabel->getPosition() - Vec2(visibleSize.width / 2 - goldNumLabel->getContentSize().width/2, 0));
+
+	//shootPad->GetSprite()->runAction(Follow::create(this));
+	shootPad->GetBaseSprite()->runAction(Follow::create(this));
+	//shootPad->GetSprite()->setPosition(shootPad->GetSprite()->getPosition() + Vec2((visibleSize.width / 4), 0));
+	shootPad->GetBaseSprite()->setPosition(shootPad->GetBaseSprite()->getPosition() + Vec2((visibleSize.width / 4), 0));
+	
+
+	//movePad->GetSprite()->runAction(Follow::create(this));
+	movePad->GetBaseSprite()->runAction(Follow::create(this));
+	//movePad->GetSprite()->setPosition(movePad->GetSprite()->getPosition() - Vec2(visibleSize.width / 4, 0));
+	movePad->GetBaseSprite()->setPosition(movePad->GetBaseSprite()->getPosition() - Vec2(visibleSize.width / 4, 0));
 
 	if (shootPad->GetActive() == true)
 	{
@@ -432,6 +474,7 @@ void GameWorld::update(float dt)
 		if ((*itr)->getActive())
 			(*itr)->Update(dt, player->getPlayerSprite()->getPosition());
 	}
+
 
 	//Update the bullets
 	for (vector<CBullet*>::iterator itr = theBullets.begin(); itr != theBullets.end(); ++itr){

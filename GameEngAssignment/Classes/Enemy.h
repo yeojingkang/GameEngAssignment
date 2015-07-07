@@ -4,6 +4,8 @@
 #include "cocos2d.h"
 #include "Player.h"
 
+#include "Definitions.h"
+
 enum enemyType{
 	ENEMYTYPE_NORMAL = 0,
 	ENEMYTYPE_TOTAL

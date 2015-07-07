@@ -5,6 +5,8 @@
 #include <string>
 #include "Enemy.h"
 
+#include "Definitions.h"
+
 using namespace cocos2d;
 using namespace std;
 
@@ -36,6 +38,7 @@ public:
 
 private:
 	Sprite* bulletSprite;
+	PhysicsBody* bulletBody;
 
 	float xPos;
 	float yPos;
@@ -47,6 +50,7 @@ private:
 	unsigned int damage;
 
 	Rect bounds;
+
 };
 
 #endif // __BULLET_H__

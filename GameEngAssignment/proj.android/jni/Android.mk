@@ -20,7 +20,8 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
 		   ../../Classes/Rendering.cpp\
 		   ../../Classes/Wave.cpp\
 		   ../../Classes/touchPad.cpp\
-		   ../../Classes/Subwave.cpp
+		   ../../Classes/Subwave.cpp\
+		   ../../Classes/Weapon.cpp\
 
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes

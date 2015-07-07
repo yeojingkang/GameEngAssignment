@@ -22,10 +22,19 @@ void CBullet::Init()
 	yPos = 0;
 	bulletSprite->setPosition(xPos, yPos);
 	bulletSprite->setScale(1.5f);
-	bulletSpeed = 1000;
+	bulletSpeed = 100;
 	movementVec = new Vec2(0, 0);
 	bounds = bulletSprite->getBoundingBox();
-	damage = 20;
+	damage = 100;
+
+	bulletBody = PhysicsBody::createBox(bulletSprite->getContentSize());
+
+	bulletBody->setDynamic(false);
+	bulletBody->setCollisionBitmask(BULLET_COLLISION_BITMASK);
+	bulletBody->setContactTestBitmask(true);
+
+	bulletSprite->setPhysicsBody(bulletBody);
+
 }
 
 void CBullet::SetSprite(string filename)
@@ -94,4 +103,5 @@ bool CBullet::CheckCollision(CEnemy* enemy){
 void CBullet::Update(float dt)
 {
 	bulletSprite->setPosition(bulletSprite->getPositionX() + movementVec->x * dt * this->bulletSpeed, bulletSprite->getPositionY() + movementVec->y * dt * this->bulletSpeed);
+	
 }

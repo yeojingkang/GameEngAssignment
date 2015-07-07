@@ -5,13 +5,13 @@ USING_NS_CC;
 Scene* GameWorld::createScene()
 {
     // 'scene' is an autorelease object
-    auto scene = Scene::create();
+	auto scene = Scene::createWithPhysics();
     
     // 'layer' is an autorelease object
 	auto layer = GameWorld::create();
 
     // add layer as a child to scene
-    scene->addChild(layer);
+	scene->addChild(layer);
 
     // return the scene
     return scene;
@@ -66,6 +66,11 @@ bool GameWorld::init()
 	//Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(touchListener, this);
 	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(multiTouchListener, this);
 
+	//listener for onContactBegin
+	auto contactListener = EventListenerPhysicsContact::create();
+	contactListener->onContactBegin = CC_CALLBACK_1(GameWorld::onContactBegin, this);
+	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
+
 	//Create Background
 	background = new Rendering();
 	background->Init();
@@ -83,12 +88,22 @@ bool GameWorld::init()
 	waveNumLabel = CCLabelTTF::create("Wave 1", "fonts/Marker Felt.ttf", 24);
 	waveNumLabel->setPosition(Vec2(origin.x + visibleSize.width / 2,
 		origin.y + visibleSize.height - waveNumLabel->getContentSize().height));
-	this->addChild(waveNumLabel, 1);
 	goldNumLabel = CCLabelTTF::create("Gold: ", "fonts/Marker Felt.ttf", 24);
-	goldNumLabel->setPosition(Vec2(origin.x + visibleSize.width / 30,
-		origin.y + visibleSize.height*3/4 - goldNumLabel->getContentSize().height));
+	goldNumLabel->setPosition(Vec2(origin.x + goldNumLabel->getContentSize().width/2,
+		origin.y + visibleSize.height*3/4));
+	hpNumLabel = CCLabelTTF::create("HP: ", "fonts/Marker Felt.ttf", 24);
+	hpNumLabel->setPosition(Vec2(origin.x + hpNumLabel->getContentSize().width/2,
+		origin.y + visibleSize.height * 3 / 4 - hpNumLabel->getContentSize().height));
+	monsterNumLabel = CCLabelTTF::create("Monsters: ", "fonts/Marker Felt.ttf", 24);
+	monsterNumLabel->setPosition(Vec2(origin.x + monsterNumLabel->getContentSize().width/2,
+		origin.y + visibleSize.height * 3 / 4 - monsterNumLabel->getContentSize().height*2));
+	this->addChild(waveNumLabel, 1);
 	this->addChild(goldNumLabel, 1);
+	this->addChild(hpNumLabel, 1);
+	this->addChild(monsterNumLabel, 1);
 	
+	//goldNumLabel->runAction(Follow::create(this));
+
 	//Create the waves
 	createWaves();
 
@@ -108,15 +123,17 @@ bool GameWorld::init()
 	shootPad->GetBaseSprite()->setPosition(Vec2(origin.x + 4 * (visibleSize.width / 5), origin.y + visibleSize.height / 4));
 	shootPad->SetOriginalPos(shootPad->GetBaseSprite()->getPosition());
 	this->addChild(shootPad->GetBaseSprite(), 0);
-	this->addChild(shootPad->GetSprite(), 0);
+	this->addChild(shootPad->GetSprite(), 0);	
 
 	//following camera
 	this->runAction(Follow::create(player->getPlayerSprite()));
 
+
+
 	//create hud
-	//hud = new CHUD();
-	//hud->createLayer("Test Message");
-	//this->addChild(hud);
+	/*hud = new CHUD();
+	hud->createLayer("Test Message");
+	this->addChild(hud);*/
 
 	//scheduling update
 	this->scheduleUpdate();
@@ -380,14 +397,51 @@ void GameWorld::touchesMoved(const vector<cocos2d::Touch*> &touches, cocos2d::Ev
 	}
 }
 
+bool GameWorld::onContactBegin(PhysicsContact &contact)
+{
+	PhysicsBody *a = contact.getShapeA()->getBody();
+	PhysicsBody *b = contact.getShapeB()->getBody();
+
+	if ((BULLET_COLLISION_BITMASK == a->getCollisionBitmask() && ENEMY_COLLISION_BITMASK == b->getCollisionBitmask()) ||
+		(BULLET_COLLISION_BITMASK == b->getCollisionBitmask() && ENEMY_COLLISION_BITMASK == a->getCollisionBitmask()))
+	{
+		auto scene = GameWorld::createScene();
+
+		Director::getInstance()->replaceScene(TransitionFade::create(1.0f, scene));
+	}
+
+	return true;
+}
+
 void GameWorld::update(float dt)
 {
 	player->update(dt);
 
-	//Update gold text
+	Size visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+	//Update text
 	char text[256];
 	sprintf(text, "Gold: %d", player->GetGold());
 	goldNumLabel->setString(text);
+	sprintf(text, "HP: %d", player->GetHP());
+	hpNumLabel->setString(text);
+	sprintf(text, "Monsters: %d", getNumberOfActiveMonsters());
+	monsterNumLabel->setString(text);
+	
+	goldNumLabel->runAction(Follow::create(this));
+	goldNumLabel->setPosition(goldNumLabel->getPosition() - Vec2(visibleSize.width / 2 - goldNumLabel->getContentSize().width/2, 0));
+
+	//shootPad->GetSprite()->runAction(Follow::create(this));
+	shootPad->GetBaseSprite()->runAction(Follow::create(this));
+	//shootPad->GetSprite()->setPosition(shootPad->GetSprite()->getPosition() + Vec2((visibleSize.width / 4), 0));
+	shootPad->GetBaseSprite()->setPosition(shootPad->GetBaseSprite()->getPosition() + Vec2((visibleSize.width / 4), 0));
+	
+
+	//movePad->GetSprite()->runAction(Follow::create(this));
+	movePad->GetBaseSprite()->runAction(Follow::create(this));
+	//movePad->GetSprite()->setPosition(movePad->GetSprite()->getPosition() - Vec2(visibleSize.width / 4, 0));
+	movePad->GetBaseSprite()->setPosition(movePad->GetBaseSprite()->getPosition() - Vec2(visibleSize.width / 4, 0));
 
 	if (shootPad->GetActive() == true)
 	{
@@ -417,8 +471,10 @@ void GameWorld::update(float dt)
 	}
 	//update the enemies
 	for (vector<CEnemy*>::iterator itr = theEnemies.begin(); itr != theEnemies.end(); ++itr){
-		(*itr)->Update(dt, player->getPlayerSprite()->getPosition());
+		if ((*itr)->getActive())
+			(*itr)->Update(dt, player->getPlayerSprite()->getPosition());
 	}
+
 
 	//Update the bullets
 	for (vector<CBullet*>::iterator itr = theBullets.begin(); itr != theBullets.end(); ++itr){
@@ -436,7 +492,8 @@ void GameWorld::update(float dt)
 
 	//Update the wave
 	if (currWaveNum < theWaves.size()){
-		if (theWaves[currWaveNum]->getTotalMonsters() <= 0){
+		//If there are no more monster to spawn or are alive
+		if (theWaves[currWaveNum]->getTotalMonsters() <= 0 && getNumberOfActiveMonsters() <= 0){
 			//When wave has finished spawning all enemies
 			//Wait for timer before going to next wave
 			static float waveChangeTimer = 0.0f;
@@ -528,4 +585,15 @@ void GameWorld::createWaves(){
 	}
 
 	currWaveNum = 0;
+}
+
+int GameWorld::getNumberOfActiveMonsters(){
+	int num = 0;
+
+	for (vector<CEnemy*>::iterator itr = theEnemies.begin(); itr != theEnemies.end(); ++itr){
+		if ((*itr)->getActive())
+			++num;
+	}
+
+	return num;
 }

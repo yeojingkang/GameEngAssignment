@@ -4,6 +4,8 @@
 #include "cocos2d.h"
 #include "Player.h"
 
+#include "Definitions.h"
+
 enum enemyType{
 	ENEMYTYPE_NORMAL = 0,
 	ENEMYTYPE_TOTAL
@@ -25,6 +27,8 @@ public:
 	int getHP(){ return hp; }
 	void decreaseHP(int amt){ hp -= amt; }
 
+	bool getActive(){ return active; }
+
 	void Die();
 
 private:
@@ -34,6 +38,7 @@ private:
 	enemyType type;
 	unsigned int hp, bounty;
 	CPlayer* thePlayer;
+	bool active;
 
 	void updateSpritePosition();
 };

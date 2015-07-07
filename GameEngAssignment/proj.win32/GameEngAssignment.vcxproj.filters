@@ -13,6 +13,7 @@
     <ClCompile Include="..\Classes\Wave.cpp" />
     <ClCompile Include="..\Classes\HUD.cpp" />
     <ClCompile Include="..\Classes\Subwave.cpp" />
+    <ClCompile Include="..\Classes\Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
@@ -28,6 +29,7 @@
     <ClInclude Include="..\Classes\HUD.h" />
     <ClInclude Include="..\Classes\Subwave.h" />
     <ClInclude Include="..\Classes\Definitions.h" />
+    <ClInclude Include="..\Classes\Weapon.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc" />

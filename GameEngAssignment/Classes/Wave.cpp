@@ -9,15 +9,25 @@ CWave::~CWave()
 {
 }
 
-monsterSpawnList CWave::update(float dt, cocos2d::Vec2 playerPosition){
-	monsterSpawnList list;
+vector<int> CWave::update(float dt, cocos2d::Vec2 playerPosition){
+	vector<int> list;
 
 	elapsedTime += dt;
 
 	for (vector<CSubwave*>::iterator itr = theSubwaves.begin(); itr != theSubwaves.end(); ++itr){
 		if ((*itr)->getActive()){
-			monsterSpawnList newList = (*itr)->update(dt, playerPosition);
-			list.insert(newList.begin(), newList.end());
+			int type = (*itr)->update(dt, playerPosition);
+
+			//If list doesn't have an element to store the count of the enemy type, create it
+			if (type >= 0){
+				if (type + 1 > list.size()){
+					while (list.size() < type + 1){
+						list.push_back(0);
+					}
+				}
+
+				++list[type];
+			}
 		}
 		else{
 			//Check if enough time has passed for subwave to activate
@@ -29,9 +39,9 @@ monsterSpawnList CWave::update(float dt, cocos2d::Vec2 playerPosition){
 	return list;
 }
 
-void CWave::setSubwave(float activateTime, int normal){
+void CWave::setSubwave(float activateTime, vector<int> enemies){
 	CSubwave* newSubwave = new CSubwave();
-	newSubwave->init(activateTime, normal);
+	newSubwave->init(activateTime, enemies);
 	theSubwaves.push_back(newSubwave);
 }
 void CWave::setSubwave(CSubwave* newSubwave){

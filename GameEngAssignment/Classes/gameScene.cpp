@@ -104,6 +104,8 @@ bool GameWorld::init()
 	
 	//goldNumLabel->runAction(Follow::create(this));
 
+	//Create the enemy types
+	createEnemyTypes();
 	//Create the waves
 	createWaves();
 
@@ -509,17 +511,20 @@ void GameWorld::update(float dt)
 		}
 		else{
 			//Get list of monsters to spawn and add them to theEnemies
-			monsterSpawnList spawnList = theWaves[currWaveNum]->update(dt, player->getPlayerSprite()->getPosition());
+			vector<int> spawnList = theWaves[currWaveNum]->update(dt, player->getPlayerSprite()->getPosition());
 
-			for (monsterSpawnList::iterator itr = spawnList.begin(); itr != spawnList.end(); ++itr){
-				CEnemy* newEnemy = new CEnemy();
+			for (vector<int>::iterator itr = spawnList.begin(); itr != spawnList.end(); ++itr){
+				int index = std::distance(spawnList.begin(), itr);
 
-				if (itr->first == "Normal"){
-					newEnemy->Init(player->getPlayerSprite()->getPosition(), ENEMYTYPE_NORMAL, player);
+				//Spawn number of enemies for each enemy type
+				for (int i = 0; i < spawnList[index]; ++i){
+					CEnemy* newEnemy = new CEnemy();
+
+					newEnemy->Init(player->getPlayerSprite()->getPosition(), theTypes[index], player);
+
+					theEnemies.push_back(newEnemy);
+					this->addChild(newEnemy->getSprite(), 0);
 				}
-
-				theEnemies.push_back(newEnemy);
-				this->addChild(newEnemy->getSprite(), 0);
 			}
 		}
 	}
@@ -539,14 +544,46 @@ void GameWorld::menuCloseCallback(Ref* pSender)
 #endif
 }
 
+void GameWorld::createEnemyTypes(){
+	ifstream file;
+	file.open("enemytypes.txt");
+
+	if (file.is_open()){
+		string line;
+		while (!file.eof()){
+			getline(file, line);
+
+			//Line isn't empty
+			if (!line.empty()){
+				istringstream tmp(line);
+
+				string name;
+				unsigned int hp, bounty;
+				float speed;
+
+				getline(tmp, name, ',');
+				tmp >> hp;
+				tmp.get();
+				tmp >> bounty;
+				tmp.get();
+				tmp >> speed;
+
+				createNewType(name, hp, bounty, speed);
+			}
+		}
+	}
+
+	file.close();
+}
 void GameWorld::createWaves(){
 	ifstream file;
 	file.open("waves.txt");
 
 	if (file.is_open()){
 		int waveSetNum = 0;
+		string line;
+
 		while (!file.eof()){
-			string line;
 			getline(file, line);
 
 			if (line.empty()){
@@ -555,19 +592,26 @@ void GameWorld::createWaves(){
 			}
 			else{
 				istringstream tmp(line);
-				string inputCatcher;//To catch unnecessary inputs
+				char inputCatcher;//To catch unnecessary inputs
 
 				if (waveSetNum > 0){
 					//Currently setting a subwave for any waves
 					float activateTime;
-					int normalMonsters;
+					int monsterNum;
 
 					tmp >> activateTime;
-					tmp >> normalMonsters;
-					//getline(tmp, inputCatcher, ',');
+
+					//Get number of each enemy type and place into subwave
+					vector<int> enemies;
+					int enemyCount = 0;
+					do{
+						tmp >> enemyCount;
+						enemies.push_back(enemyCount);
+						tmp.get(inputCatcher);
+					} while (inputCatcher == ',');
 
 					//Create subwave
-					theWaves[waveSetNum - 1]->setSubwave(activateTime, normalMonsters);
+					theWaves[waveSetNum - 1]->setSubwave(activateTime, enemies);
 				}
 				else{
 					//Currently not setting subwave for any waves
@@ -584,6 +628,8 @@ void GameWorld::createWaves(){
 		}
 	}
 
+	file.close();
+
 	currWaveNum = 0;
 }
 
@@ -596,4 +642,39 @@ int GameWorld::getNumberOfActiveMonsters(){
 	}
 
 	return num;
+}
+
+void GameWorld::createNewType(string name, int hp, int bounty, float speed){
+	//If a new type of enemy is created that has the same name as an existing type, overwrite existing type instead
+	for (vector<CEnemyType>::iterator itr = theTypes.begin(); itr != theTypes.end(); ++itr){
+		if ((*itr).getName() == name){
+			(*itr).Overwrite(hp, bounty, speed);
+			return;
+		}
+	}
+
+	CEnemyType newType;
+	newType.Init(name, hp, bounty, speed);
+
+	theTypes.push_back(newType);
+}
+void GameWorld::createNewType(CEnemyType newType){
+	//If a new type of enemy is created that has the same name as an existing type, overwrite existing type instead
+	for (vector<CEnemyType>::iterator itr = theTypes.begin(); itr != theTypes.end(); ++itr){
+		if ((*itr).getName() == newType.getName()){
+			(*itr).Overwrite(newType.getHP(), newType.getBounty(), newType.getSpeed());
+			return;
+		}
+	}
+
+	theTypes.push_back(newType);
+}
+
+int GameWorld::getEnemyTypeIndex(string name){
+	for (vector<CEnemyType>::iterator itr = theTypes.begin(); itr != theTypes.end(); ++itr){
+		if ((*itr).getName() == name)
+			return std::distance(theTypes.begin(), itr);
+	}
+
+	return -1;
 }

@@ -11,9 +11,9 @@ public:
 	CWave();
 	~CWave();
 
-	monsterSpawnList update(float dt, cocos2d::Vec2 playerPosition);
+	vector<int> update(float dt, cocos2d::Vec2 playerPosition);
 
-	void setSubwave(float activateTime, int normal);
+	void setSubwave(float activateTime, vector<int> enemies);
 	void setSubwave(CSubwave* newSubwave);
 
 	int getNormalMonsters(){ return normal; }

@@ -25,6 +25,7 @@ private:
 
 	vector<CBullet*> theBullets;
 
+	vector<CEnemyType> theTypes;
 	vector<CWave*> theWaves;
 	unsigned int currWaveNum;
 
@@ -33,6 +34,7 @@ private:
 	cocos2d::LabelTTF* hpNumLabel;
 	cocos2d::LabelTTF* monsterNumLabel;
 
+	void createEnemyTypes();
 	void createWaves();
 	
 	CTouchPad* movePad = new CTouchPad();
@@ -77,6 +79,11 @@ public:
 	virtual void update(float);
 
 	int getNumberOfActiveMonsters();
+
+	void createNewType(string, int, int, float);
+	void createNewType(CEnemyType);
+
+	int getEnemyTypeIndex(string name);
     
     // a selector callback
     void menuCloseCallback(cocos2d::Ref* pSender);

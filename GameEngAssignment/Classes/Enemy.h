@@ -3,13 +3,9 @@
 
 #include "cocos2d.h"
 #include "Player.h"
+#include "EnemyType.h"
 
 #include "Definitions.h"
-
-enum enemyType{
-	ENEMYTYPE_NORMAL = 0,
-	ENEMYTYPE_TOTAL
-};
 
 class CEnemy
 {
@@ -17,12 +13,12 @@ public:
 	CEnemy();
 	~CEnemy();
 
-	void Init(cocos2d::Vec2, enemyType, CPlayer*);
+	void Init(cocos2d::Vec2 playerPos, CEnemyType type, CPlayer* player);
 	void Update(float, cocos2d::Vec2);
 
 	cocos2d::Sprite* getSprite(void){ return theSprite; };
 
-	enemyType getType(){ return type; }
+	string getTypeName(){ return typeName; }
 
 	int getHP(){ return hp; }
 	void decreaseHP(int amt){ hp -= amt; }
@@ -35,7 +31,7 @@ private:
 	float speed;
 	cocos2d::Vec2 position, direction;
 	cocos2d::Sprite* theSprite;
-	enemyType type;
+	string typeName;
 	unsigned int hp, bounty;
 	CPlayer* thePlayer;
 	bool active;

@@ -3,7 +3,7 @@
 USING_NS_CC;
 
 CEnemy::CEnemy() :
-type(ENEMYTYPE_TOTAL),
+typeName(""),
 hp(0),
 bounty(0),
 thePlayer(NULL),
@@ -14,7 +14,7 @@ CEnemy::~CEnemy()
 {
 }
 
-void CEnemy::Init(cocos2d::Vec2 playerPos, enemyType type, CPlayer* player){
+void CEnemy::Init(cocos2d::Vec2 playerPos, CEnemyType type, CPlayer* player){
 	
 	if (CCRANDOM_0_1() > 0.5f)
 		position = Vec2(round(CCRANDOM_0_1()) * 1280, CCRANDOM_0_1() * 720);
@@ -37,14 +37,12 @@ void CEnemy::Init(cocos2d::Vec2 playerPos, enemyType type, CPlayer* player){
 
 	theSprite->setPhysicsBody(enemyBody);
 
-	this->type = type;
+	this->typeName = type.getName();
 	this->thePlayer = player;
 
-	if (this->type == ENEMYTYPE_NORMAL){
-		hp = 100;
-		bounty = 10;
-		speed = 25.0f;
-	}
+	this->hp = type.getHP();
+	this->bounty = type.getBounty();
+	this->speed = type.getSpeed();
 
 	active = true;
 }

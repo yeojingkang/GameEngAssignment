@@ -513,21 +513,23 @@ void GameWorld::update(float dt)
 			//Get list of monsters to spawn and add them to theEnemies
 			vector<int> spawnList = theWaves[currWaveNum]->update(dt, player->getPlayerSprite()->getPosition());
 
-			for (vector<int>::iterator itr = spawnList.begin(); itr != spawnList.end(); ++itr){
-				int index = std::distance(spawnList.begin(), itr);
+			if (spawnList.size() > 0){
+				for (vector<int>::iterator itr = spawnList.begin(); itr != spawnList.end(); ++itr){
+					int index = std::distance(spawnList.begin(), itr);
 
-				//If an enemy is being spawned where it's type isn't defined, break
-				if (index + 1 > theTypes.size())
-					break;
+					//If an enemy is being spawned where it's type isn't defined, break
+					if (index + 1 > theTypes.size())
+						break;
 
-				//Spawn number of enemies for each enemy type
-				for (int i = 0; i < spawnList[index]; ++i){
-					CEnemy* newEnemy = new CEnemy();
+					//Spawn number of enemies for each enemy type
+					for (int i = 0; i < spawnList[index]; ++i){
+						CEnemy* newEnemy = new CEnemy();
 
-					newEnemy->Init(player->getPlayerSprite()->getPosition(), theTypes[index], player);
+						newEnemy->Init(player->getPlayerSprite()->getPosition(), theTypes[index], player);
 
-					theEnemies.push_back(newEnemy);
-					this->addChild(newEnemy->getSprite(), 0);
+						theEnemies.push_back(newEnemy);
+						this->addChild(newEnemy->getSprite(), 0);
+					}
 				}
 			}
 		}
@@ -612,6 +614,8 @@ void GameWorld::createWaves(){
 						tmp >> enemyCount;
 						enemies.push_back(enemyCount);
 						tmp.get(inputCatcher);
+						if (tmp.eof())
+							break;
 					} while (inputCatcher == ',');
 
 					//Create subwave

@@ -26,6 +26,8 @@ int CSubwave::update(float dt, cocos2d::Vec2 playerPosition){
 
 		//Determine enemy type to spawn
 		int type = cocos2d::random(0, (int)enemies.size() - 1);
+		while (enemies[type] <= 0)
+			type = cocos2d::random(0, (int)enemies.size() - 1);
 		--enemies[type];
 
 		return type;

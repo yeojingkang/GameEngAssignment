@@ -484,10 +484,8 @@ void GameWorld::update(float dt)
 					for (int i = 0; i < spawnList[index]; ++i){
 						CEnemy* newEnemy = new CEnemy();
 
-						theEnemies.push_back(newEnemy);
-						this->addChild(newEnemy->getSprite(), 0);
-						newEnemy->MoveToPlayer();
 						newEnemy->Init(player->getPlayerSprite()->getPosition(), theTypes[index], player);
+						newEnemy->MoveToPlayer(newEnemy->getSprite());
 
 						theEnemies.push_back(newEnemy);
 						this->addChild(newEnemy->getSprite(), 0);
@@ -501,7 +499,7 @@ void GameWorld::update(float dt)
 void GameWorld::menuCloseCallback(Ref* pSender)
 {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
-	MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.","Alert");
+	MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.", "Alert");
 	return;
 #endif
 

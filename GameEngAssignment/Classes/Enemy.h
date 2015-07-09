@@ -27,7 +27,7 @@ public:
 
 	void Die();
 
-	void MoveToPlayer();
+	void MoveToPlayer(Sprite* sprite);
 
 private:
 	float speed;
@@ -38,7 +38,7 @@ private:
 	CPlayer* thePlayer;
 	bool active;
 
-	void updateSpritePosition();
+	void finishedMoving(Object *pSender);
 };
 
 #endif

@@ -8,28 +8,40 @@ CSubwave::~CSubwave()
 {
 }
 
-void CSubwave::init(float activateTime, int normal){
+void CSubwave::init(float activateTime, vector<int> enemies){
 	this->activateTime = activateTime;
-	this->normal = normal;
 	this->active = false;
 	this->spawnTimer = 0.0f;
+	this->enemies = enemies;
 }
-monsterSpawnList CSubwave::update(float dt, cocos2d::Vec2 playerPosition){
-	monsterSpawnList list;
-
+int CSubwave::update(float dt, cocos2d::Vec2 playerPosition){
 	//If there is no more monster left to spawn, end 
 	if (getTotalMonsters() <= 0)
-		return list;
+		return -1;
 
 	spawnTimer += dt;
 
 	if (spawnTimer >= 1.0f){
-		//Determine enemy type, currently only normal monsters
-		list["Normal"] = 1;
-		--normal;
-
 		spawnTimer = 0.0f;
+
+		//Determine enemy type to spawn
+		int type = cocos2d::random(0, (int)enemies.size() - 1);
+		while (enemies[type] <= 0)
+			type = cocos2d::random(0, (int)enemies.size() - 1);
+		--enemies[type];
+
+		return type;
 	}
 
-	return list;
+	return -1;
+}
+
+int CSubwave::getTotalMonsters(){
+	int total = 0;
+
+	for (vector<int>::iterator itr = enemies.begin(); itr != enemies.end(); ++itr){
+		total += *itr;
+	}
+
+	return total;
 }

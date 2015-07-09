@@ -4,39 +4,39 @@ USING_NS_CC;
 
 Scene* GameWorld::createScene()
 {
-    // 'scene' is an autorelease object
+	// 'scene' is an autorelease object
 	auto scene = Scene::createWithPhysics();
-    
-    // 'layer' is an autorelease object
+
+	// 'layer' is an autorelease object
 	auto layer = GameWorld::create();
 
 	//create hud
 	CHUD *theHUD = CHUD::createLayer("Main HUD");
 	theHUD->init();
 
-    // add layer as a child to scene
+	// add layer as a child to scene
 	scene->addChild(layer);
 
 	scene->addChild(theHUD, 2);
 
-    // return the scene
-    return scene;
+	// return the scene
+	return scene;
 }
 
 // on "init" you need to initialize your instance
 bool GameWorld::init()
 {
-    //////////////////////////////
-    // 1. super init first
-    if ( !Layer::init() )
-    {
-        return false;
-    }
-    
+	//////////////////////////////
+	// 1. super init first
+	if (!Layer::init())
+	{
+		return false;
+	}
+
 	//r = new Rendering();
 	//r->Init(1, 1);
-    Size visibleSize = Director::getInstance()->getVisibleSize();
-    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+	Size visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 	//this->addChild(r->getSprite(), 1);
 
 	//srand(time(NULL));
@@ -52,7 +52,7 @@ bool GameWorld::init()
 	mouseListener->onMouseUp = CC_CALLBACK_1(GameWorld::mouseUp, this);
 	mouseListener->onMouseMove = CC_CALLBACK_1(GameWorld::mouseMove, this);
 	mouseListener->onMouseScroll = CC_CALLBACK_1(GameWorld::mouseScroll, this);
-	
+
 	////touch listener
 	//auto touchListener = EventListenerTouchOneByOne::create();
 	//touchListener->onTouchBegan = CC_CALLBACK_2(GameWorld::touchBegan, this);
@@ -89,14 +89,24 @@ bool GameWorld::init()
 	waveNumLabel = CCLabelTTF::create("Wave 1", "fonts/Marker Felt.ttf", 24);
 	waveNumLabel->setPosition(Vec2(origin.x + visibleSize.width / 2,
 		origin.y + visibleSize.height - waveNumLabel->getContentSize().height));
-	this->addChild(waveNumLabel, 1);
 	goldNumLabel = CCLabelTTF::create("Gold: ", "fonts/Marker Felt.ttf", 24);
-	goldNumLabel->setPosition(Vec2(origin.x + visibleSize.width / 30,
-		origin.y + visibleSize.height*3/4 - goldNumLabel->getContentSize().height));
+	goldNumLabel->setPosition(Vec2(origin.x + goldNumLabel->getContentSize().width / 2,
+		origin.y + visibleSize.height * 3 / 4));
+	hpNumLabel = CCLabelTTF::create("HP: ", "fonts/Marker Felt.ttf", 24);
+	hpNumLabel->setPosition(Vec2(origin.x + hpNumLabel->getContentSize().width / 2,
+		origin.y + visibleSize.height * 3 / 4 - hpNumLabel->getContentSize().height));
+	monsterNumLabel = CCLabelTTF::create("Monsters: ", "fonts/Marker Felt.ttf", 24);
+	monsterNumLabel->setPosition(Vec2(origin.x + monsterNumLabel->getContentSize().width / 2,
+		origin.y + visibleSize.height * 3 / 4 - monsterNumLabel->getContentSize().height * 2));
+	this->addChild(waveNumLabel, 1);
 	this->addChild(goldNumLabel, 1);
-	
+	this->addChild(hpNumLabel, 1);
+	this->addChild(monsterNumLabel, 1);
+
 	//goldNumLabel->runAction(Follow::create(this));
 
+	//Create the enemy types
+	createEnemyTypes();
 	//Create the waves
 	createWaves();
 
@@ -111,7 +121,7 @@ bool GameWorld::init()
 	//scheduling update
 	this->scheduleUpdate();
 
-    return true;
+	return true;
 }
 
 void GameWorld::keyPressed(EventKeyboard::KeyCode keyCode, cocos2d::Event *event)
@@ -171,17 +181,17 @@ void GameWorld::mouseDown(Event *event)
 	Vec2* direction = new Vec2(dirX, dirY);
 	direction->normalize();
 	b->SetMoveVec(direction);
-	
+
 	theBullets.push_back(b);
 	this->addChild(b->GetSprite(), 0);
 
 	for (vector<CBullet*>::iterator itr = theBullets.begin(); itr != theBullets.end(); ++itr){
-		if ((*itr)->GetActive() == false)
-		{
-			(*itr)->SetActive(true);
-			(*itr)->GetSprite()->setRotation(player->getPlayerSprite()->getRotation());
-			(*itr)->GetSprite()->setPosition(player->getPlayerSprite()->getPosition());
-		}
+	if ((*itr)->GetActive() == false)
+	{
+	(*itr)->SetActive(true);
+	(*itr)->GetSprite()->setRotation(player->getPlayerSprite()->getRotation());
+	(*itr)->GetSprite()->setPosition(player->getPlayerSprite()->getPosition());
+	}
 	}*/
 }
 
@@ -200,7 +210,7 @@ void GameWorld::mouseMove(Event *event)
 
 	if (angleToRot < 0)
 	{
-		angleToRot = 360 - (-angleToRot);
+	angleToRot = 360 - (-angleToRot);
 	}
 
 	player->getPlayerSprite()->setRotation(angleToRot);*/
@@ -391,21 +401,17 @@ void GameWorld::update(float dt)
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	//Update gold text
+	//Update text
 	char text[256];
 	sprintf(text, "Gold: %d", player->GetGold());
 	goldNumLabel->setString(text);
-	
+	sprintf(text, "HP: %d", player->GetHP());
+	hpNumLabel->setString(text);
+	sprintf(text, "Monsters: %d", getNumberOfActiveMonsters());
+	monsterNumLabel->setString(text);
+
 	goldNumLabel->runAction(Follow::create(this));
-	goldNumLabel->setPosition(goldNumLabel->getPosition() - Vec2(visibleSize.width / 2 - goldNumLabel->getContentSize().width/2, 0));
-
-	//if (shootPad->GetActive() == true)
-	//{
-	//	CBullet* b = new CBullet();
-	//	b->Init();
-
-	//	float shootDirX = shootPad->GetSprite()->getPositionX() - shootPad->GetOriginalPos().x;
-	//	float shootDirY = shootPad->GetSprite()->getPositionY() - shootPad->GetOriginalPos().y;
+	goldNumLabel->setPosition(goldNumLabel->getPosition() - Vec2(visibleSize.width / 2 - goldNumLabel->getContentSize().width / 2, 0));
 
 	//	Vec2* shootPos = new Vec2(shootDirX, shootDirY);
 
@@ -431,19 +437,24 @@ void GameWorld::update(float dt)
 	for (vector<CEnemy*>::iterator itr = theEnemies.begin(); itr != theEnemies.end(); ++itr)
 	{
 		(*itr)->Update(dt, player->getPlayerSprite()->getPosition());
-	}
-
-	//Update the bullets
-	for (vector<CBullet*>::iterator itr = theBullets.begin(); itr != theBullets.end(); ++itr){
-		if ((*itr)->GetActive() == true)
-		{
-			(*itr)->Update(dt);
+		for (vector<CEnemy*>::iterator itr = theEnemies.begin(); itr != theEnemies.end(); ++itr){
+			if ((*itr)->getActive())
+				(*itr)->Update(dt, player->getPlayerSprite()->getPosition());
 		}
-	}
 
+		//Update the bullets
+		for (vector<CBullet*>::iterator itr = theBullets.begin(); itr != theBullets.end(); ++itr){
+			if ((*itr)->GetActive() == true)
+			{
+				(*itr)->Update(dt);
+			}
+		}
+
+	}
 	//Update the wave
 	if (currWaveNum < theWaves.size()){
-		if (theWaves[currWaveNum]->getTotalMonsters() <= 0){
+		//If there are no more monster to spawn or are alive
+		if (theWaves[currWaveNum]->getTotalMonsters() <= 0 && getNumberOfActiveMonsters() <= 0){
 			//When wave has finished spawning all enemies
 			//Wait for timer before going to next wave
 			static float waveChangeTimer = 0.0f;
@@ -453,24 +464,35 @@ void GameWorld::update(float dt)
 				++currWaveNum;
 				waveChangeTimer = 0.0f;
 				char text[256];
-				sprintf(text, "Wave %d", currWaveNum+1);
+				sprintf(text, "Wave %d", currWaveNum + 1);
 				waveNumLabel->setString(text);
 			}
 		}
 		else{
 			//Get list of monsters to spawn and add them to theEnemies
-			monsterSpawnList spawnList = theWaves[currWaveNum]->update(dt, player->getPlayerSprite()->getPosition());
+			vector<int> spawnList = theWaves[currWaveNum]->update(dt, player->getPlayerSprite()->getPosition());
 
-			for (monsterSpawnList::iterator itr = spawnList.begin(); itr != spawnList.end(); ++itr){
-				CEnemy* newEnemy = new CEnemy();
+			if (spawnList.size() > 0){
+				for (vector<int>::iterator itr = spawnList.begin(); itr != spawnList.end(); ++itr){
+					int index = std::distance(spawnList.begin(), itr);
 
-				if (itr->first == "Normal"){
-					newEnemy->Init(player->getPlayerSprite()->getPosition(), ENEMYTYPE_NORMAL, player);
+					//If an enemy is being spawned where it's type isn't defined, break
+					if (index + 1 > theTypes.size())
+						break;
+
+					//Spawn number of enemies for each enemy type
+					for (int i = 0; i < spawnList[index]; ++i){
+						CEnemy* newEnemy = new CEnemy();
+
+						theEnemies.push_back(newEnemy);
+						this->addChild(newEnemy->getSprite(), 0);
+						newEnemy->MoveToPlayer();
+						newEnemy->Init(player->getPlayerSprite()->getPosition(), theTypes[index], player);
+
+						theEnemies.push_back(newEnemy);
+						this->addChild(newEnemy->getSprite(), 0);
+					}
 				}
-
-				theEnemies.push_back(newEnemy);
-				this->addChild(newEnemy->getSprite(), 0);
-				newEnemy->MoveToPlayer();
 			}
 		}
 	}
@@ -480,24 +502,56 @@ void GameWorld::menuCloseCallback(Ref* pSender)
 {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
 	MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.","Alert");
-    return;
+	return;
 #endif
 
-    Director::getInstance()->end();
+	Director::getInstance()->end();
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    exit(0);
+	exit(0);
 #endif
 }
 
+void GameWorld::createEnemyTypes(){
+	ifstream file;
+	file.open("enemytypes.txt");
+
+	if (file.is_open()){
+		string line;
+		while (!file.eof()){
+			getline(file, line);
+
+			//Line isn't empty
+			if (!line.empty()){
+				istringstream tmp(line);
+
+				string name;
+				unsigned int hp, bounty;
+				float speed;
+
+				getline(tmp, name, ',');
+				tmp >> hp;
+				tmp.get();
+				tmp >> bounty;
+				tmp.get();
+				tmp >> speed;
+
+				createNewType(name, hp, bounty, speed);
+			}
+		}
+	}
+
+	file.close();
+}
 void GameWorld::createWaves(){
 	ifstream file;
 	file.open("waves.txt");
 
 	if (file.is_open()){
 		int waveSetNum = 0;
+		string line;
+
 		while (!file.eof()){
-			string line;
 			getline(file, line);
 
 			if (line.empty()){
@@ -506,19 +560,28 @@ void GameWorld::createWaves(){
 			}
 			else{
 				istringstream tmp(line);
-				string inputCatcher;//To catch unnecessary inputs
+				char inputCatcher;//To catch unnecessary inputs
 
 				if (waveSetNum > 0){
 					//Currently setting a subwave for any waves
 					float activateTime;
-					int normalMonsters;
+					int monsterNum;
 
 					tmp >> activateTime;
-					tmp >> normalMonsters;
-					//getline(tmp, inputCatcher, ',');
+
+					//Get number of each enemy type and place into subwave
+					vector<int> enemies;
+					int enemyCount = 0;
+					do{
+						tmp >> enemyCount;
+						enemies.push_back(enemyCount);
+						tmp.get(inputCatcher);
+						if (tmp.eof())
+							break;
+					} while (inputCatcher == ',');
 
 					//Create subwave
-					theWaves[waveSetNum - 1]->setSubwave(activateTime, normalMonsters);
+					theWaves[waveSetNum - 1]->setSubwave(activateTime, enemies);
 				}
 				else{
 					//Currently not setting subwave for any waves
@@ -535,5 +598,53 @@ void GameWorld::createWaves(){
 		}
 	}
 
+	file.close();
+
 	currWaveNum = 0;
+}
+
+int GameWorld::getNumberOfActiveMonsters(){
+	int num = 0;
+
+	for (vector<CEnemy*>::iterator itr = theEnemies.begin(); itr != theEnemies.end(); ++itr){
+		if ((*itr)->getActive())
+			++num;
+	}
+
+	return num;
+}
+
+void GameWorld::createNewType(string name, int hp, int bounty, float speed){
+	//If a new type of enemy is created that has the same name as an existing type, overwrite existing type instead
+	for (vector<CEnemyType>::iterator itr = theTypes.begin(); itr != theTypes.end(); ++itr){
+		if ((*itr).getName() == name){
+			(*itr).Overwrite(hp, bounty, speed);
+			return;
+		}
+	}
+
+	CEnemyType newType;
+	newType.Init(name, hp, bounty, speed);
+
+	theTypes.push_back(newType);
+}
+void GameWorld::createNewType(CEnemyType newType){
+	//If a new type of enemy is created that has the same name as an existing type, overwrite existing type instead
+	for (vector<CEnemyType>::iterator itr = theTypes.begin(); itr != theTypes.end(); ++itr){
+		if ((*itr).getName() == newType.getName()){
+			(*itr).Overwrite(newType.getHP(), newType.getBounty(), newType.getSpeed());
+			return;
+		}
+	}
+
+	theTypes.push_back(newType);
+}
+
+int GameWorld::getEnemyTypeIndex(string name){
+	for (vector<CEnemyType>::iterator itr = theTypes.begin(); itr != theTypes.end(); ++itr){
+		if ((*itr).getName() == name)
+			return std::distance(theTypes.begin(), itr);
+	}
+
+	return -1;
 }

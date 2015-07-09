@@ -43,6 +43,8 @@ public:
 	void AddGold(int amt){ gold += amt; }
 	void DecreaseGold(int amt){ gold -= amt; }
 
+	int GetHP(){ return hp; }
+
 	void update(float dt);
 
 private:
@@ -62,7 +64,7 @@ private:
 
 	Rect bounds;
 
-	unsigned int gold;
+	unsigned int gold, hp;
 };
 
 #endif // __PLAYER_H__

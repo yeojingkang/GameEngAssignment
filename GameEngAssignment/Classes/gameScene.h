@@ -25,15 +25,19 @@ private:
 
 	vector<CBullet*> theBullets;
 
+	vector<CEnemyType> theTypes;
 	vector<CWave*> theWaves;
 	unsigned int currWaveNum;
 
-	CCLabelTTF* waveNumLabel;
-	CCLabelTTF* goldNumLabel;
+	cocos2d::LabelTTF* waveNumLabel;
+	cocos2d::LabelTTF* goldNumLabel;
+	cocos2d::LabelTTF* hpNumLabel;
+	cocos2d::LabelTTF* monsterNumLabel;
 
 	CPlayer *player;
-
+	void createEnemyTypes();
 	void createWaves();
+	
 
 public:
 
@@ -70,6 +74,13 @@ public:
 	bool onContactBegin(PhysicsContact &contact);
 
 	virtual void update(float);
+
+	int getNumberOfActiveMonsters();
+
+	void createNewType(string, int, int, float);
+	void createNewType(CEnemyType);
+
+	int getEnemyTypeIndex(string name);
     
     // a selector callback
     void menuCloseCallback(cocos2d::Ref* pSender);

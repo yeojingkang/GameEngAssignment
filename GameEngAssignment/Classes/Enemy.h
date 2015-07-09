@@ -29,6 +29,8 @@ public:
 
 	void Die();
 
+	void MoveToPlayer();
+
 private:
 	float speed;
 	cocos2d::Vec2 position, direction;

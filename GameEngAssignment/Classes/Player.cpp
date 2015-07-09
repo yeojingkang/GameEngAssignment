@@ -2,6 +2,8 @@
 
 USING_NS_CC;
 
+CPlayer CPlayer::thePlayer;
+
 CPlayer::CPlayer()
 {
 	xPos = 0;
@@ -105,6 +107,6 @@ float CPlayer::GetMoveSpeed(void)
 
 void CPlayer::update(float dt)
 {
-	playerSprite->setPositionX(playerSprite->getPositionX() + (velocity->x * dt));
-	playerSprite->setPositionY(playerSprite->getPositionY() + (velocity->y * dt));
+	this->playerSprite->setPositionX(playerSprite->getPositionX() + (velocity->x * dt));
+	this->playerSprite->setPositionY(playerSprite->getPositionY() + (velocity->y * dt));
 }

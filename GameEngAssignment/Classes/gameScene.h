@@ -19,7 +19,7 @@ using namespace std;
 class GameWorld : public cocos2d::Layer
 {
 private:
-	CPlayer *player;
+	
 	Rendering *background;
 	vector<CEnemy*> theEnemies;
 
@@ -31,12 +31,9 @@ private:
 	CCLabelTTF* waveNumLabel;
 	CCLabelTTF* goldNumLabel;
 
-	void createWaves();
-	
-	CTouchPad* movePad = new CTouchPad();
-	CTouchPad* shootPad = new CTouchPad();
+	CPlayer *player;
 
-	CHUD* hud;
+	void createWaves();
 
 public:
 

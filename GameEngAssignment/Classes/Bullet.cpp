@@ -31,7 +31,8 @@ void CBullet::Init()
 
 	bulletBody->setDynamic(false);
 	bulletBody->setCollisionBitmask(BULLET_COLLISION_BITMASK);
-	bulletBody->setContactTestBitmask(true);
+	bulletBody->setCategoryBitmask(ENEMY_COLLISION_BITMASK);
+	bulletBody->setContactTestBitmask(0xFFFFFFFF);
 
 	bulletSprite->setPhysicsBody(bulletBody);
 
@@ -100,8 +101,12 @@ bool CBullet::CheckCollision(CEnemy* enemy){
 		return false;
 }
 
+void CBullet::MoveForward()
+{
+	bulletSprite->runAction(MoveTo::create(3, Vec2(bulletSprite->getPositionX() + movementVec->x * this->bulletSpeed, bulletSprite->getPositionY() + movementVec->y * this->bulletSpeed)));
+}
+
 void CBullet::Update(float dt)
 {
 	bulletSprite->setPosition(bulletSprite->getPositionX() + movementVec->x * dt * this->bulletSpeed, bulletSprite->getPositionY() + movementVec->y * dt * this->bulletSpeed);
-	
 }

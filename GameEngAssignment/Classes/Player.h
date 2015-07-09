@@ -9,10 +9,16 @@ using namespace std;
 
 class CPlayer
 {
+
+protected:
+	CPlayer();
+
 public:
 
-	CPlayer();
-	~CPlayer();
+	static CPlayer* getInstance()
+	{
+		return &thePlayer;
+	}
 
 	void Init();
 
@@ -40,6 +46,9 @@ public:
 	void update(float dt);
 
 private:
+
+	static CPlayer thePlayer;
+
 	Sprite* playerSprite;
 
 	float xPos;

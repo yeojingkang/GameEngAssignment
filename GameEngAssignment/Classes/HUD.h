@@ -40,6 +40,11 @@ public:
 private:
 	LabelTTF* messageLabel;
 
+	cocos2d::LabelTTF* waveNumLabel;
+	cocos2d::LabelTTF* goldNumLabel;
+	cocos2d::LabelTTF* hpNumLabel;
+	cocos2d::LabelTTF* monsterNumLabel;
+
 	CTouchPad* movePad;
 	CTouchPad* shootPad;
 

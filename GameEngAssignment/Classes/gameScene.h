@@ -30,11 +30,6 @@ private:
 	vector<CWave*> theWaves;
 	unsigned int currWaveNum;
 
-	cocos2d::LabelTTF* waveNumLabel;
-	cocos2d::LabelTTF* goldNumLabel;
-	cocos2d::LabelTTF* hpNumLabel;
-	cocos2d::LabelTTF* monsterNumLabel;
-
 	CPlayer *player;
 	void createEnemyTypes();
 	void createWaves();

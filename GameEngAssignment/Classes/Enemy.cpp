@@ -20,15 +20,12 @@ void CEnemy::Init(cocos2d::Vec2 playerPos, CEnemyType type, CPlayer* player){
 		position = Vec2(round(CCRANDOM_0_1()) * 1280, CCRANDOM_0_1() * 720);
 	else
 		position = Vec2(CCRANDOM_0_1() * 1280, round(CCRANDOM_0_1()) * 720);
-	
-	//position = Vec2(0, -720);
 
 	direction = (playerPos - position).getNormalized();
 
 	theSprite = cocos2d::Sprite::create("enemy.png");
-
+	theSprite->setPosition(position);
 	theSprite->setScale(1.0f);
-
 	theSprite->setTag(ENEMY_TAG);
 
 	auto enemyBody = PhysicsBody::createBox(theSprite->getContentSize());

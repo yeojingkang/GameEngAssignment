@@ -88,24 +88,6 @@ bool GameWorld::init()
 	theWeapon = CWeapon::getInstance();
 	theWeapon->Init();
 
-	//Create text
-	waveNumLabel = CCLabelTTF::create("Wave 1", "fonts/Marker Felt.ttf", 24);
-	waveNumLabel->setPosition(Vec2(origin.x + visibleSize.width / 2,
-		origin.y + visibleSize.height - waveNumLabel->getContentSize().height));
-	goldNumLabel = CCLabelTTF::create("Gold: ", "fonts/Marker Felt.ttf", 24);
-	goldNumLabel->setPosition(Vec2(origin.x + goldNumLabel->getContentSize().width / 2,
-		origin.y + visibleSize.height * 3 / 4));
-	hpNumLabel = CCLabelTTF::create("HP: ", "fonts/Marker Felt.ttf", 24);
-	hpNumLabel->setPosition(Vec2(origin.x + hpNumLabel->getContentSize().width / 2,
-		origin.y + visibleSize.height * 3 / 4 - hpNumLabel->getContentSize().height));
-	monsterNumLabel = CCLabelTTF::create("Monsters: ", "fonts/Marker Felt.ttf", 24);
-	monsterNumLabel->setPosition(Vec2(origin.x + monsterNumLabel->getContentSize().width / 2,
-		origin.y + visibleSize.height * 3 / 4 - monsterNumLabel->getContentSize().height * 2));
-	this->addChild(waveNumLabel, 1);
-	this->addChild(goldNumLabel, 1);
-	this->addChild(hpNumLabel, 1);
-	this->addChild(monsterNumLabel, 1);
-
 	//goldNumLabel->runAction(Follow::create(this));
 
 	//Create the enemy types
@@ -439,18 +421,6 @@ void GameWorld::update(float dt)
 		}
 	}
 
-	//Update text
-	char text[256];
-	sprintf(text, "Gold: %d", player->GetGold());
-	goldNumLabel->setString(text);
-	sprintf(text, "HP: %d", player->GetHP());
-	hpNumLabel->setString(text);
-	sprintf(text, "Monsters: %d", getNumberOfActiveMonsters());
-	monsterNumLabel->setString(text);
-
-	goldNumLabel->runAction(Follow::create(this));
-	goldNumLabel->setPosition(goldNumLabel->getPosition() - Vec2(visibleSize.width / 2 - goldNumLabel->getContentSize().width / 2, 0));
-
 	//update the enemies
 	for (vector<CEnemy*>::iterator itr = theEnemies.begin(); itr != theEnemies.end(); ++itr)
 	{
@@ -473,9 +443,6 @@ void GameWorld::update(float dt)
 			if (waveChangeTimer > 10.0f && currWaveNum + 1 < theWaves.size()){
 				++currWaveNum;
 				waveChangeTimer = 0.0f;
-				char text[256];
-				sprintf(text, "Wave %d", currWaveNum + 1);
-				waveNumLabel->setString(text);
 			}
 		}
 		else{

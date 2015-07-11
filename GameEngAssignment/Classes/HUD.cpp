@@ -166,7 +166,16 @@ void CHUD::touchesMoved(const vector<cocos2d::Touch*> &touches, cocos2d::Event *
 
 void CHUD::update(float dt)
 {
-
+	//Update text
+	char text[256];
+	sprintf(text, "Gold: %d", player->GetGold());
+	goldNumLabel->setString(text);
+	sprintf(text, "HP: %d", player->GetHP());
+	hpNumLabel->setString(text);
+	//sprintf(text, "Monsters: %d", getNumberOfActiveMonsters());
+	//monsterNumLabel->setString(text);
+	//sprintf(text, "Wave %d", currWaveNum + 1);
+	//waveNumLabel->setString(text);
 }
 
 void CHUD::menuCloseCallback(Ref* pSender)
@@ -191,6 +200,28 @@ void CHUD::initOptions(const string& message)
 
 	messageLabel->setPosition(cocos2d::Vec2(Director::getInstance()->getVisibleSize().width / 2,
 		Director::getInstance()->getVisibleSize().height / 2));
+
+	//Create text
+	waveNumLabel = CCLabelTTF::create("Wave 1", "fonts/Marker Felt.ttf", 24);
+	waveNumLabel->setPosition(Vec2(Director::getInstance()->getVisibleSize().width / 2,
+		Director::getInstance()->getVisibleSize().height - waveNumLabel->getContentSize().height));
+
+	goldNumLabel = CCLabelTTF::create("Gold: ", "fonts/Marker Felt.ttf", 24);
+	goldNumLabel->setPosition(Vec2(20 + goldNumLabel->getContentSize().width / 2,
+		Director::getInstance()->getVisibleSize().height * 3 / 4));
+
+	hpNumLabel = CCLabelTTF::create("HP: ", "fonts/Marker Felt.ttf", 24);
+	hpNumLabel->setPosition(Vec2(20 + hpNumLabel->getContentSize().width / 2,
+		Director::getInstance()->getVisibleSize().height * 3 / 4 - hpNumLabel->getContentSize().height));
+	
+	monsterNumLabel = CCLabelTTF::create("Monsters: ", "fonts/Marker Felt.ttf", 24);
+	monsterNumLabel->setPosition(Vec2(20 + monsterNumLabel->getContentSize().width / 2,
+		Director::getInstance()->getVisibleSize().height * 3 / 4 - monsterNumLabel->getContentSize().height * 2));
+	
+	this->addChild(waveNumLabel, 1);
+	this->addChild(goldNumLabel, 1);
+	this->addChild(hpNumLabel, 1);
+	this->addChild(monsterNumLabel, 1);
 
 }
 

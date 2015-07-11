@@ -17,15 +17,18 @@ enum weaponType
 
 class CWeapon
 {
+
+protected:
+	CWeapon();
+
 public:
 
-	CWeapon();
-	~CWeapon();
+	static CWeapon* getInstance()
+	{
+		return &theWeapon;
+	}
 
 	void Init();
-
-	void SetWeaponSprite(string filename);
-	Sprite* getWeaponSprite();
 
 	void SetWeaponType(weaponType type);
 	weaponType GetWeaponType();
@@ -37,29 +40,32 @@ public:
 	int GetMaxAmmo();
 
 	void SetFirerate(float firerate);
-	int GetFirerate();
+	float GetFirerate();
 
 	void SetReloadtime(float reloadtime);
 	float GetReloadtime();
 
-	void weaponFiring();
+	void SwitchWeaponType();
+
+	void SetActive(bool active);
+	bool GetActive();
 
 	void update(float dt);
 
 private:
-	Sprite* weaponSprite;
+
+	static CWeapon theWeapon;
 
 	float xPos;
 	float yPos;
 
-	float firerate;
-	float reloadtime;
+	float fireRate;
+	float reloadTime;
 
 	int currentAmmo;
 	int maxAmmo;
-
-	int weaponSelect;
-	int weaponSwitch[3];
+	
+	bool isActive;
 
 	weaponType type;
 };

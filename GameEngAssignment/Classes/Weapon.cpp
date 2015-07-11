@@ -2,13 +2,14 @@
 
 USING_NS_CC;
 
+CWeapon CWeapon::theWeapon;
+
 CWeapon::CWeapon()
 {
 	currentAmmo = 0;
-	maxAmmo = 0;
-	firerate = 0;
-	reloadtime = 0;
-	weaponSprite = NULL;
+	maxAmmo = 100;
+	fireRate = 10;
+	reloadTime = 0;
 }
 
 void CWeapon::Init()
@@ -16,20 +17,17 @@ void CWeapon::Init()
 	//SetWeaponSprite("weapon.png");
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-	xPos = origin.x + visibleSize.width / 2;
+	/*xPos = origin.x + visibleSize.width / 2;
 	yPos = origin.y + visibleSize.height / 2;
 	weaponSprite->setPosition(xPos, yPos);
-	weaponSprite->setScale(1.5f);
-}
-
-void CWeapon::SetWeaponSprite(string filename)
-{
-	this->weaponSprite = Sprite::create(filename);
-}
-
-Sprite* CWeapon::getWeaponSprite()
-{
-	return weaponSprite;
+	weaponSprite->setScale(1.5f);*/
+	currentAmmo = 0;
+	maxAmmo = 100;
+	fireRate = 1.0f;
+	reloadTime = 0;
+	type = weaponType::PISTOL;
+	isActive = false;
+	
 }
 
 void CWeapon::SetWeaponType(weaponType type)
@@ -64,52 +62,51 @@ int CWeapon::GetMaxAmmo()
 
 void CWeapon::SetFirerate(float firerate)
 {
-	this->firerate = firerate;
+	this->fireRate = firerate;
 }
 
-int CWeapon::GetFirerate()
+float CWeapon::GetFirerate()
 {
-	return this->firerate;
+	return this->fireRate;
 }
 
 void CWeapon::SetReloadtime(float reloadtime)
 {
-	this->reloadtime = reloadtime;
+	this->reloadTime = reloadtime;
 }
 
 float CWeapon::GetReloadtime()
 {
-	return this->reloadtime;
+	return this->reloadTime;
 }
 
-void CWeapon::weaponFiring()
+void CWeapon::SwitchWeaponType()
 {
-	if (weaponSelect == weaponType::PISTOL)
+	if (this->type == weaponType::PISTOL)
 	{
-		firerate = 5;
+		this->type = weaponType::MACHINE_GUN;
 	}
-	else if (weaponSelect == weaponType::SHOTGUN)
+	else if (this->type == weaponType::MACHINE_GUN)
 	{
-		firerate = 3;
+		this->type = weaponType::SHOTGUN;
 	}
-	else if (weaponSelect == weaponType::MACHINE_GUN)
+	else if (this->type == weaponType::SHOTGUN)
 	{
-		firerate = 100;
+		this->type = weaponType::SHOTGUN;
 	}
+}
+
+void CWeapon::SetActive(bool active)
+{
+	this->isActive = active;
+}
+
+bool CWeapon::GetActive()
+{
+	return this->isActive;
 }
 
 void CWeapon::update(float dt)
 {
-	if (weaponSelect == 1)
-	{
-		weaponType::PISTOL;
-	}
-	else if (weaponSelect == 2)
-	{
-		weaponType::SHOTGUN;
-	}
-	else if (weaponSelect == 3)
-	{
-		weaponType::MACHINE_GUN;
-	}
+	fireRate -= dt;
 }

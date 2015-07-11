@@ -12,6 +12,7 @@
 #include "touchPad.h"
 
 #include "HUD.h"
+#include "Weapon.h"
 #include <fstream>
 
 using namespace std;
@@ -38,7 +39,7 @@ private:
 	void createEnemyTypes();
 	void createWaves();
 	
-
+	CWeapon *theWeapon;
 public:
 
 	Rendering *r;

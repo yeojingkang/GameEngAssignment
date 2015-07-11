@@ -8,9 +8,9 @@ CBullet::CBullet()
 	yPos = 0;
 	active = false;
 	bulletSprite = NULL;
+	moveVec = NULL;
 	bulletSpeed = 0;
 	active = false;
-	movementVec = NULL;
 }
 CBullet::~CBullet(){}
 
@@ -22,20 +22,22 @@ void CBullet::Init()
 	yPos = 0;
 	bulletSprite->setPosition(xPos, yPos);
 	bulletSprite->setScale(1.5f);
-	bulletSpeed = 100;
-	movementVec = new Vec2(0, 0);
+	bulletSpeed = 200;
 	bounds = bulletSprite->getBoundingBox();
 	damage = 100;
+	moveVec = NULL;
+
+	bulletSprite->setTag(BULLET_TAG);
 
 	bulletBody = PhysicsBody::createBox(bulletSprite->getContentSize());
 
 	bulletBody->setDynamic(false);
-	bulletBody->setCollisionBitmask(BULLET_COLLISION_BITMASK);
-	bulletBody->setCategoryBitmask(ENEMY_COLLISION_BITMASK);
+	//bulletBody->setCollisionBitmask(BULLET_COLLISION_BITMASK);
+	//bulletBody->setCategoryBitmask(ENEMY_COLLISION_BITMASK);
 	bulletBody->setContactTestBitmask(0xFFFFFFFF);
 
 	bulletSprite->setPhysicsBody(bulletBody);
-
+	
 }
 
 void CBullet::SetSprite(string filename)
@@ -58,16 +60,6 @@ bool CBullet::GetActive()
 	return this->active;
 }
 
-void CBullet::SetMoveVec(Vec2* v)
-{
-	this->movementVec = v;
-}
-
-Vec2* CBullet::GetMoveVec()
-{
-	return this->movementVec;
-}
-
 void CBullet::SetBulletSpeed(float s)
 {
 	this->bulletSpeed = s;
@@ -76,6 +68,26 @@ void CBullet::SetBulletSpeed(float s)
 float CBullet::GetBulletSpeed()
 {
 	return this->bulletSpeed;
+}
+
+void CBullet::SetMoveVec(Vec2* moveVec)
+{
+	this->moveVec = moveVec;
+}
+
+Vec2* CBullet::GetMoveVec(void)
+{
+	return this->moveVec;
+}
+
+void CBullet::SetBulletDamage(float damage)
+{
+	this->damage = damage;
+}
+
+float CBullet::GetBulletDamage(void)
+{
+	return this->damage;
 }
 
 bool CBullet::CheckCollision(Rect r)
@@ -94,7 +106,6 @@ bool CBullet::CheckCollision(Rect r)
 bool CBullet::CheckCollision(CEnemy* enemy){
 	if (this->bounds.intersectsRect(enemy->getSprite()->getBoundingBox())){
 		enemy->decreaseHP(damage);
-		active = false;
 		return true;
 	}
 	else
@@ -103,10 +114,16 @@ bool CBullet::CheckCollision(CEnemy* enemy){
 
 void CBullet::MoveForward()
 {
-	bulletSprite->runAction(MoveTo::create(3, Vec2(bulletSprite->getPositionX() + movementVec->x * this->bulletSpeed, bulletSprite->getPositionY() + movementVec->y * this->bulletSpeed)));
+	float time = 1000 / bulletSpeed;
+	Vec2 targetPos = bulletSprite->getPosition() + this->moveVec->getNormalized() * 1000;
+	auto actionMove = MoveTo::create(time, targetPos);
+	bulletSprite->runAction(actionMove);
 }
 
 void CBullet::Update(float dt)
 {
-	bulletSprite->setPosition(bulletSprite->getPositionX() + movementVec->x * dt * this->bulletSpeed, bulletSprite->getPositionY() + movementVec->y * dt * this->bulletSpeed);
+	if (bulletSprite->getNumberOfRunningActions() == 0)
+	{
+		delete this;
+	}
 }

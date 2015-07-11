@@ -25,11 +25,14 @@ public:
 	void SetActive(bool);
 	bool GetActive();
 	
-	void SetMoveVec(Vec2* v);
+	void SetMoveVec(Vec2* moveVec);
 	Vec2* GetMoveVec();
 
 	void SetBulletSpeed(float s);
 	float GetBulletSpeed();
+
+	void SetBulletDamage(float);
+	float GetBulletDamage(void);
 
 	bool CheckCollision(Rect r);
 	bool CheckCollision(CEnemy* enemy);
@@ -47,9 +50,10 @@ private:
 
 	bool active;
 
-	Vec2* movementVec;
+	Vec2* moveVec;
+
 	float bulletSpeed;
-	unsigned int damage;
+	float damage;
 
 	Rect bounds;
 

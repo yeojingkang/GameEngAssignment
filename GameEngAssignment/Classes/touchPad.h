@@ -33,6 +33,8 @@ public:
 	void SetActive(bool);
 	bool GetActive();
 
+	Vec2 GetDirectionVector();
+
 	void Update(Vec2 pos, float dt);
 
 private:
@@ -50,6 +52,8 @@ private:
 	Touch* touch;
 
 	bool active;
+
+	Vec2 directionVector;
 };
 
 #endif // __TOUCHPAD_H__

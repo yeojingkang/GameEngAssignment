@@ -11,7 +11,7 @@ CPlayer::CPlayer()
 	moveSpeed = 0;
 	velocity = new Point(0, 0);
 	playerSprite = NULL;
-	gunPoint = new Vec2(0, 0);
+	shootVec = NULL;
 	gold = 0;
 	hp = 100;
 }
@@ -26,7 +26,7 @@ void CPlayer::Init()
 	moveSpeed = 200;
 	playerSprite->setPosition(xPos, yPos);
 	playerSprite->setScale(1.5f);
-	gunPoint->set(playerSprite->getPositionX() + 10, playerSprite->getPositionY());
+	shootVec = NULL;
 	bounds = playerSprite->getBoundingBox();
 }
 
@@ -86,16 +86,6 @@ Vec2* CPlayer::GetVelocity()
 	return velocity;
 }
 
-void CPlayer::SetGunPoint(Vec2* pt)
-{
-	this->gunPoint = pt;
-}
-
-Vec2* CPlayer::GetGunPoint()
-{
-	return this->gunPoint;
-}
-
 void CPlayer::SetMoveSpeed(float speed)
 {
 	this->moveSpeed = speed;
@@ -104,6 +94,16 @@ void CPlayer::SetMoveSpeed(float speed)
 float CPlayer::GetMoveSpeed(void)
 {
 	return this->moveSpeed;
+}
+
+void CPlayer::SetShootVec(Vec2* shootVec)
+{
+	this->shootVec = shootVec;
+}
+
+Vec2* CPlayer::GetShootVec(void)
+{
+	return this->shootVec;
 }
 
 void CPlayer::update(float dt)

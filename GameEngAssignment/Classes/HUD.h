@@ -6,6 +6,7 @@
 
 #include "touchPad.h"
 #include "Player.h"
+#include "Weapon.h"
 
 using namespace cocos2d;
 using namespace std;
@@ -43,6 +44,7 @@ private:
 	CTouchPad* shootPad;
 
 	CPlayer* player;
+	CWeapon* theWeapon;
 };
 
 #endif // __HUD_H__

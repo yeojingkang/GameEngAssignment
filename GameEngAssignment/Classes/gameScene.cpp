@@ -85,6 +85,9 @@ bool GameWorld::init()
 
 	this->runAction(Follow::create(player->getPlayerSprite()));
 
+	theWeapon = CWeapon::getInstance();
+	theWeapon->Init();
+
 	//Create text
 	waveNumLabel = CCLabelTTF::create("Wave 1", "fonts/Marker Felt.ttf", 24);
 	waveNumLabel->setPosition(Vec2(origin.x + visibleSize.width / 2,
@@ -382,13 +385,21 @@ void GameWorld::mouseScroll(Event *event)
 
 bool GameWorld::onContactBegin(PhysicsContact &contact)
 {
-	PhysicsBody *a = contact.getShapeA()->getBody();
-	PhysicsBody *b = contact.getShapeB()->getBody();
+	auto nodeA = contact.getShapeA()->getBody()->getNode();
+	auto nodeB = contact.getShapeB()->getBody()->getNode();
 
-	if ((a->getCategoryBitmask() & b->getCollisionBitmask()) == 0 ||
-		(b->getCategoryBitmask() & a->getCollisionBitmask()) == 0)
+	if (nodeA && nodeB)
 	{
-		player->AddGold(10);
+		if (nodeA->getTag() == BULLET_TAG)
+		{
+			//dynamic_cast<CEnemy*>(nodeB)->decreaseHP(50);
+			nodeA->removeFromParentAndCleanup(true);
+		}
+		else if (nodeB->getTag() == BULLET_TAG)
+		{
+			//dynamic_cast<CEnemy*>(nodeA)->decreaseHP(50);
+			nodeB->removeFromParentAndCleanup(true);
+		}
 	}
 
 	return true;
@@ -397,9 +408,36 @@ bool GameWorld::onContactBegin(PhysicsContact &contact)
 void GameWorld::update(float dt)
 {
 	player->update(dt);
+	theWeapon->update(dt);
 
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+	//shoot bullet if weapon is true (if user is touching the shootpad)
+	if (theWeapon->GetActive() == true)
+	{
+		if (theWeapon->GetFirerate() <= 0.0f)
+		{
+			theWeapon->SetFirerate(PISTOL_FIRE_RATE);
+			CBullet* b = new CBullet();
+			b->Init();
+			b->GetSprite()->setPosition(player->getPlayerSprite()->getPosition());
+			b->GetSprite()->setRotation(player->getPlayerSprite()->getRotation());
+			b->SetMoveVec(player->GetShootVec());
+			b->SetActive(true);
+			b->MoveForward();
+			theBullets.push_back(b);
+			this->addChild(b->GetSprite(), 0);
+		}
+	}
+
+	for (vector<CBullet*>::iterator itr = theBullets.begin(); itr != theBullets.end(); ++itr)
+	{
+		if ((*itr)->GetActive() == true)
+		{
+			(*itr)->Update(dt);
+		}
+	}
 
 	//Update text
 	char text[256];
@@ -413,26 +451,6 @@ void GameWorld::update(float dt)
 	goldNumLabel->runAction(Follow::create(this));
 	goldNumLabel->setPosition(goldNumLabel->getPosition() - Vec2(visibleSize.width / 2 - goldNumLabel->getContentSize().width / 2, 0));
 
-	//	Vec2* shootPos = new Vec2(shootDirX, shootDirY);
-
-	//	Vec2* direction = new Vec2(shootDirX, shootDirY);
-	//	direction->normalize();
-	//	b->SetMoveVec(direction);
-	//	//b->MoveForward();
-
-	//	theBullets.push_back(b);
-	//	this->addChild(b->GetSprite(), 0);
-
-	//	for (vector<CBullet*>::iterator itr = theBullets.begin(); itr != theBullets.end(); ++itr){
-	//		if ((*itr)->GetActive() == false)
-	//		{
-	//			(*itr)->SetActive(true);
-	//			(*itr)->GetSprite()->setRotation(player->getPlayerSprite()->getRotation());
-	//			(*itr)->GetSprite()->setPosition(player->getPlayerSprite()->getPosition());
-	//		}
-	//	}
-	//}
-
 	//update the enemies
 	for (vector<CEnemy*>::iterator itr = theEnemies.begin(); itr != theEnemies.end(); ++itr)
 	{
@@ -441,16 +459,8 @@ void GameWorld::update(float dt)
 			if ((*itr)->getActive())
 				(*itr)->Update(dt, player->getPlayerSprite()->getPosition());
 		}
-
-		//Update the bullets
-		for (vector<CBullet*>::iterator itr = theBullets.begin(); itr != theBullets.end(); ++itr){
-			if ((*itr)->GetActive() == true)
-			{
-				(*itr)->Update(dt);
-			}
-		}
-
 	}
+
 	//Update the wave
 	if (currWaveNum < theWaves.size()){
 		//If there are no more monster to spawn or are alive

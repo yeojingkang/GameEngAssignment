@@ -21,6 +21,8 @@ void CTouchPad::Init()
 	touchPadSprite->setPosition(Vec2(xPos, yPos));
 	baseSprite->setPosition(Vec2(xPos, yPos));
 	originalPos = touchPadSprite->getPosition();
+	directionVector.x = 0;
+	directionVector.y = 0;
 	touch = NULL;
 	active = false;
 }
@@ -75,6 +77,12 @@ bool CTouchPad::GetActive()
 	return this->active;
 }
 
+Vec2 CTouchPad::GetDirectionVector()
+{
+	return this->directionVector;
+}
+
 void CTouchPad::Update(Vec2 pos, float dt)
 {
+	directionVector = touchPadSprite->getPosition() - baseSprite->getPosition();
 }

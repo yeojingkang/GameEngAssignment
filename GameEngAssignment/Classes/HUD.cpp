@@ -39,6 +39,7 @@ bool CHUD::init()
 	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(multiTouchListener, this);
 
 	player = CPlayer::getInstance();
+	theWeapon = CWeapon::getInstance();
 
 	//movement touchpad
 	movePad = new CTouchPad();
@@ -104,6 +105,9 @@ void CHUD::touchesEnded(const vector<cocos2d::Touch*> &touches, cocos2d::Event *
 			shootPad->SetTouch(nullptr);
 			shootPad->GetSprite()->setPosition(shootPad->GetOriginalPos());
 			shootPad->SetActive(false);
+
+			//set weapon to false
+			theWeapon->SetActive(false);
 		}
 	}
 }
@@ -133,6 +137,10 @@ void CHUD::touchesMoved(const vector<cocos2d::Touch*> &touches, cocos2d::Event *
 
 			if (shootPad->GetTouch() != nullptr && shootPad->GetTouch() == touch)
 			{
+
+				//sets weapon to active
+				theWeapon->SetActive(true);
+
 				Point nextPos = tap;
 				shootPad->GetSprite()->setPosition(tap);
 
@@ -150,6 +158,7 @@ void CHUD::touchesMoved(const vector<cocos2d::Touch*> &touches, cocos2d::Event *
 				}
 
 				player->getPlayerSprite()->setRotation(angleToRot);
+				player->SetShootVec(shootPos);
 			}
 		}
 	}

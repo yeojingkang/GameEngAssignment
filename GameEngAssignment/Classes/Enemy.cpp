@@ -29,12 +29,14 @@ void CEnemy::Init(cocos2d::Vec2 playerPos, CEnemyType type, CPlayer* player){
 
 	theSprite->setScale(1.0f);
 
+	theSprite->setTag(ENEMY_TAG);
+
 	auto enemyBody = PhysicsBody::createBox(theSprite->getContentSize());
 
 	//enemyBody->setDynamic(false);
 	enemyBody->setGravityEnable(false);
-	enemyBody->setCollisionBitmask(ENEMY_COLLISION_BITMASK);
-	enemyBody->setCategoryBitmask(BULLET_COLLISION_BITMASK);
+	//enemyBody->setCollisionBitmask(ENEMY_COLLISION_BITMASK);
+	//enemyBody->setCategoryBitmask(BULLET_COLLISION_BITMASK);
 	enemyBody->setContactTestBitmask(0xFFFFFFFF);
 
 	theSprite->setPhysicsBody(enemyBody);

@@ -122,8 +122,5 @@ void CBullet::MoveForward()
 
 void CBullet::Update(float dt)
 {
-	if (bulletSprite->getNumberOfRunningActions() == 0)
-	{
-		delete this;
-	}
+	
 }

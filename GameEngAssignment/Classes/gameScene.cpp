@@ -375,12 +375,10 @@ bool GameWorld::onContactBegin(PhysicsContact &contact)
 	{
 		if (nodeA->getTag() == BULLET_TAG)
 		{
-			//dynamic_cast<CEnemy*>(nodeB)->decreaseHP(50);
 			nodeA->removeFromParentAndCleanup(true);
 		}
 		else if (nodeB->getTag() == BULLET_TAG)
 		{
-			//dynamic_cast<CEnemy*>(nodeA)->decreaseHP(50);
 			nodeB->removeFromParentAndCleanup(true);
 		}
 	}

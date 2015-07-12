@@ -68,9 +68,7 @@ void CEnemy::Init(CEnemy* eSprite, cocos2d::Vec2 playerPos, CEnemyType type, CPl
 }
 
 void CEnemy::Update(float dt, cocos2d::Vec2 playerPos){
-	if (hp <= 0){
-		Die();
-	}
+	
 }
 
 void CEnemy::finishedMoving(Object *pSender){
@@ -104,13 +102,22 @@ bool CEnemy::onContactBegin(PhysicsContact &contact)
 	{
 		if (nodeA->getTag() == BULLET_TAG)
 		{
-			//dynamic_cast<CEnemy*>(nodeB)->decreaseHP(50);
-			nodeA->removeFromParentAndCleanup(true);
+			dynamic_cast<CEnemy*>(nodeB)->decreaseHP(50);
+			if (dynamic_cast<CEnemy*>(nodeB)->hp <= 0)
+			{
+				nodeB->removeFromParentAndCleanup(true);
+				thePlayer->AddGold(bounty);
+			}
 		}
 		else if (nodeB->getTag() == BULLET_TAG)
 		{
-		//	dynamic_cast<CEnemy*>(nodeA)->decreaseHP(50);
-			nodeB->removeFromParentAndCleanup(true);
+			dynamic_cast<CEnemy*>(nodeA)->decreaseHP(50);
+			if (dynamic_cast<CEnemy*>(nodeA)->hp <= 0)
+			{
+				nodeA->removeFromParentAndCleanup(true);
+				thePlayer->AddGold(bounty);
+			}
+			
 		}
 	}
 	return true;

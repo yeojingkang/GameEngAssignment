@@ -7,13 +7,15 @@
 
 #include "Definitions.h"
 
-class CEnemy
+class CEnemy : public cocos2d::Sprite
 {
 public:
 	CEnemy();
 	~CEnemy();
 
-	void Init(cocos2d::Vec2 playerPos, CEnemyType type, CPlayer* player);
+	static CEnemy* create();
+
+	void Init(CEnemy* eSprite, cocos2d::Vec2 playerPos, CEnemyType type, CPlayer* player);
 	void Update(float, cocos2d::Vec2);
 
 	cocos2d::Sprite* getSprite(void){ return theSprite; };
@@ -27,7 +29,11 @@ public:
 
 	void Die();
 
-	void MoveToPlayer(Sprite* sprite);
+	void MoveToPlayer(CEnemy* eSprite);
+
+	//handler for onContactBegin
+	//handler for detecting collision
+	bool onContactBegin(PhysicsContact &contact);
 
 private:
 	float speed;

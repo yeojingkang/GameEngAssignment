@@ -14,7 +14,22 @@ CEnemy::~CEnemy()
 {
 }
 
-void CEnemy::Init(cocos2d::Vec2 playerPos, CEnemyType type, CPlayer* player){
+CEnemy* CEnemy::create()
+{
+
+	CEnemy* eSprite = new CEnemy();
+
+	if (eSprite->initWithFile("enemy.png"))
+	{
+		eSprite->autorelease();
+		return eSprite;
+	}
+
+	CC_SAFE_DELETE(eSprite);
+	return NULL;
+}
+
+void CEnemy::Init(CEnemy* eSprite, cocos2d::Vec2 playerPos, CEnemyType type, CPlayer* player){
 	
 	if (CCRANDOM_0_1() > 0.5f)
 		position = Vec2(round(CCRANDOM_0_1()) * 1280, CCRANDOM_0_1() * 720);
@@ -23,12 +38,12 @@ void CEnemy::Init(cocos2d::Vec2 playerPos, CEnemyType type, CPlayer* player){
 
 	direction = (playerPos - position).getNormalized();
 
-	theSprite = cocos2d::Sprite::create("enemy.png");
-	theSprite->setPosition(position);
-	theSprite->setScale(1.0f);
-	theSprite->setTag(ENEMY_TAG);
+	//theSprite = cocos2d::Sprite::create("enemy.png");
+	eSprite->setPosition(position);
+	eSprite->setScale(1.0f);
+	eSprite->setTag(ENEMY_TAG);
 
-	auto enemyBody = PhysicsBody::createBox(theSprite->getContentSize());
+	auto enemyBody = PhysicsBody::createBox(eSprite->getContentSize());
 
 	//enemyBody->setDynamic(false);
 	enemyBody->setGravityEnable(false);
@@ -36,7 +51,7 @@ void CEnemy::Init(cocos2d::Vec2 playerPos, CEnemyType type, CPlayer* player){
 	//enemyBody->setCategoryBitmask(BULLET_COLLISION_BITMASK);
 	enemyBody->setContactTestBitmask(0xFFFFFFFF);
 
-	theSprite->setPhysicsBody(enemyBody);
+	eSprite->setPhysicsBody(enemyBody);
 
 	this->typeName = type.getName();
 	this->thePlayer = player;
@@ -46,6 +61,10 @@ void CEnemy::Init(cocos2d::Vec2 playerPos, CEnemyType type, CPlayer* player){
 	this->speed = type.getSpeed();
 
 	active = true;
+
+	auto contactListener = EventListenerPhysicsContact::create();
+	contactListener->onContactBegin = CC_CALLBACK_1(CEnemy::onContactBegin, this);
+	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
 }
 
 void CEnemy::Update(float dt, cocos2d::Vec2 playerPos){
@@ -55,21 +74,44 @@ void CEnemy::Update(float dt, cocos2d::Vec2 playerPos){
 }
 
 void CEnemy::finishedMoving(Object *pSender){
-	Sprite *sprite = (Sprite *)pSender;
-	this->MoveToPlayer(sprite);
+	CEnemy *eSprite = (CEnemy *)pSender;
+	this->MoveToPlayer(eSprite);
 }
-void CEnemy::MoveToPlayer(Sprite* sprite)
+
+void CEnemy::MoveToPlayer(CEnemy* eSprite)
 {
 	//float distance = thePlayer->getPlayerSprite()->getPosition().distance(theSprite->getPosition());
 	float time = 10 / speed;
-	Vec2 targetPosition = theSprite->getPosition() + (thePlayer->getPlayerSprite()->getPosition() - theSprite->getPosition()).getNormalized() * 10;
+	Vec2 targetPosition = eSprite->getPosition() + (thePlayer->getPlayerSprite()->getPosition() - eSprite->getPosition()).getNormalized() * 10;
 
 	auto actionMove = MoveTo::create(time, targetPosition);
 	auto actionMoveDone = CallFuncN::create(CC_CALLBACK_1(CEnemy::finishedMoving, this));
-	sprite->runAction(Sequence::create(actionMove, actionMoveDone, NULL));
+	eSprite->runAction(Sequence::create(actionMove, actionMoveDone, NULL));
 }
 
 void CEnemy::Die(){
 	thePlayer->AddGold(bounty);
 	active = false;
+}
+
+//handler for handling collision
+bool CEnemy::onContactBegin(PhysicsContact &contact)
+{
+	auto nodeA = contact.getShapeA()->getBody()->getNode();
+	auto nodeB = contact.getShapeB()->getBody()->getNode();
+
+	if (nodeA && nodeB)
+	{
+		if (nodeA->getTag() == BULLET_TAG)
+		{
+			//dynamic_cast<CEnemy*>(nodeB)->decreaseHP(50);
+			nodeA->removeFromParentAndCleanup(true);
+		}
+		else if (nodeB->getTag() == BULLET_TAG)
+		{
+		//	dynamic_cast<CEnemy*>(nodeA)->decreaseHP(50);
+			nodeB->removeFromParentAndCleanup(true);
+		}
+	}
+	return true;
 }

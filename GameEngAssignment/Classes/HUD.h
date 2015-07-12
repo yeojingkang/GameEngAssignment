@@ -35,6 +35,7 @@ public:
 	// a selector callback
 	void menuCloseCallback(cocos2d::Ref* pSender);
 
+	//statically create function
 	CREATE_FUNC(CHUD);
 
 private:

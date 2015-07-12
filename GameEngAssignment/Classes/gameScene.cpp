@@ -460,13 +460,14 @@ void GameWorld::update(float dt)
 
 					//Spawn number of enemies for each enemy type
 					for (int i = 0; i < spawnList[index]; ++i){
-						CEnemy* newEnemy = new CEnemy();
 
-						newEnemy->Init(player->getPlayerSprite()->getPosition(), theTypes[index], player);
-						newEnemy->MoveToPlayer(newEnemy->getSprite());
+						CEnemy* newEnemy = CEnemy::create();
+
+						newEnemy->Init(newEnemy, player->getPlayerSprite()->getPosition(), theTypes[index], player);
+						newEnemy->MoveToPlayer(newEnemy);
 
 						theEnemies.push_back(newEnemy);
-						this->addChild(newEnemy->getSprite(), 0);
+						this->addChild(newEnemy, 1);
 					}
 				}
 			}

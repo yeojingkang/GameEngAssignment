@@ -9,6 +9,7 @@ Scene* GameWorld::createScene()
 
 	// 'layer' is an autorelease object
 	auto layer = GameWorld::create();
+	layer->setName("GameScene");
 
 	//create hud
 	CHUD *theHUD = CHUD::createLayer("Main HUD");

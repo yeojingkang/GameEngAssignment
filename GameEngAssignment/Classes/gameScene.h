@@ -72,6 +72,7 @@ public:
 	virtual void update(float);
 
 	int getNumberOfActiveMonsters();
+	int getWaveNum(){ return currWaveNum; }
 
 	void createNewType(string, int, int, float);
 	void createNewType(CEnemyType);

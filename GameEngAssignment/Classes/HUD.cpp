@@ -1,4 +1,5 @@
 #include "HUD.h"
+#include "gameScene.h"
 
 USING_NS_CC;
 
@@ -166,16 +167,18 @@ void CHUD::touchesMoved(const vector<cocos2d::Touch*> &touches, cocos2d::Event *
 
 void CHUD::update(float dt)
 {
+	GameWorld* gameScene = (GameWorld*)(this->getParent()->getChildByName("GameScene"));
+
 	//Update text
 	char text[256];
 	sprintf(text, "Gold: %d", player->GetGold());
 	goldNumLabel->setString(text);
 	sprintf(text, "HP: %d", player->GetHP());
 	hpNumLabel->setString(text);
-	//sprintf(text, "Monsters: %d", getNumberOfActiveMonsters());
-	//monsterNumLabel->setString(text);
-	//sprintf(text, "Wave %d", currWaveNum + 1);
-	//waveNumLabel->setString(text);
+	sprintf(text, "Monsters: %d", gameScene->getNumberOfActiveMonsters());
+	monsterNumLabel->setString(text);
+	sprintf(text, "Wave %d", gameScene->getWaveNum() + 1);
+	waveNumLabel->setString(text);
 }
 
 void CHUD::menuCloseCallback(Ref* pSender)

@@ -6,12 +6,12 @@ CEnemy::CEnemy() :
 typeName(""),
 hp(0),
 bounty(0),
-thePlayer(NULL),
-active(false)
+thePlayer(NULL)
 {
 }
 CEnemy::~CEnemy()
 {
+	thePlayer = NULL;
 }
 
 CEnemy* CEnemy::create()
@@ -60,8 +60,6 @@ void CEnemy::Init(CEnemy* eSprite, cocos2d::Vec2 playerPos, CEnemyType type, CPl
 	this->bounty = type.getBounty();
 	this->speed = type.getSpeed();
 
-	active = true;
-
 	auto contactListener = EventListenerPhysicsContact::create();
 	contactListener->onContactBegin = CC_CALLBACK_1(CEnemy::onContactBegin, this);
 	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
@@ -89,7 +87,6 @@ void CEnemy::MoveToPlayer(CEnemy* eSprite)
 
 void CEnemy::Die(){
 	thePlayer->AddGold(bounty);
-	active = false;
 }
 
 //handler for handling collision
@@ -102,20 +99,28 @@ bool CEnemy::onContactBegin(PhysicsContact &contact)
 	{
 		if (nodeA->getTag() == BULLET_TAG)
 		{
+			//Remove the bullet
+			nodeA->removeFromParentAndCleanup(true);
+
 			dynamic_cast<CEnemy*>(nodeB)->decreaseHP(50);
+
 			if (dynamic_cast<CEnemy*>(nodeB)->hp <= 0)
 			{
-				nodeB->removeFromParentAndCleanup(true);
-				thePlayer->AddGold(bounty);
+				Die();
+				nodeB->removeFromParentAndCleanup(false);
 			}
 		}
 		else if (nodeB->getTag() == BULLET_TAG)
 		{
+			//Remove the bullet
+			nodeB->removeFromParentAndCleanup(true);
+
 			dynamic_cast<CEnemy*>(nodeA)->decreaseHP(50);
+
 			if (dynamic_cast<CEnemy*>(nodeA)->hp <= 0)
 			{
-				nodeA->removeFromParentAndCleanup(true);
-				thePlayer->AddGold(bounty);
+				Die();
+				nodeA->removeFromParentAndCleanup(false);
 			}
 			
 		}

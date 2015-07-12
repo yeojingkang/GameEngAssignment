@@ -412,6 +412,7 @@ void GameWorld::update(float dt)
 		}
 	}
 
+	//Update the bullets
 	for (vector<CBullet*>::iterator itr = theBullets.begin(); itr != theBullets.end(); ++itr)
 	{
 		if ((*itr)->GetActive() == true)
@@ -420,15 +421,11 @@ void GameWorld::update(float dt)
 		}
 	}
 
-	//update the enemies
-	for (vector<CEnemy*>::iterator itr = theEnemies.begin(); itr != theEnemies.end(); ++itr)
-	{
-		(*itr)->Update(dt, player->getPlayerSprite()->getPosition());
-		for (vector<CEnemy*>::iterator itr = theEnemies.begin(); itr != theEnemies.end(); ++itr){
-			if ((*itr)->getActive())
-				(*itr)->Update(dt, player->getPlayerSprite()->getPosition());
-		}
-	}
+	//Cleanup theEnemies
+	theEnemies.erase(
+		std::remove_if(theEnemies.begin(), theEnemies.end(), [](CEnemy* enemy){return !enemy->getParent(); }),
+		theEnemies.end()
+		);
 
 	//Update the wave
 	if (currWaveNum < theWaves.size()){
@@ -582,7 +579,7 @@ int GameWorld::getNumberOfActiveMonsters(){
 	int num = 0;
 
 	for (vector<CEnemy*>::iterator itr = theEnemies.begin(); itr != theEnemies.end(); ++itr){
-		if ((*itr)->getActive())
+		if ((*itr)->getParent() != NULL)
 			++num;
 	}
 

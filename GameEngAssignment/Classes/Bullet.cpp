@@ -104,12 +104,13 @@ bool CBullet::CheckCollision(Rect r)
 }
 
 bool CBullet::CheckCollision(CEnemy* enemy){
-	if (this->bounds.intersectsRect(enemy->getSprite()->getBoundingBox())){
-		enemy->decreaseHP(damage);
-		return true;
-	}
-	else
-		return false;
+	//if (this->bounds.intersectsRect(enemy->getSprite()->getBoundingBox())){
+	//	enemy->decreaseHP(damage);
+	//	return true;
+	//}
+	//else
+	//	return false;
+	return false;
 }
 
 void CBullet::MoveForward()

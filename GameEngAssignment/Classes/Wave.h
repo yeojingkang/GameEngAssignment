@@ -16,13 +16,11 @@ public:
 	void setSubwave(float activateTime, vector<int> enemies);
 	void setSubwave(CSubwave* newSubwave);
 
-	int getNormalMonsters(){ return normal; }
 	int getTotalMonsters();
-
-	void spawnedNormalMonster(){ --normal; }
+	
+	void typeNotDefined(int type);
 
 private:
-	int normal;
 	float elapsedTime;
 	vector<CSubwave*> theSubwaves;
 };

@@ -463,9 +463,11 @@ void GameWorld::update(float dt)
 				for (vector<int>::iterator itr = spawnList.begin(); itr != spawnList.end(); ++itr){
 					int index = std::distance(spawnList.begin(), itr);
 
-					//If an enemy is being spawned where it's type isn't defined, break
-					if (index + 1 > theTypes.size())
+					//If an enemy is being spawned where it's type isn't defined, remove all monsters of that type then break
+					if (index + 1 > theTypes.size()){
+						theWaves[currWaveNum]->typeNotDefined(index);
 						break;
+					}
 
 					//Spawn number of enemies for each enemy type
 					for (int i = 0; i < spawnList[index]; ++i){

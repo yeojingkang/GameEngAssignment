@@ -25,7 +25,7 @@ void CWeapon::Init()
 	maxAmmo = 100;
 	fireRate = 1.0f;
 	reloadTime = 0;
-	type = weaponType::PISTOL;
+	type = weaponType::MACHINE_GUN;
 	isActive = false;
 	
 }

@@ -10,17 +10,16 @@
 using namespace cocos2d;
 using namespace std;
 
-class CBullet
+class CBullet : public cocos2d::Sprite
 {
 public:
 
 	CBullet();
 	~CBullet();
 
-	void Init();
+	static CBullet* create();
 
-	void SetSprite(string filename);
-	Sprite* GetSprite();
+	void Init();
 	
 	void SetActive(bool);
 	bool GetActive();
@@ -41,8 +40,11 @@ public:
 
 	void Update(float dt);
 
+	//handler for onContactBegin
+	//handler for detecting collision
+	bool onContactBegin(PhysicsContact &contact);
+
 private:
-	Sprite* bulletSprite;
 	PhysicsBody* bulletBody;
 
 	float xPos;

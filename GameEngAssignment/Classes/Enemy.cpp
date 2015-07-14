@@ -97,11 +97,8 @@ bool CEnemy::onContactBegin(PhysicsContact &contact)
 
 	if (nodeA && nodeB)
 	{
-		if (nodeA->getTag() == BULLET_TAG)
+		if (nodeA->getTag() == BULLET_TAG && nodeB->getTag() == ENEMY_TAG)
 		{
-			//Remove the bullet
-			nodeA->removeFromParentAndCleanup(true);
-
 			dynamic_cast<CEnemy*>(nodeB)->decreaseHP(50);
 
 			if (dynamic_cast<CEnemy*>(nodeB)->hp <= 0)
@@ -110,11 +107,8 @@ bool CEnemy::onContactBegin(PhysicsContact &contact)
 				nodeB->removeFromParentAndCleanup(false);
 			}
 		}
-		else if (nodeB->getTag() == BULLET_TAG)
+		else if (nodeB->getTag() == BULLET_TAG && nodeA->getTag() == ENEMY_TAG)
 		{
-			//Remove the bullet
-			nodeB->removeFromParentAndCleanup(true);
-
 			dynamic_cast<CEnemy*>(nodeA)->decreaseHP(50);
 
 			if (dynamic_cast<CEnemy*>(nodeA)->hp <= 0)

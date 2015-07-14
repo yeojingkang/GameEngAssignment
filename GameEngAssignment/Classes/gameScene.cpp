@@ -368,21 +368,6 @@ void GameWorld::mouseScroll(Event *event)
 
 bool GameWorld::onContactBegin(PhysicsContact &contact)
 {
-	auto nodeA = contact.getShapeA()->getBody()->getNode();
-	auto nodeB = contact.getShapeB()->getBody()->getNode();
-
-	if (nodeA && nodeB)
-	{
-		if (nodeA->getTag() == BULLET_TAG)
-		{
-			nodeA->removeFromParentAndCleanup(true);
-		}
-		else if (nodeB->getTag() == BULLET_TAG)
-		{
-			nodeB->removeFromParentAndCleanup(true);
-		}
-	}
-
 	return true;
 }
 
@@ -399,16 +384,45 @@ void GameWorld::update(float dt)
 	{
 		if (theWeapon->GetFirerate() <= 0.0f)
 		{
-			theWeapon->SetFirerate(PISTOL_FIRE_RATE);
-			CBullet* b = new CBullet();
-			b->Init();
-			b->GetSprite()->setPosition(player->getPlayerSprite()->getPosition());
-			b->GetSprite()->setRotation(player->getPlayerSprite()->getRotation());
-			b->SetMoveVec(player->GetShootVec());
-			b->SetActive(true);
-			b->MoveForward();
-			theBullets.push_back(b);
-			this->addChild(b->GetSprite(), 0);
+			if (theWeapon->GetWeaponType() == weaponType::PISTOL)
+			{
+				theWeapon->SetFirerate(PISTOL_FIRE_RATE);
+				CBullet* b = CBullet::create();
+				b->setPosition(player->getPlayerSprite()->getPosition());
+				b->SetMoveVec(player->GetShootVec());
+				b->SetActive(true);
+				b->MoveForward();
+				theBullets.push_back(b);
+				this->addChild(b, 0);
+			}
+			else if (theWeapon->GetWeaponType() == weaponType::MACHINE_GUN)
+			{
+				//adds machine gun type shooting
+				theWeapon->SetFirerate(MACHINEGUN_FIRE_RATE);
+				CBullet* b = CBullet::create();
+				b->setPosition(player->getPlayerSprite()->getPosition());
+				b->SetMoveVec(player->GetShootVec());
+				b->SetActive(true);
+				b->MoveForward();
+				theBullets.push_back(b);
+				this->addChild(b, 0);
+			}
+			else if (theWeapon->GetWeaponType() == weaponType::SHOTGUN)
+			{
+				//adds shotgun type shooting
+				theWeapon->SetFirerate(SHOTGUN_FIRE_RATE);
+
+				for (int i = 0; i < 5; ++i)
+				{
+					CBullet* b = CBullet::create();
+					b->setPosition(player->getPlayerSprite()->getPosition());
+					b->SetMoveVec(player->GetShootVec());
+					b->SetActive(true);
+					b->MoveForward();
+					theBullets.push_back(b);
+					this->addChild(b, 0);
+				}
+			}
 		}
 	}
 

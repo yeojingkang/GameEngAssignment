@@ -29,6 +29,7 @@ private:
 	vector<CEnemyType> theTypes;
 	vector<CWave*> theWaves;
 	unsigned int currWaveNum;
+	float waveChangeTimer;
 
 	CPlayer *player;
 	void createEnemyTypes();
@@ -73,6 +74,7 @@ public:
 
 	int getNumberOfActiveMonsters();
 	int getWaveNum(){ return currWaveNum; }
+	float getWaveChangeTimer(){ return waveChangeTimer; }
 
 	void createNewType(string, int, int, float);
 	void createNewType(CEnemyType);

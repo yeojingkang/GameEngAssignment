@@ -2,6 +2,8 @@
 
 USING_NS_CC;
 
+#define WAVETIME 10.0f
+
 Scene* GameWorld::createScene()
 {
 	// 'scene' is an autorelease object
@@ -12,7 +14,7 @@ Scene* GameWorld::createScene()
 	layer->setName("GameScene");
 
 	//create hud
-	CHUD *theHUD = CHUD::createLayer("Main HUD");
+	CHUD *theHUD = CHUD::createLayer("");
 	theHUD->init();
 
 	// add layer as a child to scene
@@ -447,12 +449,11 @@ void GameWorld::update(float dt)
 		if (theWaves[currWaveNum]->getTotalMonsters() <= 0 && getNumberOfActiveMonsters() <= 0){
 			//When wave has finished spawning all enemies
 			//Wait for timer before going to next wave
-			static float waveChangeTimer = 0.0f;
-			waveChangeTimer += dt;
+			waveChangeTimer -= dt;
 
-			if (waveChangeTimer > 10.0f && currWaveNum + 1 < theWaves.size()){
+			if (waveChangeTimer <= 0.0f && currWaveNum + 1 < theWaves.size()){
 				++currWaveNum;
-				waveChangeTimer = 0.0f;
+				waveChangeTimer = WAVETIME;
 			}
 		}
 		else{
@@ -589,6 +590,7 @@ void GameWorld::createWaves(){
 	file.close();
 
 	currWaveNum = 0;
+	waveChangeTimer = WAVETIME;
 }
 
 int GameWorld::getNumberOfActiveMonsters(){

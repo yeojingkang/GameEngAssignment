@@ -85,6 +85,22 @@ void CHUD::touchesBegan(const vector<cocos2d::Touch*> &touches, cocos2d::Event *
 				shootPad->SetTouch(touch);
 				shootPad->SetActive(true);
 			}
+			if (changeWeaponLabel->getBoundingBox().containsPoint(tap))
+			{
+				//change weapon type				
+				if(theWeapon->getInstance()->GetWeaponType() == weaponType::MACHINE_GUN)
+				{
+					theWeapon->getInstance()->SetWeaponType(weaponType::SHOTGUN);
+					changeWeaponLabel->loadTexture("shotgun.png");
+				}
+				else if (theWeapon->getInstance()->GetWeaponType() == weaponType::SHOTGUN)
+				{
+					theWeapon->getInstance()->SetWeaponType(weaponType::MACHINE_GUN);
+					changeWeaponLabel->loadTexture("machinegun.png");
+				}
+				changeWeaponLabel->setPosition(Vec2(Director::getInstance()->getVisibleSize().width - changeWeaponLabel->getContentSize().width / 2,
+					Director::getInstance()->getVisibleSize().height - changeWeaponLabel->getContentSize().height / 2));
+			}
 		}
 	}
 }
@@ -197,6 +213,10 @@ void CHUD::menuCloseCallback(Ref* pSender)
 
 void CHUD::initOptions(const string& message)
 {
+
+	Size visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
 	messageLabel = LabelTTF::create(message, "fonts/Marker Felt.ttf", 24);
 
 	addChild(messageLabel, 1);
@@ -205,22 +225,28 @@ void CHUD::initOptions(const string& message)
 		Director::getInstance()->getVisibleSize().height / 2));
 
 	//Create text
-	waveNumLabel = CCLabelTTF::create("Wave 1", "fonts/Marker Felt.ttf", 24);
+	waveNumLabel = LabelTTF::create("Wave 1", "fonts/Marker Felt.ttf", 24);
 	waveNumLabel->setPosition(Vec2(Director::getInstance()->getVisibleSize().width / 2,
 		Director::getInstance()->getVisibleSize().height - waveNumLabel->getContentSize().height));
 
-	goldNumLabel = CCLabelTTF::create("Gold: ", "fonts/Marker Felt.ttf", 24);
+	goldNumLabel = LabelTTF::create("Gold: ", "fonts/Marker Felt.ttf", 24);
 	goldNumLabel->setPosition(Vec2(20 + goldNumLabel->getContentSize().width / 2,
 		Director::getInstance()->getVisibleSize().height * 3 / 4));
 
-	hpNumLabel = CCLabelTTF::create("HP: ", "fonts/Marker Felt.ttf", 24);
+	hpNumLabel = LabelTTF::create("HP: ", "fonts/Marker Felt.ttf", 24);
 	hpNumLabel->setPosition(Vec2(20 + hpNumLabel->getContentSize().width / 2,
 		Director::getInstance()->getVisibleSize().height * 3 / 4 - hpNumLabel->getContentSize().height));
 	
-	monsterNumLabel = CCLabelTTF::create("Monsters: ", "fonts/Marker Felt.ttf", 24);
+	monsterNumLabel = LabelTTF::create("Monsters: ", "fonts/Marker Felt.ttf", 24);
 	monsterNumLabel->setPosition(Vec2(20 + monsterNumLabel->getContentSize().width / 2,
 		Director::getInstance()->getVisibleSize().height * 3 / 4 - monsterNumLabel->getContentSize().height * 2));
 	
+	//create label for switching weapons
+	changeWeaponLabel = ImageView::create("machinegun.png");
+	changeWeaponLabel->setPosition(Vec2(visibleSize.width - changeWeaponLabel->getContentSize().width / 2, 
+		visibleSize.height - changeWeaponLabel->getContentSize().height / 2));
+	this->addChild(changeWeaponLabel, 1);
+
 	this->addChild(waveNumLabel, 1);
 	this->addChild(goldNumLabel, 1);
 	this->addChild(hpNumLabel, 1);

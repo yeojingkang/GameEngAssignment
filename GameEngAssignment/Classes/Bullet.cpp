@@ -79,9 +79,12 @@ float CBullet::GetBulletSpeed()
 
 void CBullet::SetMoveVec(Vec2* moveVec)
 {
+
+	float x = CCRANDOM_0_1() * moveVec->x;
+	float y = CCRANDOM_0_1()  * moveVec->y;
 	
-	moveVec->x += (CCRANDOM_0_1() * moveVec->x - moveVec->x / 2);
-	moveVec->y += (CCRANDOM_0_1() * moveVec->y - moveVec->y / 2);
+	moveVec->x += (moveVec->x - x);
+	moveVec->y += (moveVec->y - y);
 
 	this->moveVec = moveVec;
 	float angleToRot = atan2(moveVec->y, moveVec->x);

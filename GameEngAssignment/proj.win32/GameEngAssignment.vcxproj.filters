@@ -15,6 +15,7 @@
     <ClCompile Include="..\Classes\Subwave.cpp" />
     <ClCompile Include="..\Classes\Weapon.cpp" />
     <ClCompile Include="..\Classes\EnemyType.cpp" />
+    <ClCompile Include="..\Classes\MainMenuScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
@@ -32,6 +33,7 @@
     <ClInclude Include="..\Classes\Definitions.h" />
     <ClInclude Include="..\Classes\Weapon.h" />
     <ClInclude Include="..\Classes\EnemyType.h" />
+    <ClInclude Include="..\Classes\MainMenuScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc" />

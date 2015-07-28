@@ -12,7 +12,7 @@ Scene* GameWorld::createScene()
 	layer->setName("GameScene");
 
 	//create hud
-	CHUD *theHUD = CHUD::createLayer("Main HUD");
+	CHUD *theHUD = CHUD::createLayer("");
 	theHUD->init();
 
 	// add layer as a child to scene
@@ -384,18 +384,7 @@ void GameWorld::update(float dt)
 	{
 		if (theWeapon->GetFirerate() <= 0.0f)
 		{
-			if (theWeapon->GetWeaponType() == weaponType::PISTOL)
-			{
-				theWeapon->SetFirerate(PISTOL_FIRE_RATE);
-				CBullet* b = CBullet::create();
-				b->setPosition(player->getPlayerSprite()->getPosition());
-				b->SetMoveVec(player->GetShootVec());
-				b->SetActive(true);
-				b->MoveForward();
-				theBullets.push_back(b);
-				this->addChild(b, 0);
-			}
-			else if (theWeapon->GetWeaponType() == weaponType::MACHINE_GUN)
+			if (theWeapon->GetWeaponType() == weaponType::MACHINE_GUN)
 			{
 				//adds machine gun type shooting
 				theWeapon->SetFirerate(MACHINEGUN_FIRE_RATE);
@@ -450,7 +439,7 @@ void GameWorld::update(float dt)
 			static float waveChangeTimer = 0.0f;
 			waveChangeTimer += dt;
 
-			if (waveChangeTimer > 10.0f && currWaveNum + 1 < theWaves.size()){
+			if (waveChangeTimer > 5.0f && currWaveNum + 1 < theWaves.size()){
 				++currWaveNum;
 				waveChangeTimer = 0.0f;
 			}

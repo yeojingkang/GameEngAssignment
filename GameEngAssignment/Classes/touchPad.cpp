@@ -20,6 +20,10 @@ void CTouchPad::Init()
 	maxDist = 10;
 	touchPadSprite->setPosition(Vec2(xPos, yPos));
 	baseSprite->setPosition(Vec2(xPos, yPos));
+	touchPadSprite->setScale(1.5f);
+	baseSprite->setScale(1.5f);
+	touchPadSprite->setOpacity(64);
+	baseSprite->setOpacity(64);
 	originalPos = touchPadSprite->getPosition();
 	directionVector.x = 0;
 	directionVector.y = 0;

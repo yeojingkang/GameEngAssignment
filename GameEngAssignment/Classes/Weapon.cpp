@@ -82,11 +82,7 @@ float CWeapon::GetReloadtime()
 
 void CWeapon::SwitchWeaponType()
 {
-	if (this->type == weaponType::PISTOL)
-	{
-		this->type = weaponType::MACHINE_GUN;
-	}
-	else if (this->type == weaponType::MACHINE_GUN)
+	if (this->type == weaponType::MACHINE_GUN)
 	{
 		this->type = weaponType::SHOTGUN;
 	}

@@ -9,7 +9,6 @@ using namespace std;
 
 enum weaponType
 {
-	PISTOL,
 	SHOTGUN,
 	MACHINE_GUN,
 	TOTAL

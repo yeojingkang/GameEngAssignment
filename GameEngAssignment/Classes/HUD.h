@@ -46,6 +46,7 @@ private:
 	cocos2d::LabelTTF* goldNumLabel;
 	cocos2d::LabelTTF* hpNumLabel;
 	cocos2d::LabelTTF* monsterNumLabel;
+	cocos2d::LabelTTF* waveChangeTimerLabel;
 
 	CTouchPad* movePad;
 	CTouchPad* shootPad;

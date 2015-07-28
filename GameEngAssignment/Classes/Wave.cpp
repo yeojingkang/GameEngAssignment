@@ -57,3 +57,10 @@ int CWave::getTotalMonsters(){
 
 	return total;
 }
+
+void CWave::typeNotDefined(int type){
+	for (vector<CSubwave*>::iterator itr = theSubwaves.begin(); itr != theSubwaves.end(); ++itr){
+		if ((*itr)->hasType(type))
+			(*itr)->typeNotDefined(type);
+	}
+}

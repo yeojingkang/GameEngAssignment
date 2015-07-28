@@ -45,3 +45,15 @@ int CSubwave::getTotalMonsters(){
 
 	return total;
 }
+
+//Returns true if the subwave has the enemy type
+bool CSubwave::hasType(int type){
+	if (type + 1 > enemies.size())
+		return false;
+	else
+		return true;
+}
+
+void CSubwave::typeNotDefined(int type){
+	enemies[type] = 0;
+}

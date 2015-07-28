@@ -195,6 +195,14 @@ void CHUD::update(float dt)
 	monsterNumLabel->setString(text);
 	sprintf(text, "Wave %d", gameScene->getWaveNum() + 1);
 	waveNumLabel->setString(text);
+
+	if (gameScene->getWaveChangeTimer() < 10.0f){
+		sprintf(text, "Next wave start in: %i", (int)gameScene->getWaveChangeTimer());
+		waveChangeTimerLabel->setString(text);
+	}
+	else
+		waveChangeTimerLabel->setString("");
+
 }
 
 void CHUD::menuCloseCallback(Ref* pSender)
@@ -247,10 +255,16 @@ void CHUD::initOptions(const string& message)
 		visibleSize.height - changeWeaponLabel->getContentSize().height / 2));
 	this->addChild(changeWeaponLabel, 1);
 
+	waveChangeTimerLabel = CCLabelTTF::create("", "fonts/Marker Felt.ttf", 48);
+	waveChangeTimerLabel->setPosition(Vec2(Director::getInstance()->getVisibleSize().width / 2,
+		Director::getInstance()->getVisibleSize().height * 3 / 4));
+
+
 	this->addChild(waveNumLabel, 1);
 	this->addChild(goldNumLabel, 1);
 	this->addChild(hpNumLabel, 1);
 	this->addChild(monsterNumLabel, 1);
+	this->addChild(waveChangeTimerLabel, 1);
 
 }
 

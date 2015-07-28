@@ -16,6 +16,10 @@ public:
 	bool getActive(){ return active; }
 	float getActivateTime(){ return activateTime; }
 
+	bool hasType(int type);
+
+	void typeNotDefined(int type);
+
 private:
 	bool active;
 	float activateTime, spawnTimer;

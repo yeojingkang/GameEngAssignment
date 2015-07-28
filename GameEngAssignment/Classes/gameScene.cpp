@@ -2,6 +2,8 @@
 
 USING_NS_CC;
 
+#define WAVETIME 10.0f
+
 Scene* GameWorld::createScene()
 {
 	// 'scene' is an autorelease object
@@ -436,12 +438,11 @@ void GameWorld::update(float dt)
 		if (theWaves[currWaveNum]->getTotalMonsters() <= 0 && getNumberOfActiveMonsters() <= 0){
 			//When wave has finished spawning all enemies
 			//Wait for timer before going to next wave
-			static float waveChangeTimer = 0.0f;
-			waveChangeTimer += dt;
+			waveChangeTimer -= dt;
 
-			if (waveChangeTimer > 5.0f && currWaveNum + 1 < theWaves.size()){
+			if (waveChangeTimer <= 0.0f && currWaveNum + 1 < theWaves.size()){
 				++currWaveNum;
-				waveChangeTimer = 0.0f;
+				waveChangeTimer = WAVETIME;
 			}
 		}
 		else{
@@ -452,9 +453,11 @@ void GameWorld::update(float dt)
 				for (vector<int>::iterator itr = spawnList.begin(); itr != spawnList.end(); ++itr){
 					int index = std::distance(spawnList.begin(), itr);
 
-					//If an enemy is being spawned where it's type isn't defined, break
-					if (index + 1 > theTypes.size())
+					//If an enemy is being spawned where it's type isn't defined, remove all monsters of that type then break
+					if (index + 1 > theTypes.size()){
+						theWaves[currWaveNum]->typeNotDefined(index);
 						break;
+					}
 
 					//Spawn number of enemies for each enemy type
 					for (int i = 0; i < spawnList[index]; ++i){
@@ -576,6 +579,7 @@ void GameWorld::createWaves(){
 	file.close();
 
 	currWaveNum = 0;
+	waveChangeTimer = WAVETIME;
 }
 
 int GameWorld::getNumberOfActiveMonsters(){

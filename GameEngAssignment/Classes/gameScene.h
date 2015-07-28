@@ -76,7 +76,7 @@ public:
 	int getWaveNum(){ return currWaveNum; }
 	float getWaveChangeTimer(){ return waveChangeTimer; }
 
-	void createNewType(string, int, int, float);
+	void createNewType(string, int, int, float, cocos2d::Color3B);
 	void createNewType(CEnemyType);
 
 	int getEnemyTypeIndex(string name);

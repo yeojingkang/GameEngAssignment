@@ -42,6 +42,7 @@ void CEnemy::Init(CEnemy* eSprite, cocos2d::Vec2 playerPos, CEnemyType type, CPl
 	eSprite->setPosition(position);
 	eSprite->setScale(1.0f);
 	eSprite->setTag(ENEMY_TAG);
+	eSprite->setColor(type.getColor());
 
 	auto enemyBody = PhysicsBody::createBox(eSprite->getContentSize());
 

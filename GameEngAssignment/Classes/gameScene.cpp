@@ -506,6 +506,7 @@ void GameWorld::createEnemyTypes(){
 				string name;
 				unsigned int hp, bounty;
 				float speed;
+				unsigned int r, g, b;
 
 				getline(tmp, name, ',');
 				tmp >> hp;
@@ -513,8 +514,14 @@ void GameWorld::createEnemyTypes(){
 				tmp >> bounty;
 				tmp.get();
 				tmp >> speed;
+				tmp.get();
+				tmp >> r;
+				tmp.get();
+				tmp >> g;
+				tmp.get();
+				tmp >> b;
 
-				createNewType(name, hp, bounty, speed);
+				createNewType(name, hp, bounty, speed, cocos2d::Color3B(r, g, b));
 			}
 		}
 	}
@@ -593,17 +600,17 @@ int GameWorld::getNumberOfActiveMonsters(){
 	return num;
 }
 
-void GameWorld::createNewType(string name, int hp, int bounty, float speed){
+void GameWorld::createNewType(string name, int hp, int bounty, float speed, cocos2d::Color3B color){
 	//If a new type of enemy is created that has the same name as an existing type, overwrite existing type instead
 	for (vector<CEnemyType>::iterator itr = theTypes.begin(); itr != theTypes.end(); ++itr){
 		if ((*itr).getName() == name){
-			(*itr).Overwrite(hp, bounty, speed);
+			(*itr).Overwrite(hp, bounty, speed, color);
 			return;
 		}
 	}
 
 	CEnemyType newType;
-	newType.Init(name, hp, bounty, speed);
+	newType.Init(name, hp, bounty, speed, color);
 
 	theTypes.push_back(newType);
 }
@@ -611,7 +618,7 @@ void GameWorld::createNewType(CEnemyType newType){
 	//If a new type of enemy is created that has the same name as an existing type, overwrite existing type instead
 	for (vector<CEnemyType>::iterator itr = theTypes.begin(); itr != theTypes.end(); ++itr){
 		if ((*itr).getName() == newType.getName()){
-			(*itr).Overwrite(newType.getHP(), newType.getBounty(), newType.getSpeed());
+			(*itr).Overwrite(newType.getHP(), newType.getBounty(), newType.getSpeed(), newType.getColor());
 			return;
 		}
 	}

@@ -27,7 +27,13 @@ void CPlayer::Init()
 	playerSprite->setPosition(xPos, yPos);
 	playerSprite->setScale(1.5f);
 	shootVec = NULL;
-	bounds = playerSprite->getBoundingBox();
+
+	//setting players physics body
+	playerBody = PhysicsBody::createBox(playerSprite->getContentSize());
+	playerBody->setDynamic(false);
+	playerBody->setContactTestBitmask(0xFFFFFFFF);
+	playerSprite->setPhysicsBody(playerBody);
+
 }
 
 void CPlayer::SetPlayerSprite(string filename)
@@ -57,6 +63,7 @@ void CPlayer::MoveLeftRight(bool left, float speed)
 	if (left)
 	{
 		velocity->x = -speed;
+		
 	}
 	else if (!left)
 	{

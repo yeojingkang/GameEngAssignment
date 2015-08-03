@@ -79,6 +79,8 @@ bool GameWorld::init()
 	background = new Rendering();
 	background->Init();
 
+	
+
 	this->addChild(background->getBackgroundSprite());
 
 	//Create Player

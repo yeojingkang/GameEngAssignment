@@ -53,6 +53,8 @@ private:
 
 	Sprite* playerSprite;
 
+	PhysicsBody* playerBody;
+
 	float xPos;
 	float yPos;
 

@@ -16,6 +16,7 @@
     <ClCompile Include="..\Classes\Weapon.cpp" />
     <ClCompile Include="..\Classes\EnemyType.cpp" />
     <ClCompile Include="..\Classes\MainMenuScene.cpp" />
+    <ClCompile Include="..\Classes\GameOverScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
@@ -34,6 +35,7 @@
     <ClInclude Include="..\Classes\Weapon.h" />
     <ClInclude Include="..\Classes\EnemyType.h" />
     <ClInclude Include="..\Classes\MainMenuScene.h" />
+    <ClInclude Include="..\Classes\GameOverScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc" />

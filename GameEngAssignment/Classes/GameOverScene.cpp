@@ -1,14 +1,14 @@
-#include "MainMenuScene.h"
+#include "GameOverScene.h"
 
 USING_NS_CC;
 
-Scene* MainMenu::createScene()
+Scene* GameOver::createScene()
 {
     // 'scene' is an autorelease object
     auto scene = Scene::create();
     
     // 'layer' is an autorelease object
-	auto layer = MainMenu::create();
+	auto layer = GameOver::create();
 
     // add layer as a child to scene
     scene->addChild(layer);
@@ -18,7 +18,7 @@ Scene* MainMenu::createScene()
 }
 
 // on "init" you need to initialize your instance
-bool MainMenu::init()
+bool GameOver::init()
 {
     //////////////////////////////
     // 1. super init first
@@ -29,9 +29,9 @@ bool MainMenu::init()
     
 	//multitouch listener
 	auto multiTouchListener = EventListenerTouchAllAtOnce::create();
-	multiTouchListener->onTouchesBegan = CC_CALLBACK_2(MainMenu::touchesBegan, this);
-	multiTouchListener->onTouchesMoved = CC_CALLBACK_2(MainMenu::touchesMoved, this);
-	multiTouchListener->onTouchesEnded = CC_CALLBACK_2(MainMenu::touchesEnded, this);
+	multiTouchListener->onTouchesBegan = CC_CALLBACK_2(GameOver::touchesBegan, this);
+	multiTouchListener->onTouchesMoved = CC_CALLBACK_2(GameOver::touchesMoved, this);
+	multiTouchListener->onTouchesEnded = CC_CALLBACK_2(GameOver::touchesEnded, this);
 
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
@@ -46,28 +46,27 @@ bool MainMenu::init()
     auto closeItem = MenuItemImage::create(
                                            "ExitNormal.png",
                                            "ExitSelected.png",
-										   CC_CALLBACK_1(MainMenu::menuCloseCallback, this));
+										   CC_CALLBACK_1(GameOver::menuCloseCallback, this));
 	closeItem->setPosition(Vec2(origin.x + visibleSize.width / 2,
                                 origin.y + visibleSize.height / 2 - closeItem->getContentSize().height));
 
-	//start
+	//play again
 	auto startItem = MenuItemImage::create(
-		"StartNormal.png",
-		"StartSelected.png",
-		CC_CALLBACK_1(MainMenu::GoToGameScene, this));
-
+		"PlayAgainNormal.png",
+		"PlayAgainSelected.png",
+		CC_CALLBACK_1(GameOver::GoToGameScene, this));
 	startItem->setPosition(Vec2(origin.x + visibleSize.width / 2,
-		origin.y + visibleSize.height / 2 + closeItem->getContentSize().height));
+								origin.y + visibleSize.height / 2 + closeItem->getContentSize().height));
 
 	// create menu, it's an autorelease object
-	auto menu = Menu::create(startItem, NULL);
-	menu->setPosition(Vec2::ZERO);
-	this->addChild(menu, 1);
+	auto gameover = Menu::create(startItem, NULL);
+	gameover->setPosition(Vec2::ZERO);
+	this->addChild(gameover, 1);
 
     // create menu, it's an autorelease object
-    auto menu2 = Menu::create(closeItem, NULL);
-	menu2->setPosition(Vec2::ZERO);
-	this->addChild(menu2, 1);
+	auto gameover2 = Menu::create(closeItem, NULL);
+	gameover2->setPosition(Vec2::ZERO);
+	this->addChild(gameover2, 1);
 
     /////////////////////////////
     // 3. add your codes below...
@@ -75,7 +74,7 @@ bool MainMenu::init()
     // add a label shows "Hello World"
     // create and initialize a label
     
-    auto label = Label::createWithTTF("Hello World", "fonts/Marker Felt.ttf", 24);
+    auto label = Label::createWithTTF("Game Over", "fonts/Marker Felt.ttf", 24);
     
     // position the label on the center of the screen
     label->setPosition(Vec2(origin.x + visibleSize.width/2,
@@ -87,7 +86,7 @@ bool MainMenu::init()
     return true;
 }
 
-void MainMenu::menuCloseCallback(Ref* pSender)
+void GameOver::menuCloseCallback(Ref* pSender)
 {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
 	MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.","Alert");
@@ -101,7 +100,7 @@ void MainMenu::menuCloseCallback(Ref* pSender)
 #endif
 }
 
-void MainMenu::touchesBegan(const vector<cocos2d::Touch*> &touches, cocos2d::Event *event)
+void GameOver::touchesBegan(const vector<cocos2d::Touch*> &touches, cocos2d::Event *event)
 {
 	log("multitouch began");
 
@@ -116,7 +115,7 @@ void MainMenu::touchesBegan(const vector<cocos2d::Touch*> &touches, cocos2d::Eve
 	}
 }
 
-void MainMenu::touchesMoved(const vector<cocos2d::Touch*> &touches, cocos2d::Event *event)
+void GameOver::touchesMoved(const vector<cocos2d::Touch*> &touches, cocos2d::Event *event)
 {
 	log("multitouch moved");
 	for (auto touch : touches)
@@ -129,7 +128,7 @@ void MainMenu::touchesMoved(const vector<cocos2d::Touch*> &touches, cocos2d::Eve
 	}
 }
 
-void MainMenu::touchesEnded(const vector<cocos2d::Touch*> &touches, cocos2d::Event *event)
+void GameOver::touchesEnded(const vector<cocos2d::Touch*> &touches, cocos2d::Event *event)
 {
 	log("multitouch ended");
 	for (auto touch : touches)
@@ -138,7 +137,7 @@ void MainMenu::touchesEnded(const vector<cocos2d::Touch*> &touches, cocos2d::Eve
 	}
 }
 
-void MainMenu::GoToGameScene(Ref* pSender)
+void GameOver::GoToGameScene(Ref* pSender)
 {
 	auto scene = GameWorld::createScene();
 	Director::getInstance()->replaceScene(scene);

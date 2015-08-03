@@ -79,9 +79,15 @@ bool GameWorld::init()
 	background = new Rendering();
 	background->Init();
 
-	
-
 	this->addChild(background->getBackgroundSprite());
+	this->addChild(background->getBackgroundSpriteTop());
+	this->addChild(background->getBackgroundSpriteTopLeft());
+	this->addChild(background->getBackgroundSpriteTopRight());
+	this->addChild(background->getBackgroundSpriteBottom());
+	this->addChild(background->getBackgroundSpriteBottomLeft());
+	this->addChild(background->getBackgroundSpriteBottomRight());
+	this->addChild(background->getBackgroundSpriteLeft());
+	this->addChild(background->getBackgroundSpriteRight());
 
 	//Create Player
 	player = CPlayer::getInstance();

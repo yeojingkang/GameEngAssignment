@@ -116,6 +116,7 @@ void CHUD::touchesEnded(const vector<cocos2d::Touch*> &touches, cocos2d::Event *
 			movePad->GetSprite()->setPosition(movePad->GetOriginalPos());
 			player->SetVelocity(0, 0);
 			movePad->SetActive(false);
+			player->getPlayerSprite()->stopAllActions();
 		}
 		if (shootPad->GetTouch() != nullptr && shootPad->GetTouch() == touch)
 		{
@@ -154,7 +155,6 @@ void CHUD::touchesMoved(const vector<cocos2d::Touch*> &touches, cocos2d::Event *
 
 			if (shootPad->GetTouch() != nullptr && shootPad->GetTouch() == touch)
 			{
-
 				//sets weapon to active
 				theWeapon->SetActive(true);
 

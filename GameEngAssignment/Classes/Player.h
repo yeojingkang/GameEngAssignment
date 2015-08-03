@@ -45,6 +45,10 @@ public:
 
 	int GetHP(){ return hp; }
 
+	void Movement();
+	void SetDidMoved(bool);
+	bool GetDidMoved();
+
 	void update(float dt);
 
 private:
@@ -65,6 +69,8 @@ private:
 	Vec2* shootVec;
 
 	Rect bounds;
+
+	bool didMoved;
 
 	unsigned int gold, hp;
 };

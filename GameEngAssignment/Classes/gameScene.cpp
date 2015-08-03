@@ -79,9 +79,15 @@ bool GameWorld::init()
 	background = new Rendering();
 	background->Init();
 
-	
-
 	this->addChild(background->getBackgroundSprite());
+	
+	//world colliders
+	auto edgeBody = PhysicsBody::createEdgeBox(visibleSize, PHYSICSBODY_MATERIAL_DEFAULT, 3);
+	auto edgeNode = Node::create();
+
+	edgeNode->setPosition(Point(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
+	edgeNode->setPhysicsBody(edgeBody);
+	this->addChild(edgeNode);
 
 	//Create Player
 	player = CPlayer::getInstance();

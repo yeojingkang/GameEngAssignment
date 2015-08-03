@@ -14,6 +14,7 @@ CPlayer::CPlayer()
 	shootVec = NULL;
 	gold = 0;
 	hp = 100;
+	didMoved = false;
 }
 
 void CPlayer::Init()
@@ -27,6 +28,7 @@ void CPlayer::Init()
 	playerSprite->setPosition(xPos, yPos);
 	playerSprite->setScale(1.5f);
 	shootVec = NULL;
+	didMoved = false;
 
 	//setting players physics body
 	playerBody = PhysicsBody::createBox(playerSprite->getContentSize());
@@ -113,8 +115,34 @@ Vec2* CPlayer::GetShootVec(void)
 	return this->shootVec;
 }
 
+void CPlayer::SetDidMoved(bool didMoved)
+{
+	this->didMoved = didMoved;
+}
+
+bool CPlayer::GetDidMoved()
+{
+	return this->didMoved;
+}
+
+void CPlayer::Movement()
+{
+	float time = 1 / moveSpeed;
+	Vec2 targetPos = this->getPlayerSprite()->getPosition() + this->GetVelocity()->getNormalized() * 1;
+	auto actionMove = MoveTo::create(time, targetPos);
+	Sequence* seq = Sequence::create(actionMove, NULL);
+	this->getPlayerSprite()->runAction(seq);
+}
+
 void CPlayer::update(float dt)
 {
-	this->playerSprite->setPositionX(playerSprite->getPositionX() + (velocity->x * dt));
-	this->playerSprite->setPositionY(playerSprite->getPositionY() + (velocity->y * dt));
+	if (this->getPlayerSprite()->getNumberOfRunningActions() == 0)
+	{
+		didMoved = false;
+		if (this->GetDidMoved() == false)
+		{
+			this->Movement();
+			this->SetDidMoved(true);
+		}
+	}
 }

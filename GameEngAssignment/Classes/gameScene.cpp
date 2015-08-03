@@ -89,6 +89,16 @@ bool GameWorld::init()
 	edgeNode->setPhysicsBody(edgeBody);
 	this->addChild(edgeNode);
 
+	this->addChild(background->getBackgroundSpriteTop());
+	this->addChild(background->getBackgroundSpriteTopLeft());
+	this->addChild(background->getBackgroundSpriteTopRight());
+	this->addChild(background->getBackgroundSpriteBottom());
+	this->addChild(background->getBackgroundSpriteBottomLeft());
+	this->addChild(background->getBackgroundSpriteBottomRight());
+	this->addChild(background->getBackgroundSpriteLeft());
+	this->addChild(background->getBackgroundSpriteRight());
+
+
 	//Create Player
 	player = CPlayer::getInstance();
 	player->Init();

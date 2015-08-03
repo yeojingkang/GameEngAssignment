@@ -81,14 +81,7 @@ bool GameWorld::init()
 
 	this->addChild(background->getBackgroundSprite());
 	
-	//world colliders
-	auto edgeBody = PhysicsBody::createEdgeBox(visibleSize, PHYSICSBODY_MATERIAL_DEFAULT, 3);
-	auto edgeNode = Node::create();
-
-	edgeNode->setPosition(Point(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
-	edgeNode->setPhysicsBody(edgeBody);
-	this->addChild(edgeNode);
-
+	//background for seamless stuffs
 	this->addChild(background->getBackgroundSpriteTop());
 	this->addChild(background->getBackgroundSpriteTopLeft());
 	this->addChild(background->getBackgroundSpriteTopRight());
@@ -97,7 +90,6 @@ bool GameWorld::init()
 	this->addChild(background->getBackgroundSpriteBottomRight());
 	this->addChild(background->getBackgroundSpriteLeft());
 	this->addChild(background->getBackgroundSpriteRight());
-
 
 	//Create Player
 	player = CPlayer::getInstance();

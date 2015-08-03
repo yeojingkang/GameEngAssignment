@@ -79,6 +79,7 @@ void CHUD::touchesBegan(const vector<cocos2d::Touch*> &touches, cocos2d::Event *
 			{
 				movePad->SetTouch(touch);
 				movePad->SetActive(true);
+				player->Movement();
 			}
 			if (shootPad->GetSprite()->getBoundingBox().containsPoint(tap))
 			{

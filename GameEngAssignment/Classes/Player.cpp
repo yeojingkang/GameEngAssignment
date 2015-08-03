@@ -125,24 +125,22 @@ bool CPlayer::GetDidMoved()
 	return this->didMoved;
 }
 
+void CPlayer::doneMovement(Object *pSender)
+{
+	CPlayer *eSprite = CPlayer::getInstance();
+	this->Movement();
+}
+
 void CPlayer::Movement()
 {
-	float time = 1 / moveSpeed;
-	Vec2 targetPos = this->getPlayerSprite()->getPosition() + this->GetVelocity()->getNormalized() * 1;
+	float time = 10 / moveSpeed;
+	Vec2 targetPos = this->getPlayerSprite()->getPosition() + this->GetVelocity()->getNormalized() * 10;
 	auto actionMove = MoveTo::create(time, targetPos);
-	Sequence* seq = Sequence::create(actionMove, NULL);
+	auto actionDone = CallFuncN::create(CC_CALLBACK_1(CPlayer::doneMovement, this));
+	Sequence* seq = Sequence::create(actionMove, actionDone, NULL);
 	this->getPlayerSprite()->runAction(seq);
 }
 
 void CPlayer::update(float dt)
 {
-	if (this->getPlayerSprite()->getNumberOfRunningActions() == 0)
-	{
-		didMoved = false;
-		if (this->GetDidMoved() == false)
-		{
-			this->Movement();
-			this->SetDidMoved(true);
-		}
-	}
 }

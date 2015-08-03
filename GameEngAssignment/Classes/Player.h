@@ -46,6 +46,7 @@ public:
 	int GetHP(){ return hp; }
 
 	void Movement();
+	void doneMovement(Object *pSender);
 	void SetDidMoved(bool);
 	bool GetDidMoved();
 

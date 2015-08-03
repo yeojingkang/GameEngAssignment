@@ -37,6 +37,7 @@ void Rendering::Init()
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 	xPos = origin.x + visibleSize.width / 2;
 	yPos = origin.y + visibleSize.height / 2;
+
 	backgroundSprite->setPosition(xPos, yPos);
 	backgroundSpriteTop->setPosition(xPos, yPos + 1066);
 	backgroundSpriteTopLeft->setPosition(xPos - 1600, yPos + 1066);
@@ -46,6 +47,55 @@ void Rendering::Init()
 	backgroundSpriteBottomRight->setPosition(xPos + 1600, yPos - 1066);
 	backgroundSpriteLeft->setPosition(xPos - 1600, yPos);
 	backgroundSpriteRight->setPosition(xPos + 1600, yPos);
+
+	//physics body
+	//background top
+	auto bgTopBody = PhysicsBody::createBox(backgroundSpriteTop->getContentSize());
+	bgTopBody->setDynamic(false);
+	bgTopBody->setContactTestBitmask(0xFFFFFFFF);
+	backgroundSpriteTop->setPhysicsBody(bgTopBody);
+
+	//background top left
+	auto bgTopLeftBody = PhysicsBody::createBox(backgroundSpriteTopLeft->getContentSize());
+	bgTopLeftBody->setDynamic(false);
+	bgTopLeftBody->setContactTestBitmask(0xFFFFFFFF);
+	backgroundSpriteTopLeft->setPhysicsBody(bgTopLeftBody);
+
+	//background top right
+	auto bgTopRightBody = PhysicsBody::createBox(backgroundSpriteTopRight->getContentSize());
+	bgTopRightBody->setDynamic(false);
+	bgTopRightBody->setContactTestBitmask(0xFFFFFFFF);
+	backgroundSpriteTopRight->setPhysicsBody(bgTopRightBody);
+
+	//background bottom
+	auto bgBtmBody = PhysicsBody::createBox(backgroundSpriteBottom->getContentSize());
+	bgBtmBody->setDynamic(false);
+	bgBtmBody->setContactTestBitmask(0xFFFFFFFF);
+	backgroundSpriteBottom->setPhysicsBody(bgBtmBody);
+
+	//background bottom left
+	auto bgBtmLeftBody = PhysicsBody::createBox(backgroundSpriteBottomLeft->getContentSize());
+	bgBtmLeftBody->setDynamic(false);
+	bgBtmLeftBody->setContactTestBitmask(0xFFFFFFFF);
+	backgroundSpriteBottomLeft->setPhysicsBody(bgBtmLeftBody);
+
+	//background bottom right
+	auto bgBtmRightBody = PhysicsBody::createBox(backgroundSpriteBottomRight->getContentSize());
+	bgBtmRightBody->setDynamic(false);
+	bgBtmRightBody->setContactTestBitmask(0xFFFFFFFF);
+	backgroundSpriteBottomRight->setPhysicsBody(bgBtmRightBody);
+
+	//background left
+	auto bgLeftBody = PhysicsBody::createBox(backgroundSpriteLeft->getContentSize());
+	bgLeftBody->setDynamic(false);
+	bgLeftBody->setContactTestBitmask(0xFFFFFFFF);
+	backgroundSpriteLeft->setPhysicsBody(bgLeftBody);
+
+	//background right
+	auto bgRightBody = PhysicsBody::createBox(backgroundSpriteRight->getContentSize());
+	bgRightBody->setDynamic(false);
+	bgRightBody->setContactTestBitmask(0xFFFFFFFF);
+	backgroundSpriteRight->setPhysicsBody(bgRightBody);
 }
 
 void Rendering::setBackgroundSprite(string filename)

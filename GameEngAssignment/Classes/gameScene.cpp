@@ -501,99 +501,131 @@ void GameWorld::menuCloseCallback(Ref* pSender)
 }
 
 void GameWorld::createEnemyTypes(){
-	ifstream file;
-	file.open("enemytypes.txt");
+	FILE* file;
+	file = fopen("enemytypes.txt", "r");
 
-	if (file.is_open()){
-		string line;
-		while (!file.eof()){
-			getline(file, line);
-
-			//Line isn't empty
-			if (!line.empty()){
-				istringstream tmp(line);
-
-				string name;
-				unsigned int hp, bounty;
-				float speed;
-				unsigned int r, g, b;
-
-				getline(tmp, name, ',');
-				tmp >> hp;
-				tmp.get();
-				tmp >> bounty;
-				tmp.get();
-				tmp >> speed;
-				tmp.get();
-				tmp >> r;
-				tmp.get();
-				tmp >> g;
-				tmp.get();
-				tmp >> b;
-
-				createNewType(name, hp, bounty, speed, cocos2d::Color3B(r, g, b));
-			}
-		}
+	if (!file){
+		log("file opening failed");
+		return;
 	}
 
-	file.close();
+	char buf[1000];
+	while (fgets(buf, 1000, file) != NULL){
+		char name[1000];
+		unsigned int hp, bounty;
+		float speed;
+		unsigned int r, g, b;
+
+		sscanf(buf, "%s %u,%u,%f,%u,%u,%u", name, &hp, &bounty, &speed, &r, &g, &b);
+		createNewType(name, hp, bounty, speed, cocos2d::Color3B(r, g, b));
+	}
+
+	fclose(file);
 }
 void GameWorld::createWaves(){
-	ifstream file;
-	file.open("waves.txt");
+	FILE* file;
+	file = fopen("waves.txt", "r");
 
-	if (file.is_open()){
-		int waveSetNum = 0;
-		string line;
+	if (!file){
+		log("file opening failed");
+		return;
+	}
 
-		while (!file.eof()){
-			getline(file, line);
+	unsigned int waveSetNum = 0;
+	char buf[1000];
 
-			if (line.empty()){
-				//Line is empty
-				waveSetNum = 0;
+	while (!feof(file)){
+		if (fgets(buf, 1000, file) != NULL){
+			if (waveSetNum > 0){
+				//Currently setting a subwave for a wave
+				float activateTime;
+				vector<int> enemies;
+				
+				sscanf(buf, "%f", &activateTime);
+
+				char* parameter = strtok(buf, " ,");
+				parameter = strtok(NULL, " ,");
+				while (parameter != NULL){
+					enemies.push_back(atoi(parameter));
+					parameter = strtok(NULL, " ,");
+				}
+
+				//Create subwave
+				theWaves[waveSetNum - 1]->setSubwave(activateTime, enemies);
 			}
 			else{
-				istringstream tmp(line);
-				char inputCatcher;//To catch unnecessary inputs
-
-				if (waveSetNum > 0){
-					//Currently setting a subwave for any waves
-					float activateTime;
-					int monsterNum;
-
-					tmp >> activateTime;
-
-					//Get number of each enemy type and place into subwave
-					vector<int> enemies;
-					int enemyCount = 0;
-					do{
-						tmp >> enemyCount;
-						enemies.push_back(enemyCount);
-						tmp.get(inputCatcher);
-						if (tmp.eof())
-							break;
-					} while (inputCatcher == ',');
-
-					//Create subwave
-					theWaves[waveSetNum - 1]->setSubwave(activateTime, enemies);
-				}
-				else{
-					//Currently not setting subwave for any waves
-					//Get number to set a new wave
-					tmp >> waveSetNum;
-
-					//If wave don't exist
-					if (waveSetNum > theWaves.size()){
-						CWave* newWave = new CWave();
-						theWaves.push_back(newWave);
-					}
+				//Currently not setting subwave for any wave
+				//Get number to set a new wave
+				sscanf(buf, "%u", &waveSetNum);
+				if (waveSetNum > theWaves.size()){
+					CWave* newWave = new CWave();
+					theWaves.push_back(newWave);
 				}
 			}
 		}
+		else{
+			//Line is empty
+			waveSetNum = 0;
+		}
 	}
 
-	file.close();
+	fclose(file);
+
+	//ifstream file;
+	//file.open("waves.txt");
+
+	//if (file.is_open()){
+	//	int waveSetNum = 0;
+	//	string line;
+
+	//	while (!file.eof()){
+	//		getline(file, line);
+
+	//		if (line.empty()){
+	//			//Line is empty
+	//			waveSetNum = 0;
+	//		}
+	//		else{
+	//			istringstream tmp(line);
+	//			char inputCatcher;//To catch unnecessary inputs
+
+	//			if (waveSetNum > 0){
+	//				//Currently setting a subwave for any waves
+	//				float activateTime;
+	//				int monsterNum;
+
+	//				tmp >> activateTime;
+
+	//				//Get number of each enemy type and place into subwave
+	//				vector<int> enemies;
+	//				int enemyCount = 0;
+	//				do{
+	//					tmp >> enemyCount;
+	//					enemies.push_back(enemyCount);
+	//					tmp.get(inputCatcher);
+	//					if (tmp.eof())
+	//						break;
+	//				} while (inputCatcher == ',');
+
+	//				//Create subwave
+	//				theWaves[waveSetNum - 1]->setSubwave(activateTime, enemies);
+	//			}
+	//			else{
+	//				//Currently not setting subwave for any waves
+	//				//Get number to set a new wave
+	//				tmp >> waveSetNum;
+
+	//				//If wave don't exist
+	//				if (waveSetNum > theWaves.size()){
+	//					CWave* newWave = new CWave();
+	//					theWaves.push_back(newWave);
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
+
+	//file.close();
 
 	currWaveNum = 0;
 	waveChangeTimer = WAVETIME;

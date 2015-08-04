@@ -14,6 +14,7 @@
 #include "HUD.h"
 #include "Weapon.h"
 #include <fstream>
+#include <stdio.h>
 
 using namespace std;
 

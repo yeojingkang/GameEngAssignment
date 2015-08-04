@@ -380,6 +380,24 @@ void GameWorld::mouseScroll(Event *event)
 
 bool GameWorld::onContactBegin(PhysicsContact &contact)
 {
+	auto nodeA = contact.getShapeA()->getBody()->getNode();
+	auto nodeB = contact.getShapeB()->getBody()->getNode();
+
+	if (nodeA && nodeB)
+	{
+		if (nodeA->getTag() == PLAYER_TAG && nodeB->getTag() == ENEMY_TAG)
+		{
+			//player die
+			GoToGameOverScene(this);
+			//nodeA->removeFromParentAndCleanup(true);
+		}
+		else if (nodeB->getTag() == PLAYER_TAG && nodeA->getTag() == ENEMY_TAG)
+		{
+			//player die
+			GoToGameOverScene(this);
+			//nodeB->removeFromParentAndCleanup(true);
+		}
+	}
 	return true;
 }
 
@@ -666,6 +684,12 @@ void GameWorld::createNewType(CEnemyType newType){
 	}
 
 	theTypes.push_back(newType);
+}
+
+void GameWorld::GoToGameOverScene(Ref* pSender)
+{
+	auto scene = GameOver::createScene();
+	Director::getInstance()->replaceScene(scene);
 }
 
 int GameWorld::getEnemyTypeIndex(string name){

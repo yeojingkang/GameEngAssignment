@@ -32,10 +32,11 @@ void CPlayer::Init()
 
 	//setting players physics body
 	playerBody = PhysicsBody::createBox(playerSprite->getContentSize());
+	playerBody->setGravityEnable(false);
 	playerBody->setDynamic(false);
 	playerBody->setContactTestBitmask(0xFFFFFFFF);
+	playerSprite->setTag(PLAYER_TAG);
 	playerSprite->setPhysicsBody(playerBody);
-
 }
 
 void CPlayer::SetPlayerSprite(string filename)

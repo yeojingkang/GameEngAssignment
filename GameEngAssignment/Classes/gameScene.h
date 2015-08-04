@@ -13,6 +13,7 @@
 
 #include "HUD.h"
 #include "Weapon.h"
+#include "GameOverScene.h"
 #include <fstream>
 #include <stdio.h>
 
@@ -67,6 +68,9 @@ public:
 	void touchesBegan(const vector<cocos2d::Touch*> &touches, cocos2d::Event *event);
 	void touchesMoved(const vector<cocos2d::Touch*> &touches, cocos2d::Event *event);
 	void touchesEnded(const vector<cocos2d::Touch*> &touches, cocos2d::Event *event);
+
+	//go to game over scene
+	void GoToGameOverScene(cocos2d::Ref *pSender);
 
 	//handler for detecting collision
 	bool onContactBegin(PhysicsContact &contact);

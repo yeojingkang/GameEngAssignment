@@ -2,6 +2,7 @@
 #define __PLAYER_H__
 
 #include "cocos2d.h"
+#include "Definitions.h"
 #include <string>
 
 using namespace cocos2d;

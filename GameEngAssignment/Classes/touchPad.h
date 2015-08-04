@@ -2,8 +2,13 @@
 #define __TOUCHPAD_H__
 
 #include "cocos2d.h"
-#include "ui\UIImageView.h"
 #include <string>
+
+#if defined(CC_TARGET_OS_IPHONE)
+	#include "UIImageView.h"
+#else
+	#include"ui\UIImageView.h" 
+#endif
 
 using namespace cocos2d;
 using namespace std;
@@ -17,7 +22,6 @@ public:
 	~CTouchPad();
 
 	void Init();
-
 	void SetSprite(string filename);
 	ImageView* GetSprite();
 

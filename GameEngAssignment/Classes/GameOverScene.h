@@ -3,6 +3,7 @@
 
 #include "cocos2d.h"
 #include "gameScene.h"
+#include "SimpleAudioEngine.h"
 #include <vector>
 
 using namespace std;

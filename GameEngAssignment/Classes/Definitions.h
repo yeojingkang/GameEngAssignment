@@ -9,7 +9,7 @@
 #define PLAYER_TAG					3
 
 #define PISTOL_FIRE_RATE			0.5
-#define MACHINEGUN_FIRE_RATE		0.1
+#define MACHINEGUN_FIRE_RATE		0.125
 #define SHOTGUN_FIRE_RATE			1.0
 
 #endif // __DEFINITIONS_H__

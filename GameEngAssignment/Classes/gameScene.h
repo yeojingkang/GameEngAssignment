@@ -17,6 +17,8 @@
 #include <fstream>
 #include <stdio.h>
 
+#include "SimpleAudioEngine.h"
+
 using namespace std;
 
 class GameWorld : public cocos2d::Layer

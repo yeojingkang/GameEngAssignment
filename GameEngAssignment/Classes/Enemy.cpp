@@ -101,6 +101,11 @@ bool CEnemy::onContactBegin(PhysicsContact &contact)
 		if (nodeA->getTag() == BULLET_TAG && nodeB->getTag() == ENEMY_TAG)
 		{
 			dynamic_cast<CEnemy*>(nodeB)->decreaseHP(50);
+			//play enemy ouch sound
+			auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+
+			// play a sound effect, just once.
+			audio->playEffect("Sounds/Shot.mp3", false, 1.0f, 1.0f, 1.0f);
 
 			if (dynamic_cast<CEnemy*>(nodeB)->hp <= 0)
 			{
@@ -111,6 +116,11 @@ bool CEnemy::onContactBegin(PhysicsContact &contact)
 		else if (nodeB->getTag() == BULLET_TAG && nodeA->getTag() == ENEMY_TAG)
 		{
 			dynamic_cast<CEnemy*>(nodeA)->decreaseHP(50);
+			//play enemy ouch sound
+			auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+
+			// play a sound effect, just once.
+			audio->playEffect("Sounds/Shot.mp3", false, 1.0f, 1.0f, 1.0f);
 
 			if (dynamic_cast<CEnemy*>(nodeA)->hp <= 0)
 			{

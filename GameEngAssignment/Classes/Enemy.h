@@ -4,6 +4,7 @@
 #include "cocos2d.h"
 #include "Player.h"
 #include "EnemyType.h"
+#include "SimpleAudioEngine.h"
 
 #include "Definitions.h"
 

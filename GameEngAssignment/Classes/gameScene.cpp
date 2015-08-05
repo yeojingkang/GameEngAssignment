@@ -116,6 +116,12 @@ bool GameWorld::init()
 	contactListener->onContactBegin = CC_CALLBACK_1(GameWorld::onContactBegin, this);
 	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
 
+	//play bgm sound
+	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+
+	// set the background music and continuously play it.
+	audio->playBackgroundMusic("Sounds/Game.mp3", true);
+
 	//scheduling update
 	this->scheduleUpdate();
 
@@ -425,6 +431,13 @@ void GameWorld::update(float dt)
 				b->MoveForward();
 				theBullets.push_back(b);
 				this->addChild(b, 0);
+
+				//play machine gun sound
+				auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+
+				// play a sound effect, just once.
+				audio->playEffect("Sounds/Rifle.mp3", false, 1.0f, 1.0f, 1.0f);
+				
 			}
 			else if (theWeapon->GetWeaponType() == weaponType::SHOTGUN)
 			{
@@ -440,6 +453,12 @@ void GameWorld::update(float dt)
 					b->MoveForward();
 					theBullets.push_back(b);
 					this->addChild(b, 0);
+
+					//play shotgun sound
+					auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+
+					// play a sound effect, just once.
+					audio->playEffect("Sounds/Shotgun.mp3", false, 1.0f, 1.0f, 1.0f);
 				}
 			}
 		}

@@ -84,6 +84,12 @@ bool MainMenu::init()
     // add the label as a child to this layer
     this->addChild(label, 1);
 
+	//play main menu bgm
+	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+
+	// set the background music and continuously play it.
+	audio->playBackgroundMusic("Sounds/MainMenu.mp3", false);
+
     return true;
 }
 

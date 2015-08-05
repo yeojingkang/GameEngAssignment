@@ -83,6 +83,12 @@ bool GameOver::init()
     // add the label as a child to this layer
     this->addChild(label, 1);
 
+	//play game over bgm
+	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+
+	// set the background music and continuously play it.
+	audio->playBackgroundMusic("Sounds/GameOver.mp3", false);
+
     return true;
 }
 

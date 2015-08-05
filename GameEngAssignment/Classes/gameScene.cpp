@@ -538,8 +538,11 @@ void GameWorld::menuCloseCallback(Ref* pSender)
 }
 
 void GameWorld::createEnemyTypes(){
+	auto fileUtils = FileUtils::getInstance();
+	string fullPath = fileUtils->fullPathForFilename("enemytypes.txt");
+
 	FILE* file;
-	file = fopen("enemytypes.txt", "r");
+	file = fopen(fullPath.c_str(), "r");
 
 	if (!file){
 		log("file opening failed");
@@ -560,8 +563,11 @@ void GameWorld::createEnemyTypes(){
 	fclose(file);
 }
 void GameWorld::createWaves(){
+	auto fileUtils = FileUtils::getInstance();
+	string fullPath = fileUtils->fullPathForFilename("waves.txt");
+
 	FILE* file;
-	file = fopen("waves.txt", "r");
+	file = fopen(fullPath.c_str(), "r");
 
 	if (!file){
 		log("file opening failed");

@@ -87,7 +87,7 @@ bool GameOver::init()
 	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
 
 	// set the background music and continuously play it.
-	audio->playBackgroundMusic("Sounds/GameOver.mp3", false);
+	audio->playBackgroundMusic("GameOver.mp3", false);
 
     return true;
 }

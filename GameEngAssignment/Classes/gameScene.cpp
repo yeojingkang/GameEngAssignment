@@ -120,7 +120,7 @@ bool GameWorld::init()
 	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
 
 	// set the background music and continuously play it.
-	audio->playBackgroundMusic("Sounds/Game.mp3", true);
+	audio->playBackgroundMusic("Game.mp3", true);
 
 	//scheduling update
 	this->scheduleUpdate();
@@ -436,7 +436,7 @@ void GameWorld::update(float dt)
 				auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
 
 				// play a sound effect, just once.
-				audio->playEffect("Sounds/Rifle.mp3", false, 1.0f, 1.0f, 1.0f);
+				audio->playEffect("Rifle.mp3", false, 1.0f, 1.0f, 1.0f);
 				
 			}
 			else if (theWeapon->GetWeaponType() == weaponType::SHOTGUN)
@@ -458,7 +458,7 @@ void GameWorld::update(float dt)
 					auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
 
 					// play a sound effect, just once.
-					audio->playEffect("Sounds/Shotgun.mp3", false, 1.0f, 1.0f, 1.0f);
+					audio->playEffect("Shotgun.mp3", false, 1.0f, 1.0f, 1.0f);
 				}
 			}
 		}

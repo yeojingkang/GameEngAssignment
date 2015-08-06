@@ -88,7 +88,7 @@ bool MainMenu::init()
 	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
 
 	// set the background music and continuously play it.
-	audio->playBackgroundMusic("Sounds/MainMenu.mp3", false);
+	audio->playBackgroundMusic("MainMenu.mp3", false);
 
     return true;
 }

@@ -41,7 +41,8 @@ public:
 private:
 	LabelTTF* messageLabel;
 	ImageView* changeWeaponLabel;
-	
+	ImageView* pauseButton;
+
 	cocos2d::LabelTTF* waveNumLabel;
 	cocos2d::LabelTTF* goldNumLabel;
 	cocos2d::LabelTTF* hpNumLabel;

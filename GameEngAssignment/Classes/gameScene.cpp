@@ -131,6 +131,9 @@ void GameWorld::update(float dt)
 	//shoot bullet if weapon is true (if user is touching the shootpad)
 	if (theWeapon->GetActive() == true)
 	{
+		//play machine gun sound
+		auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+
 		if (theWeapon->GetFirerate() <= 0.0f)
 		{
 			if (theWeapon->GetWeaponType() == weaponType::MACHINE_GUN)
@@ -145,12 +148,8 @@ void GameWorld::update(float dt)
 				theBullets.push_back(b);
 				this->addChild(b, 0);
 
-				//play machine gun sound
-				auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
-
 				// play a sound effect, just once.
 				audio->playEffect("Rifle.mp3", false, 1.0f, 1.0f, 1.0f);
-				
 			}
 			else if (theWeapon->GetWeaponType() == weaponType::SHOTGUN)
 			{
@@ -167,22 +166,10 @@ void GameWorld::update(float dt)
 					theBullets.push_back(b);
 					this->addChild(b, 0);
 
-					//play shotgun sound
-					auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
-
 					// play a sound effect, just once.
 					audio->playEffect("Shotgun.mp3", false, 1.0f, 1.0f, 1.0f);
 				}
 			}
-		}
-	}
-
-	//Update the bullets
-	for (vector<CBullet*>::iterator itr = theBullets.begin(); itr != theBullets.end(); ++itr)
-	{
-		if ((*itr)->GetActive() == true)
-		{
-			(*itr)->Update(dt);
 		}
 	}
 

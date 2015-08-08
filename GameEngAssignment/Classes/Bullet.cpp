@@ -36,7 +36,6 @@ void CBullet::Init()
 	this->setPosition(xPos, yPos);
 	this->setScale(2.0f);
 	bulletSpeed = 500;
-	bounds = this->getBoundingBox();
 	damage = 50;
 	moveVec = NULL;
 
@@ -140,8 +139,4 @@ bool CBullet::onContactBegin(PhysicsContact &contact)
 	}
 
 	return true;
-}
-
-void CBullet::Update(float dt)
-{
 }

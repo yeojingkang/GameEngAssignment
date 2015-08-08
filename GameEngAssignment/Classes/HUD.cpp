@@ -70,6 +70,9 @@ void CHUD::touchesBegan(const vector<cocos2d::Touch*> &touches, cocos2d::Event *
 {
 	log("multitouch began");
 
+	Size visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
 	for (auto touch : touches)
 	{
 		if (touch != nullptr)
@@ -99,8 +102,8 @@ void CHUD::touchesBegan(const vector<cocos2d::Touch*> &touches, cocos2d::Event *
 					theWeapon->getInstance()->SetWeaponType(weaponType::MACHINE_GUN);
 					changeWeaponLabel->loadTexture("machinegun.png");
 				}
-				changeWeaponLabel->setPosition(Vec2(Director::getInstance()->getVisibleSize().width - changeWeaponLabel->getContentSize().width / 2,
-					Director::getInstance()->getVisibleSize().height - changeWeaponLabel->getContentSize().height / 2));
+				changeWeaponLabel->setPosition(Vec2(origin.x + visibleSize.width / 2,
+					origin.y + visibleSize.height / 3 - changeWeaponLabel->getContentSize().height));
 			}
 		}
 	}
@@ -240,7 +243,7 @@ void CHUD::initOptions(const string& message)
 	waveNumLabel->setPosition(Vec2(Director::getInstance()->getVisibleSize().width / 2,
 		Director::getInstance()->getVisibleSize().height - waveNumLabel->getContentSize().height));
 
-	goldNumLabel = LabelTTF::create("Gold: ", "fonts/Marker Felt.ttf", 24);
+	goldNumLabel = LabelTTF::create("Score: ", "fonts/Marker Felt.ttf", 24);
 	goldNumLabel->setPosition(Vec2(20 + goldNumLabel->getContentSize().width / 2,
 		Director::getInstance()->getVisibleSize().height * 3 / 4));
 
@@ -254,20 +257,27 @@ void CHUD::initOptions(const string& message)
 	
 	//create label for switching weapons
 	changeWeaponLabel = ImageView::create("machinegun.png");
-	changeWeaponLabel->setPosition(Vec2(visibleSize.width - changeWeaponLabel->getContentSize().width / 2, 
-		visibleSize.height - changeWeaponLabel->getContentSize().height / 2));
+	changeWeaponLabel->setPosition(Vec2(origin.x + visibleSize.width / 2, 
+		origin.y + visibleSize.height / 3 - changeWeaponLabel->getContentSize().height));
 	this->addChild(changeWeaponLabel, 1);
 
-	waveChangeTimerLabel = CCLabelTTF::create("", "fonts/Marker Felt.ttf", 48);
+	//wave change timer label
+	waveChangeTimerLabel = LabelTTF::create("", "fonts/Marker Felt.ttf", 48);
 	waveChangeTimerLabel->setPosition(Vec2(Director::getInstance()->getVisibleSize().width / 2,
 		Director::getInstance()->getVisibleSize().height * 3 / 4));
 
+	//pause button
+	pauseButton = ImageView::create("pauseBtn.png");
+	pauseButton->setPosition(Vec2(visibleSize.width - pauseButton->getContentSize().width, 
+		visibleSize.height - pauseButton->getContentSize().height
+		));	
 
 	this->addChild(waveNumLabel, 1);
 	this->addChild(goldNumLabel, 1);
 	this->addChild(hpNumLabel, 1);
 	this->addChild(monsterNumLabel, 1);
 	this->addChild(waveChangeTimerLabel, 1);
+	this->addChild(pauseButton, 1);
 
 }
 

@@ -35,8 +35,6 @@ public:
 
 	void MoveForward();
 
-	void Update(float dt);
-
 	//handler for onContactBegin
 	//handler for detecting collision
 	bool onContactBegin(PhysicsContact &contact);
@@ -53,9 +51,6 @@ private:
 
 	float bulletSpeed;
 	float damage;
-
-	Rect bounds;
-
 };
 
 #endif // __BULLET_H__

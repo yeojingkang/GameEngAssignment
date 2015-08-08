@@ -42,6 +42,11 @@ CPlayer* CPlayer::getInstance()
 	return thePlayer;
 }
 
+void CPlayer::setNull()
+{
+	thePlayer = nullptr;
+}
+
 void CPlayer::Init()
 {
 	Size visibleSize = Director::getInstance()->getVisibleSize();

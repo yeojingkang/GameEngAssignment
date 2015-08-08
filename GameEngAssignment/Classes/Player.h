@@ -18,6 +18,7 @@ public:
 
 	static CPlayer* create();
 	static CPlayer* getInstance();
+	void setNull();
 
 	void Init();
 

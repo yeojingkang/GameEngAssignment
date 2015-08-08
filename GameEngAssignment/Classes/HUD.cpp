@@ -89,6 +89,8 @@ void CHUD::touchesBegan(const vector<cocos2d::Touch*> &touches, cocos2d::Event *
 				shootPad->SetTouch(touch);
 				shootPad->SetActive(true);
 			}
+
+			//if touch is on the changeWeaponLabel
 			if (changeWeaponLabel->getBoundingBox().containsPoint(tap))
 			{
 				//change weapon type				
@@ -104,6 +106,35 @@ void CHUD::touchesBegan(const vector<cocos2d::Touch*> &touches, cocos2d::Event *
 				}
 				changeWeaponLabel->setPosition(Vec2(origin.x + visibleSize.width / 2,
 					origin.y + visibleSize.height / 3 - changeWeaponLabel->getContentSize().height));
+			}
+
+			//if touch is on the pause button
+			if (pauseButton->getBoundingBox().containsPoint(tap) && pauseButton->isVisible() == true)
+			{
+				//pauses the game
+				mainMenuButton->setVisible(true);
+				continueButton->setVisible(true);
+				pauseButton->setVisible(false);
+				Director::getInstance()->pause();
+			}
+
+			//if touch is on the continue button
+			if (continueButton->getBoundingBox().containsPoint(tap) && continueButton->isVisible() == true)
+			{
+				//un-pauses the game
+				Director::getInstance()->resume();
+				mainMenuButton->setVisible(false);
+				continueButton->setVisible(false);
+				pauseButton->setVisible(true);
+			}
+
+			//if touch is on the main menu button
+			if (mainMenuButton->getBoundingBox().containsPoint(tap) && mainMenuButton->isVisible() == true)
+			{
+				//goes to main menu scene
+				player->setNull();
+				Director::getInstance()->resume();
+				GoToMainMenuScene(this);
 			}
 		}
 	}
@@ -208,7 +239,6 @@ void CHUD::update(float dt)
 	}
 	else
 		waveChangeTimerLabel->setString("");
-
 }
 
 void CHUD::menuCloseCallback(Ref* pSender)
@@ -227,7 +257,6 @@ void CHUD::menuCloseCallback(Ref* pSender)
 
 void CHUD::initOptions(const string& message)
 {
-
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
@@ -259,7 +288,7 @@ void CHUD::initOptions(const string& message)
 	changeWeaponLabel = ImageView::create("machinegun.png");
 	changeWeaponLabel->setPosition(Vec2(origin.x + visibleSize.width / 2, 
 		origin.y + visibleSize.height / 3 - changeWeaponLabel->getContentSize().height));
-	this->addChild(changeWeaponLabel, 1);
+	
 
 	//wave change timer label
 	waveChangeTimerLabel = LabelTTF::create("", "fonts/Marker Felt.ttf", 48);
@@ -268,19 +297,41 @@ void CHUD::initOptions(const string& message)
 
 	//pause button
 	pauseButton = ImageView::create("pauseBtn.png");
+	pauseButton->setVisible(true);
 	pauseButton->setPosition(Vec2(visibleSize.width - pauseButton->getContentSize().width, 
 		visibleSize.height - pauseButton->getContentSize().height
-		));	
+		));
+
+	//continue button
+	continueButton = ImageView::create("continueBtn.png");
+	continueButton->setVisible(false);
+	continueButton->setPosition(Vec2(origin.x + visibleSize.width / 2,
+		origin.y + visibleSize.height / 2));
+
+	//main menu button
+	mainMenuButton = ImageView::create("mainMenuBtn.png");
+	mainMenuButton->setVisible(false);
+	mainMenuButton->setPosition(Vec2(origin.x + visibleSize.width / 2,
+		origin.y + visibleSize.height / 3));
 
 	this->addChild(waveNumLabel, 1);
 	this->addChild(goldNumLabel, 1);
 	this->addChild(hpNumLabel, 1);
 	this->addChild(monsterNumLabel, 1);
 	this->addChild(waveChangeTimerLabel, 1);
+	this->addChild(changeWeaponLabel, 1);
 	this->addChild(pauseButton, 1);
+	this->addChild(continueButton, 1);
+	this->addChild(mainMenuButton, 1);
 
 }
 
 void CHUD::draw(cocos2d::Renderer* renderer, const cocos2d::Mat4 &transform, bool transformUpdated)
 {
+}
+
+void CHUD::GoToMainMenuScene(Ref* pSender)
+{
+	auto scene = MainMenu::createScene();
+	Director::getInstance()->replaceScene(scene);
 }

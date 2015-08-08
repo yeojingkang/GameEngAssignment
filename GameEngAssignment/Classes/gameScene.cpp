@@ -29,15 +29,12 @@ Scene* GameWorld::createScene()
 // on "init" you need to initialize your instance
 bool GameWorld::init()
 {
-	//////////////////////////////
 	// 1. super init first
 	if (!Layer::init())
 	{
 		return false;
 	}
 
-	//r = new Rendering();
-	//r->Init(1, 1);
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 	//this->addChild(r->getSprite(), 1);
@@ -76,11 +73,6 @@ bool GameWorld::init()
 	//Create the waves
 	createWaves();
 
-	//listener for onContactBegin
-	auto contactListener = EventListenerPhysicsContact::create();
-	contactListener->onContactBegin = CC_CALLBACK_1(GameWorld::onContactBegin, this);
-	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
-
 	//play bgm sound
 	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
 
@@ -90,29 +82,6 @@ bool GameWorld::init()
 	//scheduling update
 	this->scheduleUpdate();
 
-	return true;
-}
-
-bool GameWorld::onContactBegin(PhysicsContact &contact)
-{
-	auto nodeA = contact.getShapeA()->getBody()->getNode();
-	auto nodeB = contact.getShapeB()->getBody()->getNode();
-
-	if (nodeA && nodeB)
-	{
-		if (nodeA->getTag() == PLAYER_TAG && nodeB->getTag() == ENEMY_TAG)
-		{
-			//player die
-			//GoToGameOverScene(this);
-			//nodeA->removeFromParentAndCleanup(true);
-		}
-		else if (nodeB->getTag() == PLAYER_TAG && nodeA->getTag() == ENEMY_TAG)
-		{
-			//player die
-			//GoToGameOverScene(this);
-			//nodeB->removeFromParentAndCleanup(true);
-		}
-	}
 	return true;
 }
 

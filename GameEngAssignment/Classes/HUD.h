@@ -7,6 +7,7 @@
 #include "touchPad.h"
 #include "Player.h"
 #include "Weapon.h"
+#include "MainMenuScene.h"
 
 using namespace cocos2d;
 using namespace std;
@@ -27,6 +28,9 @@ public:
 
 	virtual void draw(cocos2d::Renderer* renderer, const cocos2d::Mat4 &transform, bool transformUpdated);
 
+	//go to main menu scene
+	void GoToMainMenuScene(cocos2d::Ref *pSender);
+
 	//function for multitouchListeners
 	void touchesBegan(const vector<cocos2d::Touch*> &touches, cocos2d::Event *event);
 	void touchesMoved(const vector<cocos2d::Touch*> &touches, cocos2d::Event *event);
@@ -42,6 +46,9 @@ private:
 	LabelTTF* messageLabel;
 	ImageView* changeWeaponLabel;
 	ImageView* pauseButton;
+
+	ImageView* continueButton;
+	ImageView* mainMenuButton;
 
 	cocos2d::LabelTTF* waveNumLabel;
 	cocos2d::LabelTTF* goldNumLabel;

@@ -53,9 +53,6 @@ public:
 	//go to game over scene
 	void GoToGameOverScene(cocos2d::Ref *pSender);
 
-	//handler for detecting collision
-	bool onContactBegin(PhysicsContact &contact);
-
 	virtual void update(float);
 
 	int getNumberOfActiveMonsters();

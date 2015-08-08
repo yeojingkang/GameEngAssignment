@@ -45,8 +45,6 @@ void CBullet::Init()
 	bulletBody = PhysicsBody::createBox(this->getContentSize());
 
 	bulletBody->setDynamic(false);
-	//bulletBody->setCollisionBitmask(BULLET_COLLISION_BITMASK);
-	//bulletBody->setCategoryBitmask(ENEMY_COLLISION_BITMASK);
 	bulletBody->setContactTestBitmask(0xFFFFFFFF);
 
 	this->setPhysicsBody(bulletBody);
@@ -114,29 +112,6 @@ float CBullet::GetBulletDamage(void)
 	return this->damage;
 }
 
-bool CBullet::CheckCollision(Rect r)
-{
-	if (this->bounds.intersectsRect(r))
-	{
-		active = false;
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-bool CBullet::CheckCollision(CEnemy* enemy){
-	//if (this->bounds.intersectsRect(enemy->getSprite()->getBoundingBox())){
-	//	enemy->decreaseHP(damage);
-	//	return true;
-	//}
-	//else
-	//	return false;
-	return false;
-}
-
 void CBullet::MoveForward()
 {
 	float time = 1000 / bulletSpeed;
@@ -153,6 +128,7 @@ bool CBullet::onContactBegin(PhysicsContact &contact)
 
 	if (nodeA && nodeB)
 	{
+		//bullet collision with enemy objects and wall objects
 		if (nodeA->getTag() == BULLET_TAG && nodeB->getTag() == ENEMY_TAG)
 		{
 			nodeA->removeFromParentAndCleanup(true);
@@ -162,6 +138,7 @@ bool CBullet::onContactBegin(PhysicsContact &contact)
 			nodeB->removeFromParentAndCleanup(true);
 		}
 	}
+
 	return true;
 }
 

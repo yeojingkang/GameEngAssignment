@@ -117,7 +117,7 @@ void CHUD::touchesEnded(const vector<cocos2d::Touch*> &touches, cocos2d::Event *
 			movePad->GetSprite()->setPosition(movePad->GetOriginalPos());
 			player->SetVelocity(0, 0);
 			movePad->SetActive(false);
-			player->getPlayerSprite()->stopAllActions();
+			player->stopAllActions();
 		}
 		if (shootPad->GetTouch() != nullptr && shootPad->GetTouch() == touch)
 		{
@@ -141,6 +141,7 @@ void CHUD::touchesMoved(const vector<cocos2d::Touch*> &touches, cocos2d::Event *
 		{
 			auto tap = touch->getLocation();
 
+			//moves the player based on the direction gotten from the movement touchPad
 			if (movePad->GetTouch() != nullptr && movePad->GetTouch() == touch)
 			{
 				Point nextPos = tap;
@@ -151,9 +152,10 @@ void CHUD::touchesMoved(const vector<cocos2d::Touch*> &touches, cocos2d::Event *
 
 				Vec2* moveDir = new Vec2(moveDirX, moveDirY);
 				moveDir->normalize();
-				player->SetVelocity(moveDir->x * CPlayer::getInstance()->GetMoveSpeed(), moveDir->y * CPlayer::getInstance()->GetMoveSpeed());
+				player->SetVelocity(moveDir->x * player->GetMoveSpeed(), moveDir->y * player->GetMoveSpeed());
 			}
 
+			//shoots in the direction provided by the shooting touchPad
 			if (shootPad->GetTouch() != nullptr && shootPad->GetTouch() == touch)
 			{
 				//sets weapon to active
@@ -175,7 +177,7 @@ void CHUD::touchesMoved(const vector<cocos2d::Touch*> &touches, cocos2d::Event *
 					angleToRot = 360 - (-angleToRot);
 				}
 
-				player->getPlayerSprite()->setRotation(angleToRot);
+				player->setRotation(angleToRot);
 				player->SetShootVec(shootPos);
 			}
 		}

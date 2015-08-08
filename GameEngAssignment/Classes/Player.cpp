@@ -2,7 +2,8 @@
 
 USING_NS_CC;
 
-CPlayer CPlayer::thePlayer;
+//singleton stuffs for other classes to reference
+static CPlayer *thePlayer = nullptr;
 
 CPlayer::CPlayer()
 {
@@ -10,55 +11,61 @@ CPlayer::CPlayer()
 	yPos = 0;
 	moveSpeed = 0;
 	velocity = new Point(0, 0);
-	playerSprite = NULL;
 	shootVec = NULL;
 	gold = 0;
 	hp = 100;
 	didMoved = false;
+	active = false;
+}
+
+CPlayer* CPlayer::create()
+{
+	CPlayer* playerSprite = new CPlayer();
+	
+	if (playerSprite->initWithFile("player.png"))
+	{
+		playerSprite->autorelease();
+		return playerSprite;
+	}
+
+	CC_SAFE_DELETE(playerSprite);
+	return NULL;
+}
+
+CPlayer* CPlayer::getInstance()
+{
+	if (!thePlayer)
+	{
+		thePlayer = CPlayer::create();
+		thePlayer->Init();
+	}
+	return thePlayer;
 }
 
 void CPlayer::Init()
 {
-	SetPlayerSprite("player.png");
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 	xPos = origin.x + visibleSize.width / 2;
 	yPos = origin.y + visibleSize.height / 2;
 	moveSpeed = 200;
-	playerSprite->setPosition(xPos, yPos);
-	playerSprite->setScale(1.5f);
+	this->setPosition(xPos, yPos);
+	this->setScale(1.5f);
 	shootVec = NULL;
 	didMoved = false;
+	active = true;
 
 	//setting players physics body
-	playerBody = PhysicsBody::createBox(playerSprite->getContentSize());
+	this->setTag(PLAYER_TAG);
+	playerBody = PhysicsBody::createBox(this->getContentSize());
 	playerBody->setGravityEnable(false);
-	playerBody->setDynamic(false);
 	playerBody->setContactTestBitmask(0xFFFFFFFF);
-	playerSprite->setTag(PLAYER_TAG);
-	playerSprite->setPhysicsBody(playerBody);
-}
+	this->setPhysicsBody(playerBody);
 
-void CPlayer::SetPlayerSprite(string filename)
-{
-	this->playerSprite = Sprite::create(filename);
-}
-
-Sprite* CPlayer::getPlayerSprite()
-{
-	return playerSprite;
-}
-
-bool CPlayer::CheckCollision(Rect r)
-{
-	if (this->bounds.intersectsRect(r))
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	//listener for onContactBegin
+	auto contactListener = EventListenerPhysicsContact::create();
+	contactListener->onContactBegin = CC_CALLBACK_1(CPlayer::onContactBegin, this);
+	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
 }
 
 void CPlayer::MoveLeftRight(bool left, float speed)
@@ -126,7 +133,17 @@ bool CPlayer::GetDidMoved()
 	return this->didMoved;
 }
 
-void CPlayer::doneMovement(Object *pSender)
+void CPlayer::SetActive(bool active)
+{
+	this->active = active;
+}
+
+bool CPlayer::GetActive()
+{
+	return this->active;
+}
+
+void CPlayer::doneMovement(Ref *pSender)
 {
 	CPlayer *eSprite = CPlayer::getInstance();
 	this->Movement();
@@ -135,13 +152,37 @@ void CPlayer::doneMovement(Object *pSender)
 void CPlayer::Movement()
 {
 	float time = 10 / moveSpeed;
-	Vec2 targetPos = this->getPlayerSprite()->getPosition() + this->GetVelocity()->getNormalized() * 10;
+	Vec2 targetPos = this->getPosition() + this->GetVelocity()->getNormalized() * 10;
 	auto actionMove = MoveTo::create(time, targetPos);
 	auto actionDone = CallFuncN::create(CC_CALLBACK_1(CPlayer::doneMovement, this));
 	Sequence* seq = Sequence::create(actionMove, actionDone, NULL);
-	this->getPlayerSprite()->runAction(seq);
+	this->runAction(seq);
 }
 
-void CPlayer::update(float dt)
+bool CPlayer::onContactBegin(PhysicsContact &contact)
 {
+	auto nodeA = contact.getShapeA()->getBody()->getNode();
+	auto nodeB = contact.getShapeB()->getBody()->getNode();
+
+	//check collision betweenplayer and enemy
+
+	//player dies
+	//sets active to false so gamescene can go to gameoverscene
+	//player singleton is set to nullptr to ensure that the player can be added as a child again
+	//also ensures that there are no assertion error due to it being a singleton class
+	if (nodeA && nodeB)
+	{
+		if (nodeA->getTag() == PLAYER_TAG && nodeB->getTag() == ENEMY_TAG)
+		{
+			dynamic_cast<CPlayer*>(nodeA)->active = false;
+			thePlayer = nullptr;
+		}
+		else if (nodeB->getTag() == PLAYER_TAG && nodeA->getTag() == ENEMY_TAG)
+		{
+			dynamic_cast<CPlayer*>(nodeB)->active = false;
+			thePlayer = nullptr;
+		}
+	}
+
+	return true;
 }

@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include "cocos2d.h"
+#include "Definitions.h"
 #include <string>
 
 using namespace std;

@@ -33,9 +33,6 @@ public:
 	void SetBulletDamage(float);
 	float GetBulletDamage(void);
 
-	bool CheckCollision(Rect r);
-	bool CheckCollision(CEnemy* enemy);
-
 	void MoveForward();
 
 	void Update(float dt);

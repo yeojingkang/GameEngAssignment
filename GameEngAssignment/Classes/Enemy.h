@@ -39,7 +39,7 @@ private:
 	unsigned int hp, bounty;
 	CPlayer* thePlayer;
 
-	void finishedMoving(Object *pSender);
+	void finishedMoving(Ref *pSender);
 };
 
 #endif

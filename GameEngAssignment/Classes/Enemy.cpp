@@ -16,7 +16,6 @@ CEnemy::~CEnemy()
 
 CEnemy* CEnemy::create()
 {
-
 	CEnemy* eSprite = new CEnemy();
 
 	if (eSprite->initWithFile("enemy.png"))
@@ -70,7 +69,7 @@ void CEnemy::Update(float dt, cocos2d::Vec2 playerPos){
 	
 }
 
-void CEnemy::finishedMoving(Object *pSender){
+void CEnemy::finishedMoving(Ref *pSender){
 	CEnemy *eSprite = (CEnemy *)pSender;
 	this->MoveToPlayer(eSprite);
 }
@@ -79,7 +78,7 @@ void CEnemy::MoveToPlayer(CEnemy* eSprite)
 {
 	//float distance = thePlayer->getPlayerSprite()->getPosition().distance(theSprite->getPosition());
 	float time = 10 / speed;
-	Vec2 targetPosition = eSprite->getPosition() + (thePlayer->getPlayerSprite()->getPosition() - eSprite->getPosition()).getNormalized() * 10;
+	Vec2 targetPosition = eSprite->getPosition() + (thePlayer->getPosition() - eSprite->getPosition()).getNormalized() * 10;
 
 	auto actionMove = MoveTo::create(time, targetPosition);
 	auto actionMoveDone = CallFuncN::create(CC_CALLBACK_1(CEnemy::finishedMoving, this));

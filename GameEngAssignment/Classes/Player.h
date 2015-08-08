@@ -8,7 +8,7 @@
 using namespace cocos2d;
 using namespace std;
 
-class CPlayer
+class CPlayer : public cocos2d::Sprite
 {
 
 protected:
@@ -16,20 +16,13 @@ protected:
 
 public:
 
-	static CPlayer* getInstance()
-	{
-		return &thePlayer;
-	}
+	static CPlayer* create();
+	static CPlayer* getInstance();
 
 	void Init();
 
-	void SetPlayerSprite(string filename);
-	Sprite* getPlayerSprite();
-
 	void SetVelocity(float, float);
 	Vec2* GetVelocity();
-
-	bool CheckCollision(Rect r);
 
 	void MoveUpDown(bool up, float speed);
 	void MoveLeftRight(bool left, float speed);
@@ -40,6 +33,9 @@ public:
 	void SetShootVec(Vec2*);
 	Vec2* GetShootVec();
 
+	void SetActive(bool);
+	bool GetActive();
+
 	int GetGold(){ return gold; }
 	void AddGold(int amt){ gold += amt; }
 	void DecreaseGold(int amt){ gold -= amt; }
@@ -47,17 +43,14 @@ public:
 	int GetHP(){ return hp; }
 
 	void Movement();
-	void doneMovement(Object *pSender);
+	void doneMovement(Ref *pSender);
 	void SetDidMoved(bool);
 	bool GetDidMoved();
 
-	void update(float dt);
+	//handler for detecting collision
+	bool onContactBegin(PhysicsContact &contact);
 
 private:
-
-	static CPlayer thePlayer;
-
-	Sprite* playerSprite;
 
 	PhysicsBody* playerBody;
 
@@ -70,7 +63,7 @@ private:
 
 	Vec2* shootVec;
 
-	Rect bounds;
+	bool active;
 
 	bool didMoved;
 

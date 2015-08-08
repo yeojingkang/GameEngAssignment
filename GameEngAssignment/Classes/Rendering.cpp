@@ -48,6 +48,15 @@ void Rendering::Init()
 	backgroundSpriteLeft->setPosition(xPos - 1600, yPos);
 	backgroundSpriteRight->setPosition(xPos + 1600, yPos);
 
+	backgroundSpriteTop->setTag(WALL_TAG);
+	backgroundSpriteTopLeft->setTag(WALL_TAG);
+	backgroundSpriteTopRight->setTag(WALL_TAG);
+	backgroundSpriteBottom->setTag(WALL_TAG);
+	backgroundSpriteBottomLeft->setTag(WALL_TAG);
+	backgroundSpriteBottomRight->setTag(WALL_TAG);
+	backgroundSpriteLeft->setTag(WALL_TAG);
+	backgroundSpriteRight->setTag(WALL_TAG);
+
 	//physics body
 	//background top
 	auto bgTopBody = PhysicsBody::createBox(backgroundSpriteTop->getContentSize());

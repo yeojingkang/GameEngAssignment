@@ -50,27 +50,6 @@ public:
     // Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
     virtual bool init();
 
-	//handler for keyboard events
-	void keyPressed(EventKeyboard::KeyCode keyCode, cocos2d::Event *event);
-	void keyReleased(EventKeyboard::KeyCode keyCode, cocos2d::Event *event);
-
-	//handler for mouse events
-	void mouseDown(cocos2d::Event *event);
-	void mouseUp(cocos2d::Event *event);
-	void mouseMove(cocos2d::Event *event);
-	void mouseScroll(cocos2d::Event *event);
-
-	//handler for touch events
-	bool touchBegan(cocos2d::Touch*, cocos2d::Event*);
-	void touchEnded(cocos2d::Touch*, cocos2d::Event*);
-	void touchMoved(cocos2d::Touch*, cocos2d::Event*);
-	void touchCancelled(cocos2d::Touch*, cocos2d::Event*);
-
-	//handler for multi touch events
-	void touchesBegan(const vector<cocos2d::Touch*> &touches, cocos2d::Event *event);
-	void touchesMoved(const vector<cocos2d::Touch*> &touches, cocos2d::Event *event);
-	void touchesEnded(const vector<cocos2d::Touch*> &touches, cocos2d::Event *event);
-
 	//go to game over scene
 	void GoToGameOverScene(cocos2d::Ref *pSender);
 

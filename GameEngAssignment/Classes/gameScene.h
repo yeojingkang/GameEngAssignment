@@ -40,6 +40,10 @@ private:
 	void createWaves();
 	
 	CWeapon *theWeapon;
+
+	//Animation* spawnAnimation;
+	Vector<SpriteFrame*> animFrames;
+	SpriteBatchNode* spritebatch;
 public:
 
 	Rendering *r;

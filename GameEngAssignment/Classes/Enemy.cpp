@@ -29,7 +29,28 @@ CEnemy* CEnemy::create()
 }
 
 void CEnemy::Init(CEnemy* eSprite, cocos2d::Vec2 playerPos, CEnemyType type, CPlayer* player){
-	
+	//Create animation
+	spritebatch = SpriteBatchNode::create("Explosion.png");
+	SpriteFrameCache* cache = SpriteFrameCache::getInstance();
+	cache->addSpriteFramesWithFile("Explosion.plist");
+
+	spawnEffect = Sprite::createWithSpriteFrameName("Explosion_01.png");
+	spritebatch->addChild(spawnEffect);
+	this->addChild(spritebatch);
+
+	string fn = "";
+	for (int i = 1; i < 26; ++i){
+		if (i < 10)
+			fn = StringUtils::format("Explosion_0%d.png", i);
+		else
+			fn = StringUtils::format("Explosion_%d.png", i);
+		SpriteFrame* frame = cache->getSpriteFrameByName(fn);
+		animFrames.pushBack(frame);
+	};
+
+	animation = Animation::createWithSpriteFrames(animFrames, 0.01f);
+	spawnEffect->runAction(Sequence::create(Animate::create(animation), RemoveSelf::create(true), nullptr));
+
 	if (CCRANDOM_0_1() > 0.5f)
 		position = Vec2(round(CCRANDOM_0_1()) * 1280, CCRANDOM_0_1() * 720);
 	else
@@ -87,6 +108,13 @@ void CEnemy::MoveToPlayer(CEnemy* eSprite)
 
 void CEnemy::Die(){
 	thePlayer->AddGold(bounty);
+
+	//spawnEffect = Sprite::createWithSpriteFrameName("Explosion_01.png");
+	//spritebatch->addChild(spawnEffect);
+	//spawnEffect->setPosition(this->getPosition());
+
+	//animation = Animation::createWithSpriteFrames(animFrames, 0.01f);
+	//spawnEffect->runAction(Sequence::create(Animate::create(animation), RemoveSelf::create(true), nullptr));
 }
 
 //handler for handling collision

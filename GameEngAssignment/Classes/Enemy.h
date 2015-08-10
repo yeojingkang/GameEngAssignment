@@ -38,6 +38,12 @@ private:
 	string typeName;
 	unsigned int hp, bounty;
 	CPlayer* thePlayer;
+	Sprite* spawnEffect;
+
+	//Animation
+	Animation* animation;
+	Vector<SpriteFrame*> animFrames;
+	SpriteBatchNode* spritebatch;
 
 	void finishedMoving(Ref *pSender);
 };

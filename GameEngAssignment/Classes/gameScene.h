@@ -67,6 +67,8 @@ public:
 	void createNewType(CEnemyType);
 
 	int getEnemyTypeIndex(string name);
+
+	bool AllWavesCleared(){ return currWaveNum >= theWaves.size() - 1 && theWaves[currWaveNum]->getTotalMonsters() <= 0 && getNumberOfActiveMonsters() <= 0; }
     
     // a selector callback
     void menuCloseCallback(cocos2d::Ref* pSender);

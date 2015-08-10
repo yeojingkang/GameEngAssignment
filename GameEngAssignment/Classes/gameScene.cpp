@@ -150,16 +150,23 @@ void GameWorld::update(float dt)
 
 	//Update the wave
 	if (currWaveNum < theWaves.size()){
+		if (currWaveNum >= theWaves.size()){
+
+		}
 		//If there are no more monster to spawn or are alive
-		if (theWaves[currWaveNum]->getTotalMonsters() <= 0 && getNumberOfActiveMonsters() <= 0){
+		else if (theWaves[currWaveNum]->getTotalMonsters() <= 0 && getNumberOfActiveMonsters() <= 0){
 			//When wave has finished spawning all enemies
 			//Wait for timer before going to next wave
-			waveChangeTimer -= dt;
+			if (!AllWavesCleared()){
+				waveChangeTimer -= dt;
 
-			if (waveChangeTimer <= 0.0f && currWaveNum + 1 < theWaves.size()){
-				++currWaveNum;
-				waveChangeTimer = WAVETIME;
+				if (waveChangeTimer <= 0.0f && currWaveNum + 1 < theWaves.size()){
+					++currWaveNum;
+					waveChangeTimer = WAVETIME;
+				}
 			}
+			else
+				waveChangeTimer = WAVETIME;
 		}
 		else{
 			//Get list of monsters to spawn and add them to theEnemies

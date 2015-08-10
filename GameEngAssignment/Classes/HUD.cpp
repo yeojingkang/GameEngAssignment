@@ -233,7 +233,11 @@ void CHUD::update(float dt)
 	sprintf(text, "Wave %d", gameScene->getWaveNum() + 1);
 	waveNumLabel->setString(text);
 
-	if (gameScene->getWaveChangeTimer() < 10.0f){
+	if (gameScene->AllWavesCleared()){
+		sprintf(text, "Finished!");
+		waveChangeTimerLabel->setString(text);
+	}
+	else if (gameScene->getWaveChangeTimer() < 10.0f){
 		sprintf(text, "Next wave start in: %i", (int)gameScene->getWaveChangeTimer());
 		waveChangeTimerLabel->setString(text);
 	}
